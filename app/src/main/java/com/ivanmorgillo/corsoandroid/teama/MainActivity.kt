@@ -40,6 +40,7 @@ class RecipiesAdapter : RecyclerView.Adapter<RecipeViewHolder>() {
     fun setRecipies(items : List<RecipeUI>){
         recipies = items
         notifyDataSetChanged()
+
     }
 }
 
