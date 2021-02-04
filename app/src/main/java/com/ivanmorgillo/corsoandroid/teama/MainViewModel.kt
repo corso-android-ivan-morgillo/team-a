@@ -8,7 +8,8 @@ class MainViewModel : ViewModel() {
 
     private val title = "Pizza1"
     private val image = "https://www.themealdb.com/images/media/meals/x0lk931587671540.jpg"
-    private val recipes = (1.rangeTo(10)).map {
+    private val maxRange = 10
+    private val recipes = (1.rangeTo(maxRange)).map {
         RecipeUI(title = title, image = image)
     }
 }
