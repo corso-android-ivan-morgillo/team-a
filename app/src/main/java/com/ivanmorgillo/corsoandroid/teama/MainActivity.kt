@@ -16,7 +16,6 @@ class MainActivity : AppCompatActivity() {
         // dobbiamo creare un binding alla UI
         val adapter = RecipesAdapter()
         recipe_list.adapter = adapter
-
         val recipesList = viewModel.getRecipes()
         adapter.setRecipes(recipesList)
 
