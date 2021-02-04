@@ -24,15 +24,15 @@ class RecipesAdapter : RecyclerView.Adapter<RecipeViewHolder>() {
         return recipes.size
     }
 
-    fun setRecipes(items : List<RecipeUI>){
+    fun setRecipes(items: List<RecipeUI>) {
         recipes = items
         notifyDataSetChanged()
     }
 }
 
 class RecipeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    val title = itemView.findViewById<TextView>(R.id.recipe_title)
-    val image = itemView.findViewById<ImageView>(R.id.recipe_image)
+    private val title = itemView.findViewById<TextView>(R.id.recipe_title)
+    private val image = itemView.findViewById<ImageView>(R.id.recipe_image)
 
     fun bind(item: RecipeUI) {
         title.text = item.title
