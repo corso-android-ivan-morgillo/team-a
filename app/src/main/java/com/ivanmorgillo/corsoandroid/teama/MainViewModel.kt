@@ -12,7 +12,7 @@ class MainViewModel : ViewModel() {
     private val title = "Pizza1"
     private val image = "https://www.themealdb.com/images/media/meals/x0lk931587671540.jpg"
     private val recipes = (1..MAXRANGE).map {
-        RecipeUI(title = title, image = image)
+        RecipeUI(title = title + it, image = image)
     }
 
     val states = MutableLiveData<MainScreenStates>()
@@ -40,6 +40,3 @@ sealed class MainScreenStates {
 sealed class MainScreenEvent {
     object OnReady : MainScreenEvent()
 }
-
-
-
