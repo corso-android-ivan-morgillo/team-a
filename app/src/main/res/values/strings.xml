@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Delicious</string>
+    <string name="main_screen_error">Something went wrong!</string>
 </resources>
