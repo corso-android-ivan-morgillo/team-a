@@ -1,6 +1,7 @@
 package com.ivanmorgillo.corsoandroid.teama
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
@@ -15,7 +16,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         // dobbiamo creare un binding alla UI
-        val adapter = RecipesAdapter()
+        val adapter = RecipesAdapter {
+            viewModel.send(MainScreenEvent.OnRecipeClick(it))
+        }
         recipe_list.adapter = adapter
         viewModel.states.observe(this, { state ->
             // riceve l'aggiornamento del nuovo valore
@@ -32,6 +35,14 @@ class MainActivity : AppCompatActivity() {
                 }
                 MainScreenStates.Loading -> {
                     recipes_list_progressBar.visible()
+                }
+            }
+        })
+
+        viewModel.actions.observe(this, { action ->
+            when (action) {
+                is MainScreenAction.NavigateToDetail -> {
+                    Toast.makeText(this, "Work in progress navigate to detail", Toast.LENGTH_SHORT).show()
                 }
             }
         })
