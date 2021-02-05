@@ -44,6 +44,7 @@ class RecipeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun bind(item: RecipeUI) {
         title.text = item.title
         image.load(item.image)
+        image.contentDescription = item.title
         recipeCardView.setOnClickListener { Log.d("RECIPE", item.toString()) }
     }
 }
