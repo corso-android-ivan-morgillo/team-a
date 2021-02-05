@@ -1,5 +1,6 @@
 package com.ivanmorgillo.corsoandroid.teama
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
@@ -12,10 +13,11 @@ class MainViewModel : ViewModel() {
     private val title = "Pizza1"
     private val image = "https://www.themealdb.com/images/media/meals/x0lk931587671540.jpg"
     private val recipes = (1..MAXRANGE).map {
-        RecipeUI(title = title, image = image)
+        RecipeUI(title = title + it, image = image)
     }
 
     val states = MutableLiveData<MainScreenStates>()
+    val actions = SingleLiveEvent<MainScreenAction>()
 
     fun send(event: MainScreenEvent) {
 
@@ -24,8 +26,16 @@ class MainViewModel : ViewModel() {
             MainScreenEvent.OnReady -> {
                 states.postValue(MainScreenStates.Content(recipes))
             }
+            is MainScreenEvent.OnRecipeClick -> {
+                Log.d("RECIPE", event.recipe.toString())
+                actions.postValue(MainScreenAction.NavigateToDetail(event.recipe))
+            }
         }
     }
+}
+
+sealed class MainScreenAction {
+    data class NavigateToDetail(val recipe: RecipeUI) : MainScreenAction()
 }
 
 sealed class MainScreenStates {
@@ -38,8 +48,8 @@ sealed class MainScreenStates {
 }
 
 sealed class MainScreenEvent {
+    /**Usiamo la dataclass perchè abbiamo bisogno di passare un parametro */
+    data class OnRecipeClick(val recipe: RecipeUI) : MainScreenEvent()
+
     object OnReady : MainScreenEvent()
 }
-
-
-
