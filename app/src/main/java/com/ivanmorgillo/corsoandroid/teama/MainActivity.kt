@@ -2,7 +2,6 @@ package com.ivanmorgillo.corsoandroid.teama
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.LifecycleOwner
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -21,10 +20,13 @@ class MainActivity : AppCompatActivity() {
             // riceve l'aggiornamento del nuovo valore
             when (state) {
                 is MainScreenStates.Content -> {
+                    recipes_list_progressBar.gone()
                     adapter.setRecipes(state.recipes)
                 }
                 MainScreenStates.Error -> TODO()
-                MainScreenStates.Loading -> TODO()
+                MainScreenStates.Loading -> {
+                    recipes_list_progressBar.visible()
+                }
             }
         })
         viewModel.send(MainScreenEvent.OnReady)

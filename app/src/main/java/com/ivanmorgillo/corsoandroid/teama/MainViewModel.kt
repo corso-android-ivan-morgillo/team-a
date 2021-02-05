@@ -22,7 +22,8 @@ class MainViewModel : ViewModel() {
         when (event) {
             // deve ricevere la lista delle ricette. La view deve ricevere eventi e reagire a stati
             MainScreenEvent.OnReady -> {
-                states.postValue(MainScreenStates.Content(recipes))
+//                states.postValue(MainScreenStates.Content(recipes))
+                states.postValue(MainScreenStates.Loading)
             }
         }
     }
