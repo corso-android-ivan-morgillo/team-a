@@ -3,19 +3,10 @@ package com.ivanmorgillo.corsoandroid.teama
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 
-private const val MAXRANGE = 10
-
-class MainViewModel : ViewModel() {
-
-    fun getRecipes() = recipes
-
-    private val title = "Pizza1"
-    private val image = "https://www.themealdb.com/images/media/meals/x0lk931587671540.jpg"
-    private val recipes = (1..MAXRANGE).map {
-        RecipeUI(title = title + it, image = image)
-    }
-
+class MainViewModel(val repository: RecipesRepository) : ViewModel() {
     val states = MutableLiveData<MainScreenStates>()
     val actions = SingleLiveEvent<MainScreenAction>()
 
@@ -24,7 +15,15 @@ class MainViewModel : ViewModel() {
         when (event) {
             // deve ricevere la lista delle ricette. La view deve ricevere eventi e reagire a stati
             MainScreenEvent.OnReady -> {
-                states.postValue(MainScreenStates.Content(recipes))
+                viewModelScope.launch {
+                    val recipes = repository.loadRecipes().map {
+                        RecipeUI(
+                            title = it.name, image = it.image
+
+                        )
+                    }
+                    states.postValue(MainScreenStates.Content(recipes))
+                }
             }
             is MainScreenEvent.OnRecipeClick -> {
                 Log.d("RECIPE", event.recipe.toString())
