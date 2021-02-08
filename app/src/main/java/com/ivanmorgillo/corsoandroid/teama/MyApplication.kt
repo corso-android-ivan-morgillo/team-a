@@ -21,5 +21,8 @@ class MyApplication : Application() {
 }
 
 val appModule = module {
-    viewModel { MainViewModel() }
+    single<RecipesRepository> {
+        RecipeRepositoryImpl()
+    }
+    viewModel { MainViewModel(repository = get()) }
 }
