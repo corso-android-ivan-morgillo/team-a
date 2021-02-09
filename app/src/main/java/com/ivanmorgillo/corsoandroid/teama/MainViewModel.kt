@@ -14,6 +14,7 @@ class MainViewModel(val repository: RecipesRepository) : ViewModel() {
         when (event) {
             // deve ricevere la lista delle ricette. La view deve ricevere eventi e reagire a stati
             MainScreenEvent.OnReady -> {
+                states.postValue(MainScreenStates.Loading)
                 viewModelScope.launch {
                     val recipes = repository.loadRecipes().map {
                         RecipeUI(
