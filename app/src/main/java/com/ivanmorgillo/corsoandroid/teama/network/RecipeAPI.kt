@@ -46,7 +46,7 @@ class RecipeAPI {
             } else {
                 LoadRecipeResult.Success(recipes)
             }
-        } catch (e: IOException) { // no network is available
+        } catch (e: IOException) { // no network available
             return Failure(NoInternet)
         } catch (e: SocketTimeoutException) { // server timeout
             return Failure(SlowInternet)
