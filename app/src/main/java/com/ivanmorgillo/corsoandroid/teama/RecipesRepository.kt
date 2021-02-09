@@ -1,22 +1,14 @@
 package com.ivanmorgillo.corsoandroid.teama
 
-private const val MAXRANGE = 10
+import com.ivanmorgillo.corsoandroid.teama.network.RecipeAPI
 
 interface RecipesRepository {
     suspend fun loadRecipes(): List<Recipe>
 }
 
-class RecipeRepositoryImpl : RecipesRepository {
+class RecipeRepositoryImpl(private val api: RecipeAPI) : RecipesRepository {
     override suspend fun loadRecipes(): List<Recipe> {
-        val title = "Pizza1"
-        val image = "https://www.themealdb.com/images/media/meals/x0lk931587671540.jpg"
-        return (1..MAXRANGE).map {
-            Recipe(
-                name = title + it,
-                image = image,
-                idMeal = it.toString(),
-            )
-        }
+        return api.loadRecipes()
     }
 }
 
