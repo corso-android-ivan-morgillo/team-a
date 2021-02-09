@@ -45,7 +45,7 @@ class RecipeAPI {
             }
         } catch (e: IOException) { // no network available
             return Failure(NoInternet)
-        }/* catch (e: SocketTimeoutException) { // server timeout
+        }/* catch (e: SocketTimeoutException) { // server timeout error
             return Failure(SlowInternet)
         } catch (e: Exception) { // other generic exception
             return Failure(ServerError)
