@@ -4,7 +4,7 @@ import android.util.Log
 import timber.log.Timber
 
 /** A tree which logs important information for crash reporting.  */
-private class CrashReportingTree : Timber.Tree() {
+class CrashReportingTree : Timber.Tree() {
     override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
         if (priority == Log.VERBOSE || priority == Log.DEBUG) {
             return
