@@ -4,6 +4,8 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeError
+import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeResult
 import kotlinx.coroutines.launch
 
 class MainViewModel(val repository: RecipesRepository) : ViewModel() {
@@ -16,13 +18,28 @@ class MainViewModel(val repository: RecipesRepository) : ViewModel() {
             MainScreenEvent.OnReady -> {
                 states.postValue(MainScreenStates.Loading)
                 viewModelScope.launch {
-                    val recipes = repository.loadRecipes().map {
-                        RecipeUI(
-                            title = it.name,
-                            image = it.image
-                        )
-                    }
-                    states.postValue(MainScreenStates.Content(recipes))
+                    val result = repository.loadRecipes()
+                    when (result) {
+                        is LoadRecipeResult.Failure -> {
+                            when (result.error) {
+                                LoadRecipeError.NoInternet -> {
+                                    actions.postValue(MainScreenAction.ShowNoInternetMessage)
+                                }
+                                LoadRecipeError.NoRecipeFound -> TODO()
+                                LoadRecipeError.ServerError -> TODO()
+                                LoadRecipeError.SlowInternet -> TODO()
+                            }.exhaustive
+                        }
+                        is LoadRecipeResult.Success -> {
+                            val recipes = result.recipes.map {
+                                RecipeUI(
+                                    title = it.name,
+                                    image = it.image
+                                )
+                            }
+                            states.postValue(MainScreenStates.Content(recipes))
+                        }
+                    }.exhaustive
                 }
             }
             is MainScreenEvent.OnRecipeClick -> {
@@ -35,6 +52,7 @@ class MainViewModel(val repository: RecipesRepository) : ViewModel() {
 
 sealed class MainScreenAction {
     data class NavigateToDetail(val recipe: RecipeUI) : MainScreenAction()
+    object ShowNoInternetMessage : MainScreenAction()
 }
 
 sealed class MainScreenStates {
