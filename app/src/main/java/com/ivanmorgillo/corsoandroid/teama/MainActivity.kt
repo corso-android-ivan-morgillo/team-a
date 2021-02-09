@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 class MainActivity : AppCompatActivity() {
 
@@ -47,6 +48,7 @@ class MainActivity : AppCompatActivity() {
             }
         })
         viewModel.send(MainScreenEvent.OnReady)
+        Timber.d("Wow")
     }
 }
 

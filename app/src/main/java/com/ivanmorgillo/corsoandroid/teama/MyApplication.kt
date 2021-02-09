@@ -5,6 +5,8 @@ import android.os.StrictMode
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
+import timber.log.Timber
+
 
 @Suppress("unused")
 class MyApplication : Application() {
@@ -17,7 +19,13 @@ class MyApplication : Application() {
             androidContext(this@MyApplication)
             modules(appModule)
         }
+        if (BuildConfig.DEBUG) {
+            Timber.plant(LineNumberDebugTree())
+        } else {
+            //Timber.plant(CrashReportingTree())
+        }
     }
+
 
     private fun setupStrictMode() {
         if (BuildConfig.DEBUG) {
