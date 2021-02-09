@@ -4,8 +4,16 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeError
-import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeResult
+import com.ivanmorgillo.corsoandroid.teama.MainScreenAction.NavigateToDetail
+import com.ivanmorgillo.corsoandroid.teama.MainScreenAction.ShowNoInternetMessage
+import com.ivanmorgillo.corsoandroid.teama.MainScreenStates.Content
+import com.ivanmorgillo.corsoandroid.teama.MainScreenStates.Loading
+import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeError.NoInternet
+import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeError.NoRecipeFound
+import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeError.ServerError
+import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeError.SlowInternet
+import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeResult.Failure
+import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeResult.Success
 import kotlinx.coroutines.launch
 
 class MainViewModel(val repository: RecipesRepository) : ViewModel() {
@@ -16,37 +24,45 @@ class MainViewModel(val repository: RecipesRepository) : ViewModel() {
         when (event) {
             // deve ricevere la lista delle ricette. La view deve ricevere eventi e reagire a stati
             MainScreenEvent.OnReady -> {
-                states.postValue(MainScreenStates.Loading)
+                states.postValue(Loading)
                 viewModelScope.launch {
                     val result = repository.loadRecipes()
                     when (result) {
-                        is LoadRecipeResult.Failure -> {
-                            when (result.error) {
-                                LoadRecipeError.NoInternet -> {
-                                    actions.postValue(MainScreenAction.ShowNoInternetMessage)
-                                }
-                                LoadRecipeError.NoRecipeFound -> TODO()
-                                LoadRecipeError.ServerError -> TODO()
-                                LoadRecipeError.SlowInternet -> TODO()
-                            }.exhaustive
-                        }
-                        is LoadRecipeResult.Success -> {
-                            val recipes = result.recipes.map {
-                                RecipeUI(
-                                    title = it.name,
-                                    image = it.image
-                                )
-                            }
-                            states.postValue(MainScreenStates.Content(recipes))
-                        }
+                        is Failure -> onFailure(result)
+                        is Success -> onSuccess(result)
                     }.exhaustive
                 }
             }
             is MainScreenEvent.OnRecipeClick -> {
-                Log.d("RECIPE", event.recipe.toString())
-                actions.postValue(MainScreenAction.NavigateToDetail(event.recipe))
+                onRecipeClick(event)
             }
         }
+    }
+
+    private fun onRecipeClick(event: MainScreenEvent.OnRecipeClick) {
+        Log.d("RECIPE", event.recipe.toString())
+        actions.postValue(NavigateToDetail(event.recipe))
+    }
+
+    private fun onFailure(result: Failure) {
+        when (result.error) {
+            NoInternet -> {
+                actions.postValue(ShowNoInternetMessage)
+            }
+            NoRecipeFound -> TODO()
+            ServerError -> TODO()
+            SlowInternet -> TODO()
+        }.exhaustive
+    }
+
+    private fun onSuccess(result: Success) {
+        val recipes = result.recipes.map {
+            RecipeUI(
+                title = it.name,
+                image = it.image
+            )
+        }
+        states.postValue(Content(recipes))
     }
 }
 
