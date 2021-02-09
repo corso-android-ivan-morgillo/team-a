@@ -1,13 +1,14 @@
 package com.ivanmorgillo.corsoandroid.teama
 
+import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeResult
 import com.ivanmorgillo.corsoandroid.teama.network.RecipeAPI
 
 interface RecipesRepository {
-    suspend fun loadRecipes(): List<Recipe>
+    suspend fun loadRecipes(): LoadRecipeResult
 }
 
 class RecipeRepositoryImpl(private val api: RecipeAPI) : RecipesRepository {
-    override suspend fun loadRecipes(): List<Recipe> {
+    override suspend fun loadRecipes(): LoadRecipeResult {
         return api.loadRecipes()
     }
 }
