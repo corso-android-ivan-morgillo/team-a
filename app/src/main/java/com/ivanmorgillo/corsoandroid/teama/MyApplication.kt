@@ -3,9 +3,7 @@ package com.ivanmorgillo.corsoandroid.teama
 import android.app.Application
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
-import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
-import org.koin.dsl.module
 
 @Suppress("unused")
 class MyApplication : Application() {
@@ -18,11 +16,4 @@ class MyApplication : Application() {
             modules(appModule)
         }
     }
-}
-
-val appModule = module {
-    single<RecipesRepository> {
-        RecipeRepositoryImpl()
-    }
-    viewModel { MainViewModel(repository = get()) }
 }

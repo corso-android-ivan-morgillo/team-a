@@ -30,6 +30,7 @@ class RecipesAdapter(private val onclick: (RecipeUI) -> Unit) : RecyclerView.Ada
         notifyDataSetChanged()
     }
 }
+
 /** Qui è dove tocchiamo veramente l'xml della card, item view identifica la vera e propria view della card.
  *
  *
@@ -54,7 +55,6 @@ class RecipeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         /** Il click deve essere gestito inviando indietro al viewModel
          * il click dell'utente e l'oggetto che è stato cliccato */
         recipeCardView.setOnClickListener {
-
             onclick(item)
         }
     }
