@@ -21,7 +21,7 @@ class MainViewModel(val repository: RecipesRepository) : ViewModel() {
 
     fun send(event: MainScreenEvent) {
         when (event) {
-            // deve ricevere la lista delle ricette. La view deve ricevere eventi e reagire a stati
+            // deve ricevere la lista delle ricette. La view deve ricevere eventi e reagire a stati.
             MainScreenEvent.OnReady -> {
                 states.postValue(Loading)
                 viewModelScope.launch {
