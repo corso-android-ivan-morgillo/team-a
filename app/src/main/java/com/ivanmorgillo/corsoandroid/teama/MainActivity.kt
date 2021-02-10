@@ -67,8 +67,13 @@ class MainActivity : AppCompatActivity() {
                 }
             }.exhaustive
         })
-        viewModel.send(MainScreenEvent.OnReady)
         Timber.d("Wow")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.send(MainScreenEvent.OnReady)
+        Timber.d("Second wow")
     }
 
     private fun showNoInternetMessage() {
