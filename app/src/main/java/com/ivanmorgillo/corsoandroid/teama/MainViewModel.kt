@@ -8,34 +8,34 @@ import com.ivanmorgillo.corsoandroid.teama.MainScreenAction.ShowNoInternetMessag
 import com.ivanmorgillo.corsoandroid.teama.MainScreenStates.Content
 import com.ivanmorgillo.corsoandroid.teama.MainScreenStates.Loading
 import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeError
-import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeError.NoInternet
-import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeError.NoRecipeFound
-import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeError.ServerError
-import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeError.SlowInternet
 import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeResult.Failure
 import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeResult.Success
 import kotlinx.coroutines.launch
 
 class MainViewModel(val repository: RecipesRepository) : ViewModel() {
-    val states = MutableLiveData<MainScreenStates>()
+    val states = MutableLiveData<MainScreenStates>() // potremmo passarci direttamente loading
     val actions = SingleLiveEvent<MainScreenAction>()
 
     fun send(event: MainScreenEvent) {
         when (event) {
             // deve ricevere la lista delle ricette. La view deve ricevere eventi e reagire a stati.
             MainScreenEvent.OnReady -> {
-                states.postValue(Loading)
-                viewModelScope.launch {
-                    val result = repository.loadRecipes()
-                    when (result) {
-                        is Failure -> onFailure(result)
-                        is Success -> onSuccess(result)
-                    }.exhaustive
-                }
+                loadContent()
             }
             is MainScreenEvent.OnRecipeClick -> {
                 onRecipeClick(event)
             }
+        }
+    }
+
+    private fun loadContent() {
+        states.postValue(Loading)
+        viewModelScope.launch {
+            val result = repository.loadRecipes()
+            when (result) {
+                is Failure -> onFailure(result)
+                is Success -> onSuccess(result)
+            }.exhaustive
         }
     }
 
@@ -46,12 +46,12 @@ class MainViewModel(val repository: RecipesRepository) : ViewModel() {
 
     private fun onFailure(result: Failure) {
         when (result.error) {
-            NoInternet -> {
+            LoadRecipeError.NoInternet -> {
                 actions.postValue(ShowNoInternetMessage)
             }
-            NoRecipeFound -> TODO()
-            ServerError -> actions.postValue(MainScreenAction.ShowServerErrorMessage)
-            SlowInternet -> actions.postValue(MainScreenAction.ShowSlowInternetMessage)
+            LoadRecipeError.NoRecipeFound -> TODO()
+            LoadRecipeError.ServerError -> actions.postValue(MainScreenAction.ShowServerErrorMessage)
+            LoadRecipeError.SlowInternet -> actions.postValue(MainScreenAction.ShowSlowInternetMessage)
             LoadRecipeError.InterruptedRequest -> actions.postValue(MainScreenAction.ShowInterruptedRequestMessage)
         }.exhaustive
     }
