@@ -20,4 +20,4 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: gradlew assembleDebug with Gradle
-      run: ./gradlew detekt assembleDebug
+      run: ./gradlew --no-build-cache clean detekt assembleDebug
