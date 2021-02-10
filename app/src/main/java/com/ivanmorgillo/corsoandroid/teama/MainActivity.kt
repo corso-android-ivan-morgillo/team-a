@@ -8,7 +8,6 @@ import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
@@ -36,8 +35,6 @@ class MainActivity : AppCompatActivity() {
                 MainScreenStates.Error -> {
                     // non trova le ricette in fase di Loading ad esempio
                     recipes_list_progressBar.gone()
-                    Snackbar.make(recipes_list_root, getString(R.string.main_screen_error), Snackbar.LENGTH_SHORT)
-                        .show()
                 }
                 MainScreenStates.Loading -> {
                     recipes_list_progressBar.visible()
@@ -54,38 +51,86 @@ class MainActivity : AppCompatActivity() {
                     showNoInternetMessage()
                 }
                 MainScreenAction.ShowInterruptedRequestMessage -> {
-                    Log.d("INTERNET", "ConnectException -- ")
-                    Snackbar.make(recipes_list_root, "Disconnected internet while loading", Snackbar.LENGTH_LONG).show()
+                    showInterruptedRequestMessage()
                 }
                 MainScreenAction.ShowSlowInternetMessage -> {
-                    Log.d("INTERNET", "Internet lento....")
-                    Snackbar.make(recipes_list_root, "Slow internet!!", Snackbar.LENGTH_LONG).show()
+                    showNoInternetMessage()
                 }
                 MainScreenAction.ShowServerErrorMessage -> {
-                    Log.d("INTERNET", "Exception Generica -- ")
-                    Snackbar.make(recipes_list_root, "Exception....", Snackbar.LENGTH_LONG).show()
+                    showServerErrorMessage()
                 }
             }.exhaustive
         })
+        viewModel.send(MainScreenEvent.OnReady)
         Timber.d("Wow")
     }
 
     override fun onResume() {
         super.onResume()
-        viewModel.send(MainScreenEvent.OnReady)
+        if (viewModel.states.value == MainScreenStates.Loading) {
+            viewModel.send(MainScreenEvent.OnReady)
+        }
         Timber.d("Second wow")
+    }
+
+    private fun showServerErrorMessage() {
+        recipes_list_progressBar.gone()
+        showAlertDialog("Server error",
+            "Something went wrong",
+            R.drawable.ic_error,
+            "Try again",
+            { viewModel.send(MainScreenEvent.OnReady) },
+            "",
+            {}
+        )
+    }
+
+    private fun showInterruptedRequestMessage() {
+        recipes_list_progressBar.gone()
+        showAlertDialog("Connection lost",
+            "Connection interrupted...",
+            R.drawable.ic_wifi_off,
+            "Network settings",
+            { startActivity(Intent(Settings.ACTION_WIRELESS_SETTINGS)) },
+            "Retry",
+            { viewModel.send(MainScreenEvent.OnReady) }
+        )
     }
 
     private fun showNoInternetMessage() {
         recipes_list_progressBar.gone()
-        Snackbar.make(recipes_list_root, "No internet connection", Snackbar.LENGTH_LONG).show()
+        showAlertDialog("No internet connection",
+            "You are not connected to internet",
+            R.drawable.ic_wifi_off,
+            "Network settings",
+            { startActivity(Intent(Settings.ACTION_WIRELESS_SETTINGS)) },
+            "Retry",
+            {
+                Log.d("INTERNET", "no internet - states ${viewModel.states.value}")
+                viewModel.send(MainScreenEvent.OnReady)
+            }
+        )
+    }
+
+    private fun showAlertDialog(
+        title: String,
+        message: String,
+        icon: Int,
+        positiveButtonText: String,
+        onPositiveButtonClick: () -> Unit,
+        neutralButtonText: String,
+        onNeutralButtonClick: () -> Unit
+    ) {
+        recipes_list_progressBar.gone()
         MaterialAlertDialogBuilder(this)
-            .setTitle("No internet connection")
-            .setMessage("You are not connected to internet")
-            .setIcon(R.drawable.ic_wifi_off)
-            .setNeutralButton("Retry") { dialogInterface: DialogInterface, i: Int -> }
-            .setPositiveButton("Network settings") { dialog, which ->
-                startActivity(Intent(Settings.ACTION_WIRELESS_SETTINGS))
+            .setTitle(title)
+            .setMessage(message)
+            .setIcon(icon)
+            .setPositiveButton(positiveButtonText) { dialog, which ->
+                onPositiveButtonClick()
+            }
+            .setNeutralButton(neutralButtonText) { dialogInterface: DialogInterface, i: Int ->
+                onNeutralButtonClick()
             }
             .setCancelable(false)
             .show()
