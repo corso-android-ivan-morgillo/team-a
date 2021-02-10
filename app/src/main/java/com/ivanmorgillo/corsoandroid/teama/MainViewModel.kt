@@ -1,6 +1,5 @@
 package com.ivanmorgillo.corsoandroid.teama
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -22,7 +21,7 @@ class MainViewModel(val repository: RecipesRepository) : ViewModel() {
 
     fun send(event: MainScreenEvent) {
         when (event) {
-            // deve ricevere la lista delle ricette. La view deve ricevere eventi e reagire a stati
+            // deve ricevere la lista delle ricette. La view deve ricevere eventi e reagire a stati.
             MainScreenEvent.OnReady -> {
                 states.postValue(Loading)
                 viewModelScope.launch {
@@ -40,7 +39,7 @@ class MainViewModel(val repository: RecipesRepository) : ViewModel() {
     }
 
     private fun onRecipeClick(event: MainScreenEvent.OnRecipeClick) {
-        Log.d("RECIPE", event.recipe.toString())
+        // Log.d("RECIPE", event.recipe.toString())
         actions.postValue(NavigateToDetail(event.recipe))
     }
 
@@ -50,8 +49,8 @@ class MainViewModel(val repository: RecipesRepository) : ViewModel() {
                 actions.postValue(ShowNoInternetMessage)
             }
             NoRecipeFound -> TODO()
-            ServerError -> TODO()
-            SlowInternet -> TODO()
+            ServerError -> actions.postValue(MainScreenAction.ShowServerErrorMessage)
+            SlowInternet -> actions.postValue(MainScreenAction.ShowSlowInternetMessage)
         }.exhaustive
     }
 
@@ -69,6 +68,8 @@ class MainViewModel(val repository: RecipesRepository) : ViewModel() {
 sealed class MainScreenAction {
     data class NavigateToDetail(val recipe: RecipeUI) : MainScreenAction()
     object ShowNoInternetMessage : MainScreenAction()
+    object ShowSlowInternetMessage : MainScreenAction()
+    object ShowServerErrorMessage : MainScreenAction()
 }
 
 sealed class MainScreenStates {
