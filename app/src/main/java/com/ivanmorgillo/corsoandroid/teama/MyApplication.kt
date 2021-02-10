@@ -7,7 +7,6 @@ import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
 import timber.log.Timber
 
-
 @Suppress("unused")
 class MyApplication : Application() {
     override fun onCreate() {
@@ -25,7 +24,6 @@ class MyApplication : Application() {
             //Timber.plant(CrashReportingTree())
         }
     }
-
 
     private fun setupStrictMode() {
         if (BuildConfig.DEBUG) {
