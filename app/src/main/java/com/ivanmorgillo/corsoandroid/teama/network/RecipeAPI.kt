@@ -3,12 +3,15 @@ package com.ivanmorgillo.corsoandroid.teama.network
 import com.ivanmorgillo.corsoandroid.teama.Recipe
 import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeError.NoInternet
 import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeError.NoRecipeFound
+import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeError.ServerError
+import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeError.SlowInternet
 import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeResult.Failure
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
+import java.net.SocketTimeoutException
 
 class RecipeAPI {
     private val service: RecipeService
@@ -45,11 +48,11 @@ class RecipeAPI {
             }
         } catch (e: IOException) { // no network available
             return Failure(NoInternet)
-        }/* catch (e: SocketTimeoutException) { // server timeout error
+        } catch (e: SocketTimeoutException) { // server timeout error
             return Failure(SlowInternet)
         } catch (e: Exception) { // other generic exception
             return Failure(ServerError)
-        }*/
+        }
     }
 }
 
