@@ -1,6 +1,7 @@
 package com.ivanmorgillo.corsoandroid.teama
 
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.snackbar.Snackbar
@@ -48,6 +49,14 @@ class MainActivity : AppCompatActivity() {
                 MainScreenAction.ShowNoInternetMessage -> {
                     recipes_list_progressBar.gone()
                     Snackbar.make(recipes_list_root, "No internet connection", Snackbar.LENGTH_LONG).show()
+                }
+                MainScreenAction.ShowSlowInternetMessage -> {
+                    Log.d("INTERNET", "Internet lento....")
+                    Snackbar.make(recipes_list_root, "Slow internet!!", Snackbar.LENGTH_LONG).show()
+                }
+                MainScreenAction.ShowServerErrorMessage -> {
+                    Log.d("INTERNET", "Exception Generica -- ")
+                    Snackbar.make(recipes_list_root, "Exception....", Snackbar.LENGTH_LONG).show()
                 }
             }.exhaustive
         })

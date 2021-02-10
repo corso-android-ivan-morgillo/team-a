@@ -8,10 +8,7 @@ import com.ivanmorgillo.corsoandroid.teama.MainScreenAction.NavigateToDetail
 import com.ivanmorgillo.corsoandroid.teama.MainScreenAction.ShowNoInternetMessage
 import com.ivanmorgillo.corsoandroid.teama.MainScreenStates.Content
 import com.ivanmorgillo.corsoandroid.teama.MainScreenStates.Loading
-import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeError.NoInternet
-import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeError.NoRecipeFound
-import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeError.ServerError
-import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeError.SlowInternet
+import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeError.*
 import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeResult.Failure
 import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeResult.Success
 import kotlinx.coroutines.launch
@@ -50,8 +47,8 @@ class MainViewModel(val repository: RecipesRepository) : ViewModel() {
                 actions.postValue(ShowNoInternetMessage)
             }
             NoRecipeFound -> TODO()
-            ServerError -> TODO()
-            SlowInternet -> TODO()
+            ServerError -> actions.postValue(MainScreenAction.ShowServerErrorMessage)
+            SlowInternet -> actions.postValue(MainScreenAction.ShowSlowInternetMessage)
         }.exhaustive
     }
 
@@ -69,6 +66,8 @@ class MainViewModel(val repository: RecipesRepository) : ViewModel() {
 sealed class MainScreenAction {
     data class NavigateToDetail(val recipe: RecipeUI) : MainScreenAction()
     object ShowNoInternetMessage : MainScreenAction()
+    object ShowSlowInternetMessage : MainScreenAction()
+    object ShowServerErrorMessage : MainScreenAction()
 }
 
 sealed class MainScreenStates {
