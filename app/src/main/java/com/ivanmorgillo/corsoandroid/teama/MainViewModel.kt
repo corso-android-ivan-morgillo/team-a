@@ -7,6 +7,7 @@ import com.ivanmorgillo.corsoandroid.teama.MainScreenAction.NavigateToDetail
 import com.ivanmorgillo.corsoandroid.teama.MainScreenAction.ShowNoInternetMessage
 import com.ivanmorgillo.corsoandroid.teama.MainScreenStates.Content
 import com.ivanmorgillo.corsoandroid.teama.MainScreenStates.Loading
+import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeError
 import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeError.NoInternet
 import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeError.NoRecipeFound
 import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeError.ServerError
@@ -51,6 +52,7 @@ class MainViewModel(val repository: RecipesRepository) : ViewModel() {
             NoRecipeFound -> TODO()
             ServerError -> actions.postValue(MainScreenAction.ShowServerErrorMessage)
             SlowInternet -> actions.postValue(MainScreenAction.ShowSlowInternetMessage)
+            LoadRecipeError.InterruptedRequest -> actions.postValue(MainScreenAction.ShowInterruptedRequestMessage)
         }.exhaustive
     }
 
@@ -70,6 +72,7 @@ sealed class MainScreenAction {
     object ShowNoInternetMessage : MainScreenAction()
     object ShowSlowInternetMessage : MainScreenAction()
     object ShowServerErrorMessage : MainScreenAction()
+    object ShowInterruptedRequestMessage : MainScreenAction()
 }
 
 sealed class MainScreenStates {

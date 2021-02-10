@@ -1,16 +1,19 @@
 package com.ivanmorgillo.corsoandroid.teama.network
 
 import com.ivanmorgillo.corsoandroid.teama.Recipe
+import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeError.InterruptedRequest
 import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeError.NoInternet
 import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeError.NoRecipeFound
 import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeError.ServerError
 import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeError.SlowInternet
 import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeResult.Failure
+import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeResult.Success
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
+import java.net.ConnectException
 import java.net.SocketTimeoutException
 
 class RecipeAPI {
@@ -44,10 +47,12 @@ class RecipeAPI {
             return if (recipes.isEmpty()) {
                 Failure(NoRecipeFound)
             } else {
-                LoadRecipeResult.Success(recipes)
+                Success(recipes)
             }
         } catch (e: IOException) { // no network available
             return Failure(NoInternet)
+        } catch (e: ConnectException) { // interrupted network request
+            return Failure(InterruptedRequest)
         } catch (e: SocketTimeoutException) { // server timeout error
             return Failure(SlowInternet)
         } catch (e: Exception) { // other generic exception
@@ -59,6 +64,7 @@ class RecipeAPI {
 sealed class LoadRecipeError {
     object NoRecipeFound : LoadRecipeError()
     object NoInternet : LoadRecipeError()
+    object InterruptedRequest : LoadRecipeError()
     object SlowInternet : LoadRecipeError()
     object ServerError : LoadRecipeError()
 }

@@ -1,9 +1,13 @@
 package com.ivanmorgillo.corsoandroid.teama
 
+import android.content.DialogInterface
+import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -47,8 +51,11 @@ class MainActivity : AppCompatActivity() {
                     Toast.makeText(this, "Work in progress navigate to detail", Toast.LENGTH_SHORT).show()
                 }
                 MainScreenAction.ShowNoInternetMessage -> {
-                    recipes_list_progressBar.gone()
-                    Snackbar.make(recipes_list_root, "No internet connection", Snackbar.LENGTH_LONG).show()
+                    showNoInternetMessage()
+                }
+                MainScreenAction.ShowInterruptedRequestMessage -> {
+                    Log.d("INTERNET", "ConnectException -- ")
+                    Snackbar.make(recipes_list_root, "Disconnected internet while loading", Snackbar.LENGTH_LONG).show()
                 }
                 MainScreenAction.ShowSlowInternetMessage -> {
                     Log.d("INTERNET", "Internet lento....")
@@ -62,6 +69,21 @@ class MainActivity : AppCompatActivity() {
         })
         viewModel.send(MainScreenEvent.OnReady)
         Timber.d("Wow")
+    }
+
+    private fun showNoInternetMessage() {
+        recipes_list_progressBar.gone()
+        Snackbar.make(recipes_list_root, "No internet connection", Snackbar.LENGTH_LONG).show()
+        MaterialAlertDialogBuilder(this)
+            .setTitle("No internet connection")
+            .setMessage("You are not connected to internet")
+            .setIcon(R.drawable.ic_wifi_off)
+            .setNeutralButton("Retry") { dialogInterface: DialogInterface, i: Int -> }
+            .setPositiveButton("Network settings") { dialog, which ->
+                startActivity(Intent(Settings.ACTION_WIRELESS_SETTINGS))
+            }
+            .setCancelable(false)
+            .show()
     }
 }
 
