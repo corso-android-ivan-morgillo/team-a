@@ -8,8 +8,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.ivanmorgillo.corsoandroid.teama.MainScreenAction.NavigateToDetail
 import com.ivanmorgillo.corsoandroid.teama.MainScreenAction.ShowInterruptedRequestMessage
@@ -65,11 +65,11 @@ class HomeFragment : Fragment() {
 
             viewModel.actions.observe(viewLifecycleOwner, { action ->
                 when (action) {
-                    is NavigateToDetail -> Toast.makeText(
-                        view.context,
-                        "Work in progress navigate to detail",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    is NavigateToDetail -> {
+                        val directions = HomeFragmentDirections.actionHomeFragmentToDetailFragment(action.recipe.id)
+                        Timber.d("Invio al details RecipeId= ${action.recipe.id}")
+                        findNavController().navigate(directions)
+                    }
                     ShowNoInternetMessage -> showNoInternetMessage()
                     ShowInterruptedRequestMessage -> showInterruptedRequestMessage()
                     ShowSlowInternetMessage -> showNoInternetMessage()

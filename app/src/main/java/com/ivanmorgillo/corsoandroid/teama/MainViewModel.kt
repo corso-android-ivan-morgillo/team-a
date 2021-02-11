@@ -65,7 +65,8 @@ class MainViewModel(
         val recipes = result.recipes.map {
             RecipeUI(
                 title = it.name,
-                image = it.image
+                image = it.image,
+                id = it.idMeal
             )
         }
         states.postValue(Content(recipes))
