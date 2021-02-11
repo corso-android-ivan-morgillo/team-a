@@ -11,5 +11,9 @@ val appModule = module {
     single<RecipesRepository> {
         RecipeRepositoryImpl(api = get())
     }
-    viewModel { MainViewModel(repository = get()) }
+
+    single<Tracking> {
+        TrackingImpl()
+    }
+    viewModel { MainViewModel(repository = get(), tracking = get()) }
 }

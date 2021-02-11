@@ -7,12 +7,16 @@ import com.ivanmorgillo.corsoandroid.teama.MainScreenAction.NavigateToDetail
 import com.ivanmorgillo.corsoandroid.teama.MainScreenAction.ShowNoInternetMessage
 import com.ivanmorgillo.corsoandroid.teama.MainScreenStates.Content
 import com.ivanmorgillo.corsoandroid.teama.MainScreenStates.Loading
+import com.ivanmorgillo.corsoandroid.teama.home.RecipeUI
 import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeError
 import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeResult.Failure
 import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeResult.Success
 import kotlinx.coroutines.launch
 
-class MainViewModel(val repository: RecipesRepository) : ViewModel() {
+class MainViewModel(
+    private val repository: RecipesRepository,
+    private val tracking: Tracking
+) : ViewModel() {
     val states = MutableLiveData<MainScreenStates>() // potremmo passarci direttamente loading
     val actions = SingleLiveEvent<MainScreenAction>()
 
@@ -41,6 +45,7 @@ class MainViewModel(val repository: RecipesRepository) : ViewModel() {
 
     private fun onRecipeClick(event: MainScreenEvent.OnRecipeClick) {
         // Log.d("RECIPE", event.recipe.toString())
+        tracking.logEvent("recipe_clicked")
         actions.postValue(NavigateToDetail(event.recipe))
     }
 
@@ -60,7 +65,8 @@ class MainViewModel(val repository: RecipesRepository) : ViewModel() {
         val recipes = result.recipes.map {
             RecipeUI(
                 title = it.name,
-                image = it.image
+                image = it.image,
+                id = it.idMeal
             )
         }
         states.postValue(Content(recipes))

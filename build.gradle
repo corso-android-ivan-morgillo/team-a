@@ -1,8 +1,9 @@
 buildscript {
     ext {
-        kotlin_version = "1.4.21"
-        lifecycle_version = "2.2.0"
+        kotlin_version = "1.4.30"
+        lifecycle_version = "2.3.0"
         koin_version = "2.2.2"
+        nav_version = "2.3.3"
     }
     repositories {
         google()
@@ -11,13 +12,14 @@ buildscript {
     dependencies {
         classpath "com.android.tools.build:gradle:4.0.2"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-
         classpath "org.koin:koin-gradle-plugin:$koin_version"
+        classpath 'com.google.gms:google-services:4.3.5'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.4.1'
+        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version"
     }
 }
 
 plugins {
-
     id "io.gitlab.arturbosch.detekt" version "1.9.1"
 }
 
@@ -25,14 +27,17 @@ apply plugin: 'koin'
 
 detekt {
     buildUponDefaultConfig = true // preconfigure defaults
-    config = files("$projectDir/config/detekt.yml") // point to your custom config defining rules to run, overwriting default behavior
+    //noinspection GroovyAssignabilityCheck
+    config = files("$projectDir/config/detekt/detekt.yml")
+    // point to your custom config defining rules to run, overwriting default behavior
+    //noinspection GroovyAssignabilityCheck
     baseline = file("$projectDir/config/baseline.xml") // a way of suppressing issues before introducing detekt
 
+    //noinspection GroovyAssignabilityCheck
     reports {
         html.enabled = true // observe findings in your browser with structure and code snippets
         xml.enabled = true // checkstyle like format mainly for integrations like Jenkins
         txt.enabled = true // similar to the console output, contains issue signature to manually edit baseline files
-
     }
 }
 

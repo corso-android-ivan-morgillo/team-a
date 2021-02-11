@@ -13,4 +13,4 @@ class RecipeRepositoryImpl(private val api: RecipeAPI) : RecipesRepository {
     }
 }
 
-data class Recipe(val name: String, val image: String, val idMeal: String)
+data class Recipe(val name: String, val image: String, val idMeal: Long)
