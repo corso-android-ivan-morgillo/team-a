@@ -7,7 +7,7 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "com.ivanmorgillo.corsoandroid.teama"
+        applicationId "com.ateam.delicious"
         minSdkVersion 23
         targetSdkVersion 30
         versionCode 1
