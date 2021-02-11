@@ -16,7 +16,8 @@ import com.ivanmorgillo.corsoandroid.teama.MainScreenAction.ShowInterruptedReque
 import com.ivanmorgillo.corsoandroid.teama.MainScreenAction.ShowNoInternetMessage
 import com.ivanmorgillo.corsoandroid.teama.MainScreenAction.ShowServerErrorMessage
 import com.ivanmorgillo.corsoandroid.teama.MainScreenAction.ShowSlowInternetMessage
-import com.ivanmorgillo.corsoandroid.teama.MainScreenEvent
+import com.ivanmorgillo.corsoandroid.teama.MainScreenEvent.OnReady
+import com.ivanmorgillo.corsoandroid.teama.MainScreenEvent.OnRecipeClick
 import com.ivanmorgillo.corsoandroid.teama.MainScreenStates
 import com.ivanmorgillo.corsoandroid.teama.MainViewModel
 import com.ivanmorgillo.corsoandroid.teama.R
@@ -41,7 +42,7 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val adapter = RecipesAdapter {
-            viewModel.send(MainScreenEvent.OnRecipeClick(it))
+            viewModel.send(OnRecipeClick(it))
         }
         recipe_list.adapter = adapter
         viewModel.states.observe(viewLifecycleOwner, { state ->
@@ -62,7 +63,6 @@ class HomeFragment : Fragment() {
         })
         // Questo blocco serve a specificare che per le istruzioni interne il this è "view"
         with(view) {
-
             viewModel.actions.observe(viewLifecycleOwner, { action ->
                 when (action) {
                     is NavigateToDetail -> {
@@ -77,16 +77,16 @@ class HomeFragment : Fragment() {
                 }.exhaustive
             })
         }
-        viewModel.send(MainScreenEvent.OnReady)
+        viewModel.send(OnReady)
         Timber.d("Wow")
     }
 
     override fun onResume() {
         super.onResume()
-        if (viewModel.states.value == MainScreenStates.Loading) {
-            viewModel.send(MainScreenEvent.OnReady)
+        //Log.d("TeamA", viewModel.states.value.toString())
+        if (viewModel.states.value == null) {
+            viewModel.send(OnReady)
         }
-        Timber.d("Second wow")
     }
 
     private fun View.showServerErrorMessage() {
@@ -95,7 +95,7 @@ class HomeFragment : Fragment() {
             "Something went wrong",
             R.drawable.ic_error,
             "Try again",
-            { viewModel.send(MainScreenEvent.OnReady) },
+            { viewModel.send(OnReady) },
             "",
             {}
         )
@@ -109,7 +109,7 @@ class HomeFragment : Fragment() {
             "Network settings",
             { startActivity(Intent(Settings.ACTION_WIRELESS_SETTINGS)) },
             "Retry",
-            { viewModel.send(MainScreenEvent.OnReady) }
+            { viewModel.send(OnReady) }
         )
     }
 
@@ -123,7 +123,7 @@ class HomeFragment : Fragment() {
             "Retry",
             {
                 Log.d("INTERNET", "no internet - states ${viewModel.states.value}")
-                viewModel.send(MainScreenEvent.OnReady)
+                viewModel.send(OnReady)
             }
         )
     }
