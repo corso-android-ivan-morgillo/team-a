@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.google.android.material.card.MaterialCardView
+import com.ivanmorgillo.corsoandroid.teama.home.RecipeUI
 
 class RecipesAdapter(private val onclick: (RecipeUI) -> Unit) : RecyclerView.Adapter<RecipeViewHolder>() {
     private var recipes = emptyList<RecipeUI>()
