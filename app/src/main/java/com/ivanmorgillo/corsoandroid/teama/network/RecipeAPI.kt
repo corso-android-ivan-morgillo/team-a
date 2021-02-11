@@ -12,6 +12,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import timber.log.Timber
 import java.io.IOException
 import java.net.ConnectException
 import java.net.SocketTimeoutException
@@ -56,6 +57,7 @@ class RecipeAPI {
         } catch (e: SocketTimeoutException) { // server timeout error
             return Failure(SlowInternet)
         } catch (e: Exception) { // other generic exception
+            Timber.e(e, "Generic Exception on LoadRecipes")
             return Failure(ServerError)
         }
     }
