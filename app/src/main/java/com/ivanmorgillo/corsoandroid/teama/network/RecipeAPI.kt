@@ -40,6 +40,7 @@ class RecipeAPI {
             val recipesList = service.loadRecipeDetails(idMeal)
             Timber.tag("TeamA").d(recipesList.toString())
         } catch (e: Exception) {
+            return Failure(LoadRecipeError.NoRecipeFound)
         }
         return Failure(LoadRecipeError.NoRecipeFound)
     }
