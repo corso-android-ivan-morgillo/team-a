@@ -1,5 +1,6 @@
 package com.ivanmorgillo.corsoandroid.teama.network
 
+import android.util.Log
 import com.ivanmorgillo.corsoandroid.teama.Recipe
 import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeError.InterruptedRequest
 import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeError.NoInternet
@@ -32,6 +33,16 @@ class RecipeAPI {
             .client(client)
             .build()
         service = retrofit.create(RecipeService::class.java)
+    }
+
+    @Suppress("TooGenericExceptionCaught")
+    suspend fun loadRecipeDetails(idMeal: Long): LoadRecipeResult {
+        try {
+            val recipesList = service.loadRecipeDetails(idMeal)
+            Log.d("TeamA", recipesList.toString())
+        } catch (e: Exception) {
+        }
+        return Failure(LoadRecipeError.NoRecipeFound)
     }
 
     @Suppress("TooGenericExceptionCaught")
