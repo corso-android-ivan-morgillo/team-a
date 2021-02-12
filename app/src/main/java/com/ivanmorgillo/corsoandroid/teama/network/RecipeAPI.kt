@@ -1,6 +1,5 @@
 package com.ivanmorgillo.corsoandroid.teama.network
 
-import android.util.Log
 import com.ivanmorgillo.corsoandroid.teama.Recipe
 import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeError.InterruptedRequest
 import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeError.NoInternet
@@ -39,7 +38,7 @@ class RecipeAPI {
     suspend fun loadRecipeDetails(idMeal: Long): LoadRecipeResult {
         try {
             val recipesList = service.loadRecipeDetails(idMeal)
-            Log.d("TeamA", recipesList.toString())
+            Timber.tag("TeamA").d(recipesList.toString())
         } catch (e: Exception) {
         }
         return Failure(LoadRecipeError.NoRecipeFound)

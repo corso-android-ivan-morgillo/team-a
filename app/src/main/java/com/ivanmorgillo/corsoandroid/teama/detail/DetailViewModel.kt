@@ -8,7 +8,6 @@ import com.ivanmorgillo.corsoandroid.teama.home.RecipeUI
 import kotlinx.coroutines.launch
 
 class DetailViewModel(private val repository: RecipeDetailsRepository) : ViewModel() {
-    private val TAG = "TeamA"
 
     val states = MutableLiveData<DetailScreenStates>()
 
