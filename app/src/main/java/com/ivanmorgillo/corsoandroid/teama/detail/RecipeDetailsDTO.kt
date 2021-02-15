@@ -1,4 +1,4 @@
-package com.ivanmorgillo.corsoandroid.teama.network
+package com.ivanmorgillo.corsoandroid.teama.detail
 
 import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
@@ -6,12 +6,12 @@ import com.google.gson.annotations.SerializedName
 @Keep
 data class RecipeDetailsDTO(
     @SerializedName("meals")
-    val meals: List<Meal>
+    val details: List<Detail>
 ) {
     @Keep
-    data class Meal(
+    data class Detail(
         @SerializedName("dateModified")
-        val dateModified: Any,
+        val dateModified: String,
         @SerializedName("idMeal")
         val idMeal: String,
         @SerializedName("strArea")
@@ -19,7 +19,7 @@ data class RecipeDetailsDTO(
         @SerializedName("strCategory")
         val strCategory: String,
         @SerializedName("strDrinkAlternate")
-        val strDrinkAlternate: Any,
+        val strDrinkAlternate: String,
         @SerializedName("strIngredient1")
         val strIngredient1: String,
         @SerializedName("strIngredient10")
@@ -35,17 +35,17 @@ data class RecipeDetailsDTO(
         @SerializedName("strIngredient15")
         val strIngredient15: String,
         @SerializedName("strIngredient16")
-        val strIngredient16: Any,
+        val strIngredient16: String,
         @SerializedName("strIngredient17")
-        val strIngredient17: Any,
+        val strIngredient17: String,
         @SerializedName("strIngredient18")
-        val strIngredient18: Any,
+        val strIngredient18: String,
         @SerializedName("strIngredient19")
-        val strIngredient19: Any,
+        val strIngredient19: String,
         @SerializedName("strIngredient2")
         val strIngredient2: String,
         @SerializedName("strIngredient20")
-        val strIngredient20: Any,
+        val strIngredient20: String,
         @SerializedName("strIngredient3")
         val strIngredient3: String,
         @SerializedName("strIngredient4")
@@ -81,17 +81,17 @@ data class RecipeDetailsDTO(
         @SerializedName("strMeasure15")
         val strMeasure15: String,
         @SerializedName("strMeasure16")
-        val strMeasure16: Any,
+        val strMeasure16: String,
         @SerializedName("strMeasure17")
-        val strMeasure17: Any,
+        val strMeasure17: String,
         @SerializedName("strMeasure18")
-        val strMeasure18: Any,
+        val strMeasure18: String,
         @SerializedName("strMeasure19")
-        val strMeasure19: Any,
+        val strMeasure19: String,
         @SerializedName("strMeasure2")
         val strMeasure2: String,
         @SerializedName("strMeasure20")
-        val strMeasure20: Any,
+        val strMeasure20: String,
         @SerializedName("strMeasure3")
         val strMeasure3: String,
         @SerializedName("strMeasure4")
@@ -107,7 +107,7 @@ data class RecipeDetailsDTO(
         @SerializedName("strMeasure9")
         val strMeasure9: String,
         @SerializedName("strSource")
-        val strSource: Any,
+        val strSource: String,
         @SerializedName("strTags")
         val strTags: String,
         @SerializedName("strYoutube")
