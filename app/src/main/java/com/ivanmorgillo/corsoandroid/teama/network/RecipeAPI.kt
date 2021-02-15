@@ -39,10 +39,11 @@ class RecipeAPI {
         try {
             val recipesList = service.loadRecipeDetails(idMeal)
             Timber.tag("TeamA").d(recipesList.toString())
+            // il dettaglio della ricetta non ritorna al detail fragment.
         } catch (e: Exception) {
-            return Failure(LoadRecipeError.NoRecipeFound)
+            return Failure(NoRecipeFound)
         }
-        return Failure(LoadRecipeError.NoRecipeFound)
+        return Failure(NoRecipeFound)
     }
 
     @Suppress("TooGenericExceptionCaught")
