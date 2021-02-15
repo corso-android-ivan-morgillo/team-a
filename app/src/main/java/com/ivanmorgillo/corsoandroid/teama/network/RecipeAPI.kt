@@ -35,6 +35,17 @@ class RecipeAPI {
     }
 
     @Suppress("TooGenericExceptionCaught")
+    suspend fun loadRecipeDetails(idMeal: Long): LoadRecipeResult {
+        try {
+            val recipesList = service.loadRecipeDetails(idMeal)
+            Timber.tag("TeamA").d(recipesList.toString())
+        } catch (e: Exception) {
+            return Failure(LoadRecipeError.NoRecipeFound)
+        }
+        return Failure(LoadRecipeError.NoRecipeFound)
+    }
+
+    @Suppress("TooGenericExceptionCaught")
     suspend fun loadRecipes(): LoadRecipeResult {
         try {
             val recipesList = service.loadRecipes()
