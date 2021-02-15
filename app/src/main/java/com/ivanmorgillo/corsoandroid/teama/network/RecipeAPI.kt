@@ -66,7 +66,45 @@ class RecipeAPI {
         }
     }
 
+    private fun getIngredient(strIngredient: String, strMeasure: String): Ingredient? {
+        return if (!strIngredient.isNullOrEmpty()) {
+            if (strMeasure.isNullOrEmpty()) {
+                Ingredient(strIngredient, "qb") // ad esempio il sale
+            } else {
+                Ingredient(strIngredient, strMeasure)
+            }
+        } else {
+            null
+        }
+    }
+
     private fun getIngredients(detail: RecipeDetailsDTO.Detail): List<Ingredient> {
+        return listOfNotNull(
+            getIngredient(detail.strIngredient1, detail.strMeasure1),
+            getIngredient(detail.strIngredient2, detail.strMeasure2),
+            getIngredient(detail.strIngredient3, detail.strMeasure3),
+            getIngredient(detail.strIngredient4, detail.strMeasure4),
+            getIngredient(detail.strIngredient5, detail.strMeasure5),
+            getIngredient(detail.strIngredient6, detail.strMeasure6),
+            getIngredient(detail.strIngredient7, detail.strMeasure7),
+            getIngredient(detail.strIngredient8, detail.strMeasure8),
+            getIngredient(detail.strIngredient9, detail.strMeasure9),
+            getIngredient(detail.strIngredient10, detail.strMeasure10),
+            getIngredient(detail.strIngredient11, detail.strMeasure11),
+            getIngredient(detail.strIngredient12, detail.strMeasure12),
+            getIngredient(detail.strIngredient13, detail.strMeasure13),
+            getIngredient(detail.strIngredient14, detail.strMeasure14),
+            getIngredient(detail.strIngredient15, detail.strMeasure15),
+            getIngredient(detail.strIngredient16, detail.strMeasure16),
+            getIngredient(detail.strIngredient17, detail.strMeasure17),
+            getIngredient(detail.strIngredient18, detail.strMeasure18),
+            getIngredient(detail.strIngredient19, detail.strMeasure19),
+            getIngredient(detail.strIngredient20, detail.strMeasure20)
+        )
+    }
+
+    /*
+    private fun getIngredientsOLD(detail: RecipeDetailsDTO.Detail): List<Ingredient> {
         val ingredients: List<Ingredient> = listOf(
             if (!detail.strIngredient1.isNullOrEmpty()) {
                 if (detail.strMeasure1.isNullOrEmpty()) {
@@ -250,7 +288,7 @@ class RecipeAPI {
             }
         ).filterNotNull()
         return ingredients
-    }
+    }*/
 
     @Suppress("TooGenericExceptionCaught")
     suspend fun loadRecipes(): LoadRecipeResult {
