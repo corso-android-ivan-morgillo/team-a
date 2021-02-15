@@ -12,6 +12,7 @@ import com.ivanmorgillo.corsoandroid.teama.DetailScreenStates
 import com.ivanmorgillo.corsoandroid.teama.DetailViewModel
 import com.ivanmorgillo.corsoandroid.teama.R
 import com.ivanmorgillo.corsoandroid.teama.gone
+import kotlinx.android.synthetic.main.fragment_detail.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
@@ -21,6 +22,9 @@ class DetailFragment : Fragment() {
     private val viewModel: DetailViewModel by viewModel()
     private val args: DetailFragmentArgs by navArgs()
 
+    /** Qui ci va la lista da passare all'adapter
+    // private val ingredientsList: List<IngredientUI> = loadIngredients() */
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.fragment_detail, container, false)
         return rootView
@@ -29,6 +33,9 @@ class DetailFragment : Fragment() {
     // Equivalente alla onCreate di un activity
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // La nostra recycler view dovrà accettare in ingresso l'oggetto che conterrà i dettagli.
+        val adapter = ListIngredientAdapter()
+        recipedetails_list.adapter = adapter
         val recipeId = args.recipeId
         if (recipeId == 0L) {
             // Torna indietro nella schermata da cui provieni.
@@ -40,6 +47,7 @@ class DetailFragment : Fragment() {
                     is DetailScreenStates.Content -> {
                         // recipes_list_progressBar.gone() binding con View
                         Timber.d("RecipeId= $recipeId")
+                        //  adapter.setIngredients(state.recipes.ingredients)
                     }
                     DetailScreenStates.Error -> {
                         // non trova le ricette in fase di Loading ad esempio
