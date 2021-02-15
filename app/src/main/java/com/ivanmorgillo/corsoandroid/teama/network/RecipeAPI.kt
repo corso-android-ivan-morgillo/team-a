@@ -1,6 +1,7 @@
 package com.ivanmorgillo.corsoandroid.teama.network
 
 import com.ivanmorgillo.corsoandroid.teama.Recipe
+import com.ivanmorgillo.corsoandroid.teama.detail.Ingredient
 import com.ivanmorgillo.corsoandroid.teama.detail.RecipeDetails
 import com.ivanmorgillo.corsoandroid.teama.detail.RecipeDetailsDTO
 import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeError.InterruptedRequest
@@ -44,14 +45,12 @@ class RecipeAPI {
                 return LoadRecipeDetailsResult.Failure(NoRecipeFound)
             }
             val recipeDetail: RecipeDetailsDTO.Detail = recipesDetailsDTO.details[0]
-            val ingredients: MutableList<String> = getIngredientsList(recipeDetail)
-            val measures: MutableList<String> = getMeasuresList(recipeDetail)
+            val ingredients = getIngredients(recipeDetail)
             val recipeDetails: RecipeDetails = RecipeDetails(
                 name = recipeDetail.strMeal,
                 image = recipeDetail.strMealThumb,
                 idMeal = recipeDetail.idMeal,
                 ingredients = ingredients,
-                measures = measures,
                 instructions = recipeDetail.strInstructions
             )
             return LoadRecipeDetailsResult.Success(recipeDetails)
@@ -67,53 +66,189 @@ class RecipeAPI {
         }
     }
 
-    private fun getMeasuresList(it: RecipeDetailsDTO.Detail): MutableList<String> {
-        val measures: MutableList<String> = mutableListOf()
-        measures.add(it.strMeasure1)
-        measures.add(it.strMeasure2)
-        measures.add(it.strMeasure3)
-        measures.add(it.strMeasure4)
-        measures.add(it.strMeasure5)
-        measures.add(it.strMeasure6)
-        measures.add(it.strMeasure7)
-        measures.add(it.strMeasure8)
-        measures.add(it.strMeasure9)
-        measures.add(it.strMeasure10)
-        measures.add(it.strMeasure11)
-        measures.add(it.strMeasure12)
-        measures.add(it.strMeasure13)
-        measures.add(it.strMeasure14)
-        measures.add(it.strMeasure15)
-        measures.add(it.strMeasure16)
-        measures.add(it.strMeasure17)
-        measures.add(it.strMeasure18)
-        measures.add(it.strMeasure19)
-        measures.add(it.strMeasure20)
-        return measures
-    }
-
-    private fun getIngredientsList(it: RecipeDetailsDTO.Detail): MutableList<String> {
-        val ingredients: MutableList<String> = mutableListOf()
-        ingredients.add(it.strIngredient1)
-        ingredients.add(it.strIngredient2)
-        ingredients.add(it.strIngredient3)
-        ingredients.add(it.strIngredient4)
-        ingredients.add(it.strIngredient5)
-        ingredients.add(it.strIngredient6)
-        ingredients.add(it.strIngredient7)
-        ingredients.add(it.strIngredient8)
-        ingredients.add(it.strIngredient9)
-        ingredients.add(it.strIngredient10)
-        ingredients.add(it.strIngredient11)
-        ingredients.add(it.strIngredient12)
-        ingredients.add(it.strIngredient13)
-        ingredients.add(it.strIngredient14)
-        ingredients.add(it.strIngredient15)
-        ingredients.add(it.strIngredient16)
-        ingredients.add(it.strIngredient17)
-        ingredients.add(it.strIngredient18)
-        ingredients.add(it.strIngredient19)
-        ingredients.add(it.strIngredient20)
+    private fun getIngredients(detail: RecipeDetailsDTO.Detail): List<Ingredient> {
+        val ingredients: List<Ingredient> = listOf(
+            if (!detail.strIngredient1.isNullOrEmpty()) {
+                if (detail.strMeasure1.isNullOrEmpty()) {
+                    Ingredient(detail.strIngredient1, "qb") // ad esempio il sale
+                } else {
+                    Ingredient(detail.strIngredient1, detail.strMeasure1)
+                }
+            } else {
+                null
+            },
+            if (!detail.strIngredient2.isNullOrEmpty()) {
+                if (detail.strMeasure2.isNullOrEmpty()) {
+                    Ingredient(detail.strIngredient2, "qb") // ad esempio il sale
+                } else {
+                    Ingredient(detail.strIngredient2, detail.strMeasure2)
+                }
+            } else {
+                null
+            },
+            if (!detail.strIngredient3.isNullOrEmpty()) {
+                if (detail.strMeasure3.isNullOrEmpty()) {
+                    Ingredient(detail.strIngredient3, "qb") // ad esempio il sale
+                } else {
+                    Ingredient(detail.strIngredient3, detail.strMeasure3)
+                }
+            } else {
+                null
+            },
+            if (!detail.strIngredient4.isNullOrEmpty()) {
+                if (detail.strMeasure4.isNullOrEmpty()) {
+                    Ingredient(detail.strIngredient4, "qb") // ad esempio il sale
+                } else {
+                    Ingredient(detail.strIngredient4, detail.strMeasure4)
+                }
+            } else {
+                null
+            },
+            if (!detail.strIngredient5.isNullOrEmpty()) {
+                if (detail.strMeasure5.isNullOrEmpty()) {
+                    Ingredient(detail.strIngredient5, "qb") // ad esempio il sale
+                } else {
+                    Ingredient(detail.strIngredient5, detail.strMeasure5)
+                }
+            } else {
+                null
+            },
+            if (!detail.strIngredient6.isNullOrEmpty()) {
+                if (detail.strMeasure6.isNullOrEmpty()) {
+                    Ingredient(detail.strIngredient6, "qb") // ad esempio il sale
+                } else {
+                    Ingredient(detail.strIngredient6, detail.strMeasure6)
+                }
+            } else {
+                null
+            },
+            if (!detail.strIngredient7.isNullOrEmpty()) {
+                if (detail.strMeasure7.isNullOrEmpty()) {
+                    Ingredient(detail.strIngredient7, "qb") // ad esempio il sale
+                } else {
+                    Ingredient(detail.strIngredient7, detail.strMeasure7)
+                }
+            } else {
+                null
+            },
+            if (!detail.strIngredient8.isNullOrEmpty()) {
+                if (detail.strMeasure8.isNullOrEmpty()) {
+                    Ingredient(detail.strIngredient8, "qb") // ad esempio il sale
+                } else {
+                    Ingredient(detail.strIngredient8, detail.strMeasure8)
+                }
+            } else {
+                null
+            },
+            if (!detail.strIngredient9.isNullOrEmpty()) {
+                if (detail.strMeasure9.isNullOrEmpty()) {
+                    Ingredient(detail.strIngredient9, "qb") // ad esempio il sale
+                } else {
+                    Ingredient(detail.strIngredient9, detail.strMeasure9)
+                }
+            } else {
+                null
+            },
+            if (!detail.strIngredient10.isNullOrEmpty()) {
+                if (detail.strMeasure10.isNullOrEmpty()) {
+                    Ingredient(detail.strIngredient10, "qb") // ad esempio il sale
+                } else {
+                    Ingredient(detail.strIngredient10, detail.strMeasure10)
+                }
+            } else {
+                null
+            },
+            if (!detail.strIngredient11.isNullOrEmpty()) {
+                if (detail.strMeasure11.isNullOrEmpty()) {
+                    Ingredient(detail.strIngredient11, "qb") // ad esempio il sale
+                } else {
+                    Ingredient(detail.strIngredient11, detail.strMeasure11)
+                }
+            } else {
+                null
+            },
+            if (!detail.strIngredient12.isNullOrEmpty()) {
+                if (detail.strMeasure12.isNullOrEmpty()) {
+                    Ingredient(detail.strIngredient12, "qb") // ad esempio il sale
+                } else {
+                    Ingredient(detail.strIngredient12, detail.strMeasure12)
+                }
+            } else {
+                null
+            },
+            if (!detail.strIngredient13.isNullOrEmpty()) {
+                if (detail.strMeasure13.isNullOrEmpty()) {
+                    Ingredient(detail.strIngredient13, "qb") // ad esempio il sale
+                } else {
+                    Ingredient(detail.strIngredient13, detail.strMeasure13)
+                }
+            } else {
+                null
+            },
+            if (!detail.strIngredient14.isNullOrEmpty()) {
+                if (detail.strMeasure14.isNullOrEmpty()) {
+                    Ingredient(detail.strIngredient14, "qb") // ad esempio il sale
+                } else {
+                    Ingredient(detail.strIngredient14, detail.strMeasure14)
+                }
+            } else {
+                null
+            },
+            if (!detail.strIngredient15.isNullOrEmpty()) {
+                if (detail.strMeasure15.isNullOrEmpty()) {
+                    Ingredient(detail.strIngredient15, "qb") // ad esempio il sale
+                } else {
+                    Ingredient(detail.strIngredient15, detail.strMeasure15)
+                }
+            } else {
+                null
+            },
+            if (!detail.strIngredient16.isNullOrEmpty()) {
+                if (detail.strMeasure16.isNullOrEmpty()) {
+                    Ingredient(detail.strIngredient16, "qb") // ad esempio il sale
+                } else {
+                    Ingredient(detail.strIngredient16, detail.strMeasure16)
+                }
+            } else {
+                null
+            },
+            if (!detail.strIngredient17.isNullOrEmpty()) {
+                if (detail.strMeasure17.isNullOrEmpty()) {
+                    Ingredient(detail.strIngredient17, "qb") // ad esempio il sale
+                } else {
+                    Ingredient(detail.strIngredient17, detail.strMeasure17)
+                }
+            } else {
+                null
+            },
+            if (!detail.strIngredient18.isNullOrEmpty()) {
+                if (detail.strMeasure18.isNullOrEmpty()) {
+                    Ingredient(detail.strIngredient18, "qb") // ad esempio il sale
+                } else {
+                    Ingredient(detail.strIngredient18, detail.strMeasure18)
+                }
+            } else {
+                null
+            },
+            if (!detail.strIngredient19.isNullOrEmpty()) {
+                if (detail.strMeasure19.isNullOrEmpty()) {
+                    Ingredient(detail.strIngredient19, "qb") // ad esempio il sale
+                } else {
+                    Ingredient(detail.strIngredient19, detail.strMeasure19)
+                }
+            } else {
+                null
+            },
+            if (!detail.strIngredient20.isNullOrEmpty()) {
+                if (detail.strMeasure20.isNullOrEmpty()) {
+                    Ingredient(detail.strIngredient20, "qb") // ad esempio il sale
+                } else {
+                    Ingredient(detail.strIngredient20, detail.strMeasure20)
+                }
+            } else {
+                null
+            }
+        ).filterNotNull()
         return ingredients
     }
 
