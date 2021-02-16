@@ -3,6 +3,7 @@ package com.ivanmorgillo.corsoandroid.teama
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ivanmorgillo.corsoandroid.teama.detail.IngredientUI
 import com.ivanmorgillo.corsoandroid.teama.detail.RecipeDetails
 import com.ivanmorgillo.corsoandroid.teama.detail.RecipeDetailsRepository
 import com.ivanmorgillo.corsoandroid.teama.detail.RecipeDetailsUI
@@ -38,8 +39,7 @@ class DetailViewModel(private val repository: RecipeDetailsRepository) : ViewMod
             details.idMeal,
             details.name,
             details.image,
-            details.ingredients,
-            details.measures,
+            details.ingredients.map { IngredientUI(it.ingredientName, it.ingredientQuantity) },
             details.instructions
         )
         states.postValue(DetailScreenStates.Content(detailUI))

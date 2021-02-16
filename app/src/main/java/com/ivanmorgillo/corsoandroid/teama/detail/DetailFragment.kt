@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import coil.load
 import com.ivanmorgillo.corsoandroid.teama.DetailScreenEvent
 import com.ivanmorgillo.corsoandroid.teama.DetailScreenStates
 import com.ivanmorgillo.corsoandroid.teama.DetailViewModel
@@ -15,7 +16,6 @@ import com.ivanmorgillo.corsoandroid.teama.gone
 import kotlinx.android.synthetic.main.fragment_detail.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import timber.log.Timber
 
 class DetailFragment : Fragment() {
 
@@ -46,8 +46,10 @@ class DetailFragment : Fragment() {
                 when (state) {
                     is DetailScreenStates.Content -> {
                         // recipes_list_progressBar.gone() binding con View
-                        Timber.d("RecipeId= $recipeId")
-                        //  adapter.setIngredients(state.recipes.ingredients)
+                        // Timber.d("RecipeId= $recipeId")
+                        adapter.setIngredients(state.recipes.ingredients)
+                        recipe_image_details.load(state.recipes.image)
+                        details_Title.text = state.recipes.title
                     }
                     DetailScreenStates.Error -> {
                         // non trova le ricette in fase di Loading ad esempio

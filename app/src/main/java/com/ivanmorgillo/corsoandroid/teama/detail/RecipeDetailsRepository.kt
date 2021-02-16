@@ -17,7 +17,6 @@ data class RecipeDetails(
     val name: String,
     val image: String,
     val idMeal: String,
-    val ingredients: List<String>,
-    val measures: List<String>,
+    val ingredients: List<Ingredient>,
     val instructions: String
 )
