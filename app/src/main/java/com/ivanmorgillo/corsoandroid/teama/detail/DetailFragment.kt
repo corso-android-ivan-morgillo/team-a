@@ -1,13 +1,13 @@
 package com.ivanmorgillo.corsoandroid.teama.detail
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import coil.load
 import com.ivanmorgillo.corsoandroid.teama.DetailScreenEvent
 import com.ivanmorgillo.corsoandroid.teama.DetailScreenStates
 import com.ivanmorgillo.corsoandroid.teama.DetailViewModel
@@ -34,8 +34,8 @@ class DetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // La nostra recycler view dovrà accettare in ingresso l'oggetto che conterrà i dettagli.
-        val adapter = ListIngredientAdapter()
-        recipedetails_list.adapter = adapter
+        val adapter = DetailScreenAdapter()
+        detail_screen_recyclerview.adapter = adapter
         val recipeId = args.recipeId
         if (recipeId == 0L) {
             // Torna indietro nella schermata da cui provieni.
@@ -47,9 +47,12 @@ class DetailFragment : Fragment() {
                     is DetailScreenStates.Content -> {
                         // recipes_list_progressBar.gone() binding con View
                         // Timber.d("RecipeId= $recipeId")
-                        adapter.setIngredients(state.recipes.ingredients)
-                        recipe_image_details.load(state.recipes.image)
-                        details_Title.text = state.recipes.title
+                        adapter.items = listOf(
+                            DetailScreenItems.Title(state.recipes.title),
+                            DetailScreenItems.Image(state.recipes.image),
+                            DetailScreenItems.IngredientList(state.recipes.ingredients)
+                        )
+                        Log.d("SHOT", state.recipes.ingredients.toString())
                     }
                     DetailScreenStates.Error -> {
                         // non trova le ricette in fase di Loading ad esempio
