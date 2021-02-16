@@ -13,11 +13,6 @@ import com.ivanmorgillo.corsoandroid.teama.detail.DetailScreenViewHolder.Ingredi
 import com.ivanmorgillo.corsoandroid.teama.detail.DetailScreenViewHolder.MethodViewHolder
 import com.ivanmorgillo.corsoandroid.teama.detail.DetailScreenViewHolder.TitleViewHolder
 
-data class IngredientUI(
-    val ingredientName: String,
-    val ingredientQuantity: String
-)
-
 // gli oggetti dentro questa sealed li stiamo aggiungendo a seconda dell'ordine della nostra schermata
 // io seguo un pò anche il discorso di ivan perchè la nostra schermata è diversa
 sealed class DetailScreenItems {
@@ -125,40 +120,5 @@ sealed class DetailScreenViewHolder(itemView: View) : RecyclerView.ViewHolder(it
         fun bind(method: DetailScreenItems.Instruction) {
             methodDetail.text = method.instruction
         }
-    }
-}
-
-class ListIngredientAdapter : RecyclerView.Adapter<ListIngredientViewHolder>() {
-
-    private var ingredients = emptyList<IngredientUI>()
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListIngredientViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.ingredient_detail_item, parent, false)
-        return ListIngredientViewHolder(view)
-    }
-
-    override fun onBindViewHolder(holder: ListIngredientViewHolder, position: Int) {
-        holder.bind(ingredients[position])
-    }
-
-    override fun getItemCount(): Int {
-        return ingredients.size
-    }
-
-    fun setIngredients(items: List<IngredientUI>) {
-        ingredients = items
-        notifyDataSetChanged()
-    }
-}
-
-/** Qui è dove tocchiamo veramente l'xml della card, item view identifica la vera e propria view della card.
- *
- *
- * */
-class ListIngredientViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    private val ingredientDetails = itemView.findViewById<TextView>(R.id.ingredient_details)
-
-    fun bind(item: IngredientUI) {
-        ingredientDetails.text = item.ingredientName + "," + item.ingredientQuantity
     }
 }
