@@ -33,7 +33,6 @@ class ListIngredientAdapter : RecyclerView.Adapter<ListIngredientViewHolder>() {
 
 /** Qui è dove tocchiamo veramente l'xml della card, item view identifica la vera e propria view della card.
  *
- *
  * */
 class ListIngredientViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val ingredientDetails = itemView.findViewById<TextView>(R.id.ingredient_details)
