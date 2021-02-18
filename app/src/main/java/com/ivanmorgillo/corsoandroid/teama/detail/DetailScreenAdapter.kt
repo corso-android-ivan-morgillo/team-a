@@ -10,7 +10,7 @@ import coil.load
 import com.ivanmorgillo.corsoandroid.teama.R
 import com.ivanmorgillo.corsoandroid.teama.detail.DetailScreenViewHolder.ImageViewHolder
 import com.ivanmorgillo.corsoandroid.teama.detail.DetailScreenViewHolder.IngredientListViewHolder
-import com.ivanmorgillo.corsoandroid.teama.detail.DetailScreenViewHolder.MethodViewHolder
+import com.ivanmorgillo.corsoandroid.teama.detail.DetailScreenViewHolder.InstructionViewHolder
 import com.ivanmorgillo.corsoandroid.teama.detail.DetailScreenViewHolder.TitleViewHolder
 
 // gli oggetti dentro questa sealed li stiamo aggiungendo a seconda dell'ordine della nostra schermata
@@ -60,8 +60,8 @@ class DetailScreenAdapter : RecyclerView.Adapter<DetailScreenViewHolder>() {
                 IngredientListViewHolder(view)
             }
             INSTRUCTION_VIEWTYPE -> {
-                val view = layoutInflater.inflate(R.layout.detail_screen_method, parent, false)
-                MethodViewHolder(view)
+                val view = layoutInflater.inflate(R.layout.detail_screen_instruction, parent, false)
+                InstructionViewHolder(view)
             }
             TITLE_VIEWTYPE -> {
                 val view = layoutInflater.inflate(R.layout.detail_screen_title, parent, false)
@@ -75,7 +75,7 @@ class DetailScreenAdapter : RecyclerView.Adapter<DetailScreenViewHolder>() {
         when (holder) {
             is ImageViewHolder -> holder.bind(items[position] as DetailScreenItems.Image)
             is IngredientListViewHolder -> holder.bind(items[position] as DetailScreenItems.IngredientList)
-            is MethodViewHolder -> holder.bind(items[position] as DetailScreenItems.Instruction)
+            is InstructionViewHolder -> holder.bind(items[position] as DetailScreenItems.Instruction)
             is TitleViewHolder -> holder.bind(items[position] as DetailScreenItems.Title)
         }
     }
@@ -114,11 +114,11 @@ sealed class DetailScreenViewHolder(itemView: View) : RecyclerView.ViewHolder(it
         }
     }
 
-    class MethodViewHolder(itemView: View) : DetailScreenViewHolder(itemView) {
+    class InstructionViewHolder(itemView: View) : DetailScreenViewHolder(itemView) {
 
-        private val methodDetail = itemView.findViewById<TextView>(R.id.detail_screen_method)
+        private val instructionDetail = itemView.findViewById<TextView>(R.id.detail_screen_instruction)
         fun bind(method: DetailScreenItems.Instruction) {
-            methodDetail.text = method.instruction
+            instructionDetail.text = method.instruction
         }
     }
 }
