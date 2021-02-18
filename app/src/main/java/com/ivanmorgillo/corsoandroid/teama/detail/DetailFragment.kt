@@ -50,7 +50,7 @@ class DetailFragment : Fragment() {
                         adapter.items = listOf(
                             DetailScreenItems.Title(state.recipes.title),
                             DetailScreenItems.Image(state.recipes.image),
-                            DetailScreenItems.IngredientList(state.recipes.ingredients)
+                            DetailScreenItems.IngredientsList(state.recipes.ingredients)
                         )
                         Log.d("SHOT", state.recipes.ingredients.toString())
                     }
