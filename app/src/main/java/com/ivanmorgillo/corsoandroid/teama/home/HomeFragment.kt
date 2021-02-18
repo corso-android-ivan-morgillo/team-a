@@ -4,7 +4,6 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -78,12 +77,10 @@ class HomeFragment : Fragment() {
             })
         }
         viewModel.send(OnReady)
-        Timber.d("Wow")
     }
 
     override fun onResume() {
         super.onResume()
-        //Log.d("TeamA", viewModel.states.value.toString())
         if (viewModel.states.value == null) {
             viewModel.send(OnReady)
         }
@@ -91,10 +88,10 @@ class HomeFragment : Fragment() {
 
     private fun View.showServerErrorMessage() {
         recipes_list_progressBar.gone()
-        showAlertDialog("Server error",
-            "Something went wrong",
+        showAlertDialog(resources.getString(R.string.server_error_title),
+            resources.getString(R.string.server_error_message),
             R.drawable.ic_error,
-            "Try again",
+            resources.getString(R.string.retry),
             { viewModel.send(OnReady) },
             "",
             {}
@@ -103,26 +100,25 @@ class HomeFragment : Fragment() {
 
     private fun View.showInterruptedRequestMessage() {
         recipes_list_progressBar.gone()
-        showAlertDialog("Connection lost",
-            "Connection interrupted...",
+        showAlertDialog(resources.getString(R.string.connection_lost_error_title),
+            resources.getString(R.string.connection_lost_error_message),
             R.drawable.ic_wifi_off,
-            "Network settings",
+            resources.getString(R.string.network_settings),
             { startActivity(Intent(Settings.ACTION_WIRELESS_SETTINGS)) },
-            "Retry",
+            resources.getString(R.string.retry),
             { viewModel.send(OnReady) }
         )
     }
 
     private fun View.showNoInternetMessage() {
         recipes_list_progressBar.gone()
-        showAlertDialog("No internet connection",
-            "You are not connected to internet",
+        showAlertDialog(resources.getString(R.string.no_internet_error_title),
+            resources.getString(R.string.no_internet_error_message),
             R.drawable.ic_wifi_off,
-            "Network settings",
+            resources.getString(R.string.network_settings),
             { startActivity(Intent(Settings.ACTION_WIRELESS_SETTINGS)) },
-            "Retry",
+            resources.getString(R.string.retry),
             {
-                Log.d("INTERNET", "no internet - states ${viewModel.states.value}")
                 viewModel.send(OnReady)
             }
         )

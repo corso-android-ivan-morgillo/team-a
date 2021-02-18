@@ -32,10 +32,8 @@ private const val IGNREDIENTSINSTRUCTIONS_VIEWTYPE = 2
 private const val TITLE_VIEWTYPE = 3
 private const val TABLAYOUT_VIEWTYPE = 4
 
-class DetailScreenAdapter(
-    private val onIngredientsClick: () -> Unit,
-    private val onInstructionsClick: () -> Unit
-) : RecyclerView.Adapter<DetailScreenViewHolder>() {
+class DetailScreenAdapter(private val onIngredientsClick: () -> Unit, private val onInstructionsClick: () -> Unit) :
+    RecyclerView.Adapter<DetailScreenViewHolder>() {
     var items: List<DetailScreenItems> = emptyList()
         set(value) {
             field = value
@@ -83,7 +81,6 @@ class DetailScreenAdapter(
             is ImageViewHolder -> holder.bind(items[position] as DetailScreenItems.Image)
             is IngredientInstructionListViewHolder -> holder.bind(
                 items[position] as DetailScreenItems.IngredientsInstructionsList
-
             )
             is TitleViewHolder -> holder.bind(items[position] as DetailScreenItems.Title)
             is DetailScreenViewHolder.TabLayoutViewHolder -> holder.bind(onIngredientsClick, onInstructionsClick)
@@ -99,7 +96,6 @@ sealed class DetailScreenViewHolder(itemView: View) : RecyclerView.ViewHolder(it
     class TitleViewHolder(itemView: View) : DetailScreenViewHolder(itemView) {
         private val titleDetail = itemView.findViewById<TextView>(R.id.detail_screen_title)
         fun bind(title: DetailScreenItems.Title) {
-
             titleDetail.text = title.title
         }
     }
@@ -107,7 +103,6 @@ sealed class DetailScreenViewHolder(itemView: View) : RecyclerView.ViewHolder(it
     class ImageViewHolder(itemView: View) : DetailScreenViewHolder(itemView) {
         private val imageDetail = itemView.findViewById<ImageView>(R.id.detail_screen_image)
         fun bind(image: DetailScreenItems.Image) {
-
             imageDetail.load(image.image)
         }
     }
@@ -116,9 +111,7 @@ sealed class DetailScreenViewHolder(itemView: View) : RecyclerView.ViewHolder(it
 
         private val ingredientDetail = itemView.findViewById<RecyclerView>(R.id.detail_screen_ingredient_list)
         private val instructionDetail = itemView.findViewById<TextView>(R.id.detail_screen_instruction)
-        fun bind(
-            ingredientInstructions: DetailScreenItems.IngredientsInstructionsList
-        ) {
+        fun bind(ingredientInstructions: DetailScreenItems.IngredientsInstructionsList) {
             // questa striscia contiene una recyclerview quindi a questa lista serve:
             // - un adapter e una lista di elem da passare all'adapter.
             val adapter = ListIngredientAdapter()

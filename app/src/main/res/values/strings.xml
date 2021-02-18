@@ -1,6 +1,13 @@
 <resources>
     <string name="app_name">Delicious</string>
-    <string name="main_screen_error">Something went wrong!</string>
     <string name="ingredients">Ingredients</string>
     <string name="instructions">Instructions</string>
+    <string name="server_error_title">Server error</string>
+    <string name="connection_lost_error_title">Connection lost</string>
+    <string name="no_internet_error_title">No network</string>
+    <string name="server_error_message">Something went wrong!</string>
+    <string name="connection_lost_error_message">Connection interrupted</string>
+    <string name="no_internet_error_message">No connection available</string>
+    <string name="retry">Retry</string>
+    <string name="network_settings">Network settings</string>
 </resources>
