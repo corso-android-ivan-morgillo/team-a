@@ -1,18 +1,17 @@
 package com.ivanmorgillo.corsoandroid.teama.detail
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.ivanmorgillo.corsoandroid.teama.DetailScreenEvent
-import com.ivanmorgillo.corsoandroid.teama.DetailScreenStates
-import com.ivanmorgillo.corsoandroid.teama.DetailViewModel
 import com.ivanmorgillo.corsoandroid.teama.R
+import com.ivanmorgillo.corsoandroid.teama.exhaustive
 import com.ivanmorgillo.corsoandroid.teama.gone
+import com.ivanmorgillo.corsoandroid.teama.visible
+import kotlinx.android.synthetic.main.detail_ingredient_instruction.*
 import kotlinx.android.synthetic.main.fragment_detail.*
 import kotlinx.android.synthetic.main.fragment_home.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -34,7 +33,10 @@ class DetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         // La nostra recycler view dovrà accettare in ingresso l'oggetto che conterrà i dettagli.
-        val adapter = DetailScreenAdapter()
+        val adapter = DetailScreenAdapter(
+            { viewModel.send(DetailScreenEvent.OnIngredientsClick) },
+            { viewModel.send(DetailScreenEvent.OnInstructionsClick) }
+        )
         detail_screen_recyclerview.adapter = adapter
         val recipeId = args.recipeId
         if (recipeId == 0L) {
@@ -50,9 +52,13 @@ class DetailFragment : Fragment() {
                         adapter.items = listOf(
                             DetailScreenItems.Title(state.recipes.title),
                             DetailScreenItems.Image(state.recipes.image),
-                            DetailScreenItems.IngredientsList(state.recipes.ingredients)
+                            DetailScreenItems.TabLayout,
+                            DetailScreenItems.IngredientsInstructionsList(
+                                state.recipes.ingredients,
+                                state.recipes.instructions
+                            )
+
                         )
-                        Log.d("SHOT", state.recipes.ingredients.toString())
                     }
                     DetailScreenStates.Error -> {
                         // non trova le ricette in fase di Loading ad esempio
@@ -61,8 +67,23 @@ class DetailFragment : Fragment() {
                     DetailScreenStates.Loading -> {
                         // recipes_list_progressBar.visible()
                     }
-                }
+                }.exhaustive
             })
+            viewModel.actions.observe(viewLifecycleOwner, { action ->
+                when (action) {
+                    DetailScreenAction.ShowIngredients -> {
+
+                        detail_screen_ingredient_list.visible()
+                        detail_screen_instruction.gone()
+                    }
+                    DetailScreenAction.ShowInstructions -> {
+
+                        detail_screen_instruction.visible()
+                        detail_screen_ingredient_list.gone()
+                    }
+                }.exhaustive
+            }
+            )
             viewModel.send(DetailScreenEvent.OnReady(recipeId))
         }
     }

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<com.google.android.material.tabs.TabLayout android:layout_width="match_parent"
+    android:id="@+id/tab_layout_detail"
+    android:layout_height="wrap_content"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <com.google.android.material.tabs.TabItem
+        android:id="@+id/ingredient_button_detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/ingredients" />
+
+    <com.google.android.material.tabs.TabItem
+        android:id="@+id/instruction_button_detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/instructions" />
+
+
+</com.google.android.material.tabs.TabLayout>
