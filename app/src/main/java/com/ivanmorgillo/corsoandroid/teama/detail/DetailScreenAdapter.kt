@@ -7,11 +7,13 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.google.android.material.tabs.TabLayout
 import com.ivanmorgillo.corsoandroid.teama.R
 import com.ivanmorgillo.corsoandroid.teama.detail.DetailScreenViewHolder.ImageViewHolder
-import com.ivanmorgillo.corsoandroid.teama.detail.DetailScreenViewHolder.IngredientListViewHolder
-import com.ivanmorgillo.corsoandroid.teama.detail.DetailScreenViewHolder.InstructionViewHolder
+import com.ivanmorgillo.corsoandroid.teama.detail.DetailScreenViewHolder.IngredientInstructionListViewHolder
 import com.ivanmorgillo.corsoandroid.teama.detail.DetailScreenViewHolder.TitleViewHolder
+import com.ivanmorgillo.corsoandroid.teama.exhaustive
+import timber.log.Timber
 
 // gli oggetti dentro questa sealed li stiamo aggiungendo a seconda dell'ordine della nostra schermata
 // io seguo un pò anche il discorso di ivan perchè la nostra schermata è diversa
@@ -19,16 +21,21 @@ sealed class DetailScreenItems {
 
     data class Title(val title: String) : DetailScreenItems()
     data class Image(val image: String) : DetailScreenItems()
-    data class IngredientsList(val ingredients: List<IngredientUI>) : DetailScreenItems()
-    data class Instruction(val instruction: String) : DetailScreenItems()
+    data class IngredientsInstructionsList(val ingredients: List<IngredientUI>, val instruction: String) :
+        DetailScreenItems()
+
+    object TabLayout : DetailScreenItems()
 }
 
 private const val IMAGEVAL_VIEWTYPE = 1
-private const val INGREDIENTLIST_VIEWTYPE = 2
-private const val INSTRUCTION_VIEWTYPE = 3
-private const val TITLE_VIEWTYPE = 4
+private const val IGNREDIENTSINSTRUCTIONS_VIEWTYPE = 2
+private const val TITLE_VIEWTYPE = 3
+private const val TABLAYOUT_VIEWTYPE = 4
 
-class DetailScreenAdapter : RecyclerView.Adapter<DetailScreenViewHolder>() {
+class DetailScreenAdapter(
+    private val onIngredientsClick: () -> Unit,
+    private val onInstructionsClick: () -> Unit
+) : RecyclerView.Adapter<DetailScreenViewHolder>() {
     var items: List<DetailScreenItems> = emptyList()
         set(value) {
             field = value
@@ -42,10 +49,10 @@ class DetailScreenAdapter : RecyclerView.Adapter<DetailScreenViewHolder>() {
         val item = items[position]
         return when (item) {
             is DetailScreenItems.Image -> IMAGEVAL_VIEWTYPE
-            is DetailScreenItems.IngredientsList -> INGREDIENTLIST_VIEWTYPE
-            is DetailScreenItems.Instruction -> INSTRUCTION_VIEWTYPE
+            is DetailScreenItems.IngredientsInstructionsList -> IGNREDIENTSINSTRUCTIONS_VIEWTYPE
             is DetailScreenItems.Title -> TITLE_VIEWTYPE
-        }
+            is DetailScreenItems.TabLayout -> TABLAYOUT_VIEWTYPE
+        }.exhaustive
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DetailScreenViewHolder {
@@ -55,17 +62,17 @@ class DetailScreenAdapter : RecyclerView.Adapter<DetailScreenViewHolder>() {
                 val view = layoutInflater.inflate(R.layout.detail_screen_image, parent, false)
                 ImageViewHolder(view)
             }
-            INGREDIENTLIST_VIEWTYPE -> {
-                val view = layoutInflater.inflate(R.layout.detail_screen_ingredient, parent, false)
-                IngredientListViewHolder(view)
-            }
-            INSTRUCTION_VIEWTYPE -> {
-                val view = layoutInflater.inflate(R.layout.detail_screen_instruction, parent, false)
-                InstructionViewHolder(view)
+            IGNREDIENTSINSTRUCTIONS_VIEWTYPE -> {
+                val view = layoutInflater.inflate(R.layout.detail_ingredient_instruction, parent, false)
+                IngredientInstructionListViewHolder(view)
             }
             TITLE_VIEWTYPE -> {
                 val view = layoutInflater.inflate(R.layout.detail_screen_title, parent, false)
                 TitleViewHolder(view)
+            }
+            TABLAYOUT_VIEWTYPE -> {
+                val view = layoutInflater.inflate(R.layout.tab_button_details, parent, false)
+                DetailScreenViewHolder.TabLayoutViewHolder(view)
             }
             else -> error("ViewTypeNotValid!")
         }
@@ -74,9 +81,12 @@ class DetailScreenAdapter : RecyclerView.Adapter<DetailScreenViewHolder>() {
     override fun onBindViewHolder(holder: DetailScreenViewHolder, position: Int) {
         when (holder) {
             is ImageViewHolder -> holder.bind(items[position] as DetailScreenItems.Image)
-            is IngredientListViewHolder -> holder.bind(items[position] as DetailScreenItems.IngredientsList)
-            is InstructionViewHolder -> holder.bind(items[position] as DetailScreenItems.Instruction)
+            is IngredientInstructionListViewHolder -> holder.bind(
+                items[position] as DetailScreenItems.IngredientsInstructionsList
+
+            )
             is TitleViewHolder -> holder.bind(items[position] as DetailScreenItems.Title)
+            is DetailScreenViewHolder.TabLayoutViewHolder -> holder.bind(onIngredientsClick, onInstructionsClick)
         }
     }
 
@@ -102,23 +112,43 @@ sealed class DetailScreenViewHolder(itemView: View) : RecyclerView.ViewHolder(it
         }
     }
 
-    class IngredientListViewHolder(itemView: View) : DetailScreenViewHolder(itemView) {
+    class IngredientInstructionListViewHolder(itemView: View) : DetailScreenViewHolder(itemView) {
 
         private val ingredientDetail = itemView.findViewById<RecyclerView>(R.id.detail_screen_ingredient_list)
-        fun bind(ingredient: DetailScreenItems.IngredientsList) {
+        private val instructionDetail = itemView.findViewById<TextView>(R.id.detail_screen_instruction)
+        fun bind(
+            ingredientInstructions: DetailScreenItems.IngredientsInstructionsList
+        ) {
             // questa striscia contiene una recyclerview quindi a questa lista serve:
             // - un adapter e una lista di elem da passare all'adapter.
             val adapter = ListIngredientAdapter()
             ingredientDetail.adapter = adapter
-            adapter.setIngredients(ingredient.ingredients)
+            adapter.setIngredients(ingredientInstructions.ingredients)
+
+            instructionDetail.text = ingredientInstructions.instruction
         }
     }
 
-    class InstructionViewHolder(itemView: View) : DetailScreenViewHolder(itemView) {
+    class TabLayoutViewHolder(itemView: View) : DetailScreenViewHolder(itemView) {
 
-        private val instructionDetail = itemView.findViewById<TextView>(R.id.detail_screen_instruction)
-        fun bind(method: DetailScreenItems.Instruction) {
-            instructionDetail.text = method.instruction
+        private val tabLayout = itemView.findViewById<TabLayout>(R.id.tab_layout_detail)
+
+        fun bind(onIngredientsClick: () -> Unit, onInstructionsClick: () -> Unit) {
+            tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+                override fun onTabSelected(tab: TabLayout.Tab) {
+                    Timber.d("OnTabSelected: ${tab.position}")
+
+                    if (tab.position == 0) {
+                        onIngredientsClick()
+                    } else {
+                        onInstructionsClick()
+                    }
+                }
+
+                override fun onTabUnselected(tab: TabLayout.Tab?) = Unit
+
+                override fun onTabReselected(tab: TabLayout.Tab?) = Unit
+            })
         }
     }
 }

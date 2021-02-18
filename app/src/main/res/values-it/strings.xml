@@ -2,4 +2,6 @@
 <resources>
     <string name="app_name">Delicious</string>
     <string name="main_screen_error">Qualcosa e` andato storto!</string>
+    <string name="ingredients">Ingredients</string>
+    <string name="instructions">Instructions</string>
 </resources>
