@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Delicious</string>
-    <string name="main_screen_error">Qualcosa e` andato storto!</string>
-    <string name="ingredients">Ingredients</string>
-    <string name="instructions">Instructions</string>
+    <string name="ingredients">Ingredienti</string>
+    <string name="instructions">Istruzioni</string>
+    <string name="server_error_title">Errore del server</string>
+    <string name="connection_lost_error_title">Connessione persa</string>
+    <string name="no_internet_error_title">Nessuna connessione</string>
+    <string name="server_error_message">Qualcosa è andato storto!</string>
+    <string name="connection_lost_error_message">La connessione è stata interrotta</string>
+    <string name="no_internet_error_message">Nessuna connessione disponibile</string>
+    <string name="retry">Riprova</string>
+    <string name="network_settings">Impostazioni di rete</string>
 </resources>

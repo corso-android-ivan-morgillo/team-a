@@ -46,12 +46,10 @@ class DetailViewModel(private val repository: RecipeDetailsRepository) : ViewMod
     }
 
     private fun onIngredientsClick() {
-
         actions.postValue(DetailScreenAction.ShowIngredients)
     }
 
     private fun onInstructionsClick() {
-
         actions.postValue(DetailScreenAction.ShowInstructions)
     }
 }
@@ -66,7 +64,6 @@ sealed class DetailScreenStates {
 }
 
 sealed class DetailScreenAction {
-
     object ShowIngredients : DetailScreenAction()
     object ShowInstructions : DetailScreenAction()
 }

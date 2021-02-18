@@ -13,7 +13,6 @@ import com.ivanmorgillo.corsoandroid.teama.gone
 import com.ivanmorgillo.corsoandroid.teama.visible
 import kotlinx.android.synthetic.main.detail_ingredient_instruction.*
 import kotlinx.android.synthetic.main.fragment_detail.*
-import kotlinx.android.synthetic.main.fragment_home.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class DetailFragment : Fragment() {
@@ -47,7 +46,7 @@ class DetailFragment : Fragment() {
                 // riceve l'aggiornamento del nuovo valore
                 when (state) {
                     is DetailScreenStates.Content -> {
-                        // recipes_list_progressBar.gone() binding con View
+                        details_list_progressBar.gone()
                         // Timber.d("RecipeId= $recipeId")
                         adapter.items = listOf(
                             DetailScreenItems.Title(state.recipes.title),
@@ -57,27 +56,24 @@ class DetailFragment : Fragment() {
                                 state.recipes.ingredients,
                                 state.recipes.instructions
                             )
-
                         )
                     }
                     DetailScreenStates.Error -> {
                         // non trova le ricette in fase di Loading ad esempio
-                        recipes_list_progressBar.gone()
+                        details_list_progressBar.gone()
                     }
                     DetailScreenStates.Loading -> {
-                        // recipes_list_progressBar.visible()
+                        details_list_progressBar.visible()
                     }
                 }.exhaustive
             })
             viewModel.actions.observe(viewLifecycleOwner, { action ->
                 when (action) {
                     DetailScreenAction.ShowIngredients -> {
-
                         detail_screen_ingredient_list.visible()
                         detail_screen_instruction.gone()
                     }
                     DetailScreenAction.ShowInstructions -> {
-
                         detail_screen_instruction.visible()
                         detail_screen_ingredient_list.gone()
                     }

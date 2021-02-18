@@ -29,8 +29,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/recipe_image"
             app:layout_constraintStart_toStartOf="parent"
-            android:text="Lorem Ipsum....."
-            style="@style/TextAppearance.MaterialComponents.Caption"/>
+            style="@style/TextAppearance.MaterialComponents.Caption" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
