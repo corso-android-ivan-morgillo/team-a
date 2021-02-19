@@ -1,8 +1,9 @@
 package com.ivanmorgillo.corsoandroid.teama.detail
 
-import android.graphics.Color
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,8 +14,8 @@ import com.google.android.material.transition.MaterialContainerTransform
 import com.ivanmorgillo.corsoandroid.teama.R
 import com.ivanmorgillo.corsoandroid.teama.exhaustive
 import com.ivanmorgillo.corsoandroid.teama.gone
-import com.ivanmorgillo.corsoandroid.teama.themeColor
 import com.ivanmorgillo.corsoandroid.teama.showAlertDialog
+import com.ivanmorgillo.corsoandroid.teama.themeColor
 import com.ivanmorgillo.corsoandroid.teama.visible
 import kotlinx.android.synthetic.main.detail_ingredient_instruction.*
 import kotlinx.android.synthetic.main.fragment_detail.*
@@ -36,8 +37,7 @@ class DetailFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val rootView = inflater.inflate(R.layout.fragment_detail, container, false)
-        return rootView
+        return inflater.inflate(R.layout.fragment_detail, container, false)
     }
 
     // Equivalente alla onCreate di un activity
@@ -133,9 +133,7 @@ class DetailFragment : Fragment() {
             resources.getString(R.string.network_settings),
             { startActivity(Intent(Settings.ACTION_WIRELESS_SETTINGS)) },
             resources.getString(R.string.retry),
-            {
-                viewModel.send(DetailScreenEvent.OnReady(recipeId))
-            }
+            { viewModel.send(DetailScreenEvent.OnReady(recipeId)) }
         )
     }
 
