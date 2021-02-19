@@ -7,6 +7,7 @@ import com.ivanmorgillo.corsoandroid.teama.SingleLiveEvent
 import com.ivanmorgillo.corsoandroid.teama.exhaustive
 import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeDetailsResult
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class DetailViewModel(private val repository: RecipeDetailsRepository) : ViewModel() {
 
@@ -27,7 +28,7 @@ class DetailViewModel(private val repository: RecipeDetailsRepository) : ViewMod
         viewModelScope.launch {
             val result = repository.loadRecipeDetails(idMeal)
             when (result) {
-                is LoadRecipeDetailsResult.Failure -> TODO()
+                is LoadRecipeDetailsResult.Failure -> Timber.d("result, $result")
                 is LoadRecipeDetailsResult.Success -> onSuccess(result)
             }.exhaustive
         }
