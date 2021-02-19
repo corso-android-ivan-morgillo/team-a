@@ -6,6 +6,10 @@
     <string name="server_error_title">Errore del server</string>
     <string name="connection_lost_error_title">Connessione persa</string>
     <string name="no_internet_error_title">Nessuna connessione</string>
+    <string name="no_recipe_found_error_title">Nessuna ricetta trovata</string>
+    <string name="no_recipe_found_error_message">Ci dispiace, ma nessuna ricetta è stata trovata</string>
+    <string name="no_recipe_detail_found_error_title">Ricetta non trovata</string>
+    <string name="no_recipe_detail_found_error_message">Impossibile caricare la ricetta selezionata</string>
     <string name="server_error_message">Qualcosa è andato storto!</string>
     <string name="connection_lost_error_message">La connessione è stata interrotta</string>
     <string name="no_internet_error_message">Nessuna connessione disponibile</string>

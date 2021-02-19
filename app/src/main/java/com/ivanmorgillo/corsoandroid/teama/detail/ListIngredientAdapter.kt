@@ -9,7 +9,7 @@ import com.ivanmorgillo.corsoandroid.teama.R
 
 data class IngredientUI(
     val ingredientName: String,
-    val ingredientQuantity: String
+    val ingredientQuantity: String,
 )
 
 class ListIngredientAdapter : RecyclerView.Adapter<ListIngredientViewHolder>() {
@@ -38,6 +38,6 @@ class ListIngredientViewHolder(itemView: View) : RecyclerView.ViewHolder(itemVie
     private val ingredientDetails = itemView.findViewById<CheckBox>(R.id.ingredient_details)
 
     fun bind(item: IngredientUI) {
-        ingredientDetails.text = item.ingredientName + "," + item.ingredientQuantity
+        ingredientDetails.text = item.ingredientName + ": " + item.ingredientQuantity
     }
 }

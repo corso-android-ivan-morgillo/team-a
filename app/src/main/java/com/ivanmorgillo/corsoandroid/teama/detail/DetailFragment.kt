@@ -1,6 +1,8 @@
 package com.ivanmorgillo.corsoandroid.teama.detail
 
+import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,6 +12,7 @@ import androidx.navigation.fragment.navArgs
 import com.ivanmorgillo.corsoandroid.teama.R
 import com.ivanmorgillo.corsoandroid.teama.exhaustive
 import com.ivanmorgillo.corsoandroid.teama.gone
+import com.ivanmorgillo.corsoandroid.teama.showAlertDialog
 import com.ivanmorgillo.corsoandroid.teama.visible
 import kotlinx.android.synthetic.main.detail_ingredient_instruction.*
 import kotlinx.android.synthetic.main.fragment_detail.*
@@ -77,10 +80,65 @@ class DetailFragment : Fragment() {
                         detail_screen_instruction.visible()
                         detail_screen_ingredient_list.gone()
                     }
+                    DetailScreenAction.ShowNoInternetMessage -> showNoInternetMessage(view, recipeId)
+                    DetailScreenAction.ShowInterruptedRequestMessage -> showInterruptedRequestMessage(view, recipeId)
+                    DetailScreenAction.ShowSlowInternetMessage -> showNoInternetMessage(view, recipeId)
+                    DetailScreenAction.ShowServerErrorMessage -> showServerErrorMessage(view, recipeId)
+                    DetailScreenAction.ShowNoRecipeDetailFoundMessage -> showNoRecipeDetailFoundMessage(view, recipeId)
                 }.exhaustive
             }
             )
             viewModel.send(DetailScreenEvent.OnReady(recipeId))
         }
+    }
+
+    private fun showServerErrorMessage(view: View, recipeId: Long) {
+        details_list_progressBar.gone()
+        view.showAlertDialog(resources.getString(R.string.server_error_title),
+            resources.getString(R.string.server_error_message),
+            R.drawable.ic_error,
+            resources.getString(R.string.retry),
+            { viewModel.send(DetailScreenEvent.OnReady(recipeId)) },
+            "",
+            {}
+        )
+    }
+
+    private fun showInterruptedRequestMessage(view: View, recipeId: Long) {
+        details_list_progressBar.gone()
+        view.showAlertDialog(resources.getString(R.string.connection_lost_error_title),
+            resources.getString(R.string.connection_lost_error_message),
+            R.drawable.ic_wifi_off,
+            resources.getString(R.string.network_settings),
+            { startActivity(Intent(Settings.ACTION_WIRELESS_SETTINGS)) },
+            resources.getString(R.string.retry),
+            { viewModel.send(DetailScreenEvent.OnReady(recipeId)) }
+        )
+    }
+
+    private fun showNoInternetMessage(view: View, recipeId: Long) {
+        details_list_progressBar.gone()
+        view.showAlertDialog(resources.getString(R.string.no_internet_error_title),
+            resources.getString(R.string.no_internet_error_message),
+            R.drawable.ic_wifi_off,
+            resources.getString(R.string.network_settings),
+            { startActivity(Intent(Settings.ACTION_WIRELESS_SETTINGS)) },
+            resources.getString(R.string.retry),
+            {
+                viewModel.send(DetailScreenEvent.OnReady(recipeId))
+            }
+        )
+    }
+
+    private fun showNoRecipeDetailFoundMessage(view: View, recipeId: Long) {
+        details_list_progressBar.gone()
+        view.showAlertDialog(resources.getString(R.string.no_recipe_detail_found_error_title),
+            resources.getString(R.string.no_recipe_detail_found_error_message),
+            R.drawable.ic_sad_face,
+            resources.getString(R.string.retry),
+            { viewModel.send(DetailScreenEvent.OnReady(recipeId)) },
+            "",
+            {}
+        )
     }
 }
