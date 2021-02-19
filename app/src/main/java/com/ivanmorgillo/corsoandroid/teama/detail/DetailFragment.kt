@@ -61,8 +61,8 @@ class DetailFragment : Fragment() {
                         details_list_progressBar.gone()
                         // Timber.d("RecipeId= $recipeId")
                         adapter.items = listOf(
-                            DetailScreenItems.Title(state.recipes.title),
                             DetailScreenItems.Image(state.recipes.image),
+                            DetailScreenItems.Title(state.recipes.title),
                             DetailScreenItems.TabLayout,
                             DetailScreenItems.IngredientsInstructionsList(
                                 state.recipes.ingredients,
