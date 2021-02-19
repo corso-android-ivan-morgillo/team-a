@@ -13,6 +13,8 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.transition.MaterialElevationScale
+import androidx.navigation.Navigation.findNavController
+import com.ivanmorgillo.corsoandroid.teama.MainScreenAction
 import com.ivanmorgillo.corsoandroid.teama.MainScreenAction.NavigateToDetail
 import com.ivanmorgillo.corsoandroid.teama.MainScreenAction.ShowInterruptedRequestMessage
 import com.ivanmorgillo.corsoandroid.teama.MainScreenAction.ShowNoInternetMessage
@@ -26,6 +28,7 @@ import com.ivanmorgillo.corsoandroid.teama.R
 import com.ivanmorgillo.corsoandroid.teama.RecipesAdapter
 import com.ivanmorgillo.corsoandroid.teama.exhaustive
 import com.ivanmorgillo.corsoandroid.teama.gone
+import com.ivanmorgillo.corsoandroid.teama.showAlertDialog
 import com.ivanmorgillo.corsoandroid.teama.visible
 import kotlinx.android.synthetic.main.fragment_home.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -75,24 +78,23 @@ class HomeFragment : Fragment() {
             }
         })
         // Questo blocco serve a specificare che per le istruzioni interne il this è "view"
-        with(view) {
-            viewModel.actions.observe(viewLifecycleOwner, { action ->
-                when (action) {
-                    is NavigateToDetail -> {
+        viewModel.actions.observe(viewLifecycleOwner, { action ->
+            when (action) {
+                is NavigateToDetail -> {
                         lastClickedItem?.run {
                             val extras = FragmentNavigatorExtras(this to "recipe_transition_item")
                             val directions = HomeFragmentDirections.actionHomeFragmentToDetailFragment(action.recipe.id)
                             Timber.d("Invio al details RecipeId= ${action.recipe.id}")
                             findNavController().navigate(directions, extras)
                         }
-                    }
-                    ShowNoInternetMessage -> showNoInternetMessage()
-                    ShowInterruptedRequestMessage -> showInterruptedRequestMessage()
-                    ShowSlowInternetMessage -> showNoInternetMessage()
-                    ShowServerErrorMessage -> showServerErrorMessage()
-                }.exhaustive
-            })
-        }
+                }
+                ShowNoInternetMessage -> showNoInternetMessage(view)
+                ShowInterruptedRequestMessage -> showInterruptedRequestMessage(view)
+                ShowSlowInternetMessage -> showNoInternetMessage(view)
+                ShowServerErrorMessage -> showServerErrorMessage(view)
+                MainScreenAction.ShowNoRecipeFoundMessage -> showNoRecipeFoundMessage(view)
+            }.exhaustive
+        })
         viewModel.send(OnReady)
     }
 
@@ -103,9 +105,9 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun View.showServerErrorMessage() {
+    private fun showServerErrorMessage(view: View) {
         recipes_list_progressBar.gone()
-        showAlertDialog(resources.getString(R.string.server_error_title),
+        view.showAlertDialog(resources.getString(R.string.server_error_title),
             resources.getString(R.string.server_error_message),
             R.drawable.ic_error,
             resources.getString(R.string.retry),
@@ -115,9 +117,9 @@ class HomeFragment : Fragment() {
         )
     }
 
-    private fun View.showInterruptedRequestMessage() {
+    private fun showInterruptedRequestMessage(view: View) {
         recipes_list_progressBar.gone()
-        showAlertDialog(resources.getString(R.string.connection_lost_error_title),
+        view.showAlertDialog(resources.getString(R.string.connection_lost_error_title),
             resources.getString(R.string.connection_lost_error_message),
             R.drawable.ic_wifi_off,
             resources.getString(R.string.network_settings),
@@ -127,9 +129,9 @@ class HomeFragment : Fragment() {
         )
     }
 
-    private fun View.showNoInternetMessage() {
+    private fun showNoInternetMessage(view: View) {
         recipes_list_progressBar.gone()
-        showAlertDialog(resources.getString(R.string.no_internet_error_title),
+        view.showAlertDialog(resources.getString(R.string.no_internet_error_title),
             resources.getString(R.string.no_internet_error_message),
             R.drawable.ic_wifi_off,
             resources.getString(R.string.network_settings),
@@ -141,27 +143,15 @@ class HomeFragment : Fragment() {
         )
     }
 
-    private fun View.showAlertDialog(
-        title: String,
-        message: String,
-        icon: Int,
-        positiveButtonText: String,
-        onPositiveButtonClick: () -> Unit,
-        neutralButtonText: String,
-        onNeutralButtonClick: () -> Unit
-    ) {
+    private fun showNoRecipeFoundMessage(view: View) {
         recipes_list_progressBar.gone()
-        MaterialAlertDialogBuilder(this.context)
-            .setTitle(title)
-            .setMessage(message)
-            .setIcon(icon)
-            .setPositiveButton(positiveButtonText) { dialog, which ->
-                onPositiveButtonClick()
-            }
-            .setNeutralButton(neutralButtonText) { dialogInterface: DialogInterface, i: Int ->
-                onNeutralButtonClick()
-            }
-            .setCancelable(false)
-            .show()
+        view.showAlertDialog(resources.getString(R.string.no_recipe_found_error_title),
+            resources.getString(R.string.no_recipe_found_error_message),
+            R.drawable.ic_sad_face,
+            resources.getString(R.string.retry),
+            { viewModel.send(OnReady) },
+            "",
+            {}
+        )
     }
 }

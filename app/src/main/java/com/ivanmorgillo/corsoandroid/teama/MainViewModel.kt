@@ -16,7 +16,7 @@ import kotlinx.coroutines.launch
 
 class MainViewModel(
     private val repository: RecipesRepository,
-    private val tracking: Tracking
+    private val tracking: Tracking,
 ) : ViewModel() {
     val states = MutableLiveData<MainScreenStates>() // potremmo passarci direttamente loading
     val actions = SingleLiveEvent<MainScreenAction>()
@@ -54,7 +54,7 @@ class MainViewModel(
         states.postValue(Error)
         when (result.error) {
             LoadRecipeError.NoInternet -> actions.postValue(ShowNoInternetMessage)
-            LoadRecipeError.NoRecipeFound -> TODO()
+            LoadRecipeError.NoRecipeFound -> actions.postValue(MainScreenAction.ShowNoRecipeFoundMessage)
             LoadRecipeError.ServerError -> actions.postValue(MainScreenAction.ShowServerErrorMessage)
             LoadRecipeError.SlowInternet -> actions.postValue(MainScreenAction.ShowSlowInternetMessage)
             LoadRecipeError.InterruptedRequest -> actions.postValue(MainScreenAction.ShowInterruptedRequestMessage)
@@ -79,6 +79,7 @@ sealed class MainScreenAction {
     object ShowSlowInternetMessage : MainScreenAction()
     object ShowServerErrorMessage : MainScreenAction()
     object ShowInterruptedRequestMessage : MainScreenAction()
+    object ShowNoRecipeFoundMessage : MainScreenAction()
 }
 
 sealed class MainScreenStates {

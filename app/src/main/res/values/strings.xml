@@ -5,6 +5,10 @@
     <string name="server_error_title">Server error</string>
     <string name="connection_lost_error_title">Connection lost</string>
     <string name="no_internet_error_title">No network</string>
+    <string name="no_recipe_found_error_title">No recipes found</string>
+    <string name="no_recipe_found_error_message">Sorry, no recipes found</string>
+    <string name="no_recipe_detail_found_error_title">No recipe found</string>
+    <string name="no_recipe_detail_found_error_message">Sorry, unable to load recipe</string>
     <string name="server_error_message">Something went wrong!</string>
     <string name="connection_lost_error_message">Connection interrupted</string>
     <string name="no_internet_error_message">No connection available</string>
