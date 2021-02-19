@@ -68,9 +68,9 @@ class RecipeAPI {
         }
     }
 
-    private fun getIngredient(strIngredient: String, strMeasure: String): Ingredient? {
-        return if (strIngredient.isNotEmpty()) {
-            if (strMeasure.isEmpty()) {
+    private fun getIngredient(strIngredient: String?, strMeasure: String?): Ingredient? {
+        return if (!strIngredient.isNullOrBlank()) {
+            if (strMeasure.isNullOrBlank()) {
                 Ingredient(strIngredient, "qb") // ad esempio il sale
             } else {
                 Ingredient(strIngredient, strMeasure)
