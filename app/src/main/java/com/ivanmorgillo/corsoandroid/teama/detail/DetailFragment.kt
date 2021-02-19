@@ -1,6 +1,7 @@
 package com.ivanmorgillo.corsoandroid.teama.detail
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.provider.Settings
 import android.view.LayoutInflater
@@ -9,10 +10,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import com.google.android.material.transition.MaterialContainerTransform
 import com.ivanmorgillo.corsoandroid.teama.R
 import com.ivanmorgillo.corsoandroid.teama.exhaustive
 import com.ivanmorgillo.corsoandroid.teama.gone
 import com.ivanmorgillo.corsoandroid.teama.showAlertDialog
+import com.ivanmorgillo.corsoandroid.teama.themeColor
 import com.ivanmorgillo.corsoandroid.teama.visible
 import kotlinx.android.synthetic.main.detail_ingredient_instruction.*
 import kotlinx.android.synthetic.main.fragment_detail.*
@@ -23,12 +26,18 @@ class DetailFragment : Fragment() {
     private val viewModel: DetailViewModel by viewModel()
     private val args: DetailFragmentArgs by navArgs()
 
-    /** Qui ci va la lista da passare all'adapter
-    // private val ingredientsList: List<IngredientUI> = loadIngredients() */
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        sharedElementEnterTransition = MaterialContainerTransform().apply {
+            drawingViewId = R.id.nav_host_fragment
+            duration = resources.getInteger(R.integer.motion_duration_large).toLong()
+            scrimColor = Color.TRANSPARENT
+            setAllContainerColors(requireContext().themeColor(R.attr.colorSurface))
+        }
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val rootView = inflater.inflate(R.layout.fragment_detail, container, false)
-        return rootView
+        return inflater.inflate(R.layout.fragment_detail, container, false)
     }
 
     // Equivalente alla onCreate di un activity
@@ -124,9 +133,7 @@ class DetailFragment : Fragment() {
             resources.getString(R.string.network_settings),
             { startActivity(Intent(Settings.ACTION_WIRELESS_SETTINGS)) },
             resources.getString(R.string.retry),
-            {
-                viewModel.send(DetailScreenEvent.OnReady(recipeId))
-            }
+            { viewModel.send(DetailScreenEvent.OnReady(recipeId)) }
         )
     }
 

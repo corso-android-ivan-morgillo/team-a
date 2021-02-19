@@ -10,7 +10,7 @@ import coil.load
 import com.google.android.material.card.MaterialCardView
 import com.ivanmorgillo.corsoandroid.teama.home.RecipeUI
 
-class RecipesAdapter(private val onclick: (RecipeUI) -> Unit) : RecyclerView.Adapter<RecipeViewHolder>() {
+class RecipesAdapter(private val onclick: (RecipeUI, View) -> Unit) : RecyclerView.Adapter<RecipeViewHolder>() {
     private var recipes = emptyList<RecipeUI>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipeViewHolder {
@@ -49,14 +49,15 @@ class RecipeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
      * Possono essere messe dentro una variabile ed essere passate come parametro. In questo caso la
      * nostra funzione accetta come secondo parametro in
      * ingresso una funzione anonima (senza nome specifico/signature).*/
-    fun bind(item: RecipeUI, onclick: (RecipeUI) -> Unit) {
+    fun bind(item: RecipeUI, onclick: (RecipeUI, View) -> Unit) {
         title.text = item.title
         image.load(item.image)
         image.contentDescription = item.title
         /** Il click deve essere gestito inviando indietro al viewModel
          * il click dell'utente e l'oggetto che è stato cliccato */
         recipeCardView.setOnClickListener {
-            onclick(item)
+            onclick(item, it)
         }
+        recipeCardView.transitionName = "recipe_transition_item${item.id}"
     }
 }

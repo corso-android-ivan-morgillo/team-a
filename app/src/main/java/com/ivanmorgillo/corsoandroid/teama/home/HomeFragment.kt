@@ -1,12 +1,18 @@
 package com.ivanmorgillo.corsoandroid.teama.home
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.FragmentNavigatorExtras
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.transition.MaterialElevationScale
 import androidx.navigation.Navigation.findNavController
 import com.ivanmorgillo.corsoandroid.teama.MainScreenAction
 import com.ivanmorgillo.corsoandroid.teama.MainScreenAction.NavigateToDetail
@@ -30,7 +36,7 @@ import timber.log.Timber
 
 class HomeFragment : Fragment() {
     private val viewModel: MainViewModel by viewModel()
-
+    var lastClickedItem: View? = null
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_home, container, false)
@@ -39,9 +45,20 @@ class HomeFragment : Fragment() {
     // Equivalente alla onCreate di un activity
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        postponeEnterTransition()
+        view.doOnPreDraw { startPostponedEnterTransition() }
 
-        val adapter = RecipesAdapter {
-            viewModel.send(OnRecipeClick(it))
+
+        val adapter = RecipesAdapter { item, view ->
+            lastClickedItem = view
+            exitTransition = MaterialElevationScale(false).apply {
+                duration = resources.getInteger(R.integer.motion_duration_large).toLong()
+            }
+            reenterTransition = MaterialElevationScale(true).apply {
+                duration = resources.getInteger(R.integer.motion_duration_large).toLong()
+            }
+
+            viewModel.send(OnRecipeClick(item))
         }
         recipe_list.adapter = adapter
         viewModel.states.observe(viewLifecycleOwner, { state ->
@@ -64,9 +81,12 @@ class HomeFragment : Fragment() {
         viewModel.actions.observe(viewLifecycleOwner, { action ->
             when (action) {
                 is NavigateToDetail -> {
-                    val directions = HomeFragmentDirections.actionHomeFragmentToDetailFragment(action.recipe.id)
-                    Timber.d("Invio al details RecipeId= ${action.recipe.id}")
-                    findNavController(view).navigate(directions)
+                        lastClickedItem?.run {
+                            val extras = FragmentNavigatorExtras(this to "recipe_transition_item")
+                            val directions = HomeFragmentDirections.actionHomeFragmentToDetailFragment(action.recipe.id)
+                            Timber.d("Invio al details RecipeId= ${action.recipe.id}")
+                            findNavController().navigate(directions, extras)
+                        }
                 }
                 ShowNoInternetMessage -> showNoInternetMessage(view)
                 ShowInterruptedRequestMessage -> showInterruptedRequestMessage(view)
@@ -75,6 +95,7 @@ class HomeFragment : Fragment() {
                 MainScreenAction.ShowNoRecipeFoundMessage -> showNoRecipeFoundMessage(view)
             }.exhaustive
         })
+        viewModel.send(OnReady)
     }
 
     override fun onResume() {

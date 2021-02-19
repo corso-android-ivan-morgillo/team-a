@@ -22,6 +22,7 @@ import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeDetailError.SlowInt
 import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeDetailsResult.Failure
 import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeDetailsResult.Success
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class DetailViewModel(private val repository: RecipeDetailsRepository) : ViewModel() {
 
