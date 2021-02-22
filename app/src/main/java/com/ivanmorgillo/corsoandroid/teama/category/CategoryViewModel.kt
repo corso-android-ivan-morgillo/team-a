@@ -5,11 +5,20 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ivanmorgillo.corsoandroid.teama.SingleLiveEvent
 import com.ivanmorgillo.corsoandroid.teama.Tracking
+import com.ivanmorgillo.corsoandroid.teama.category.CategoryScreenAction.ShowInterruptedRequestMessage
+import com.ivanmorgillo.corsoandroid.teama.category.CategoryScreenAction.ShowNoCategoryFoundMessage
+import com.ivanmorgillo.corsoandroid.teama.category.CategoryScreenAction.ShowNoInternetMessage
+import com.ivanmorgillo.corsoandroid.teama.category.CategoryScreenAction.ShowServerErrorMessage
+import com.ivanmorgillo.corsoandroid.teama.category.CategoryScreenAction.ShowSlowInternetMessage
 import com.ivanmorgillo.corsoandroid.teama.category.CategoryScreenStates.Content
 import com.ivanmorgillo.corsoandroid.teama.category.CategoryScreenStates.Error
 import com.ivanmorgillo.corsoandroid.teama.category.CategoryScreenStates.Loading
 import com.ivanmorgillo.corsoandroid.teama.exhaustive
-import com.ivanmorgillo.corsoandroid.teama.network.LoadCategoryError
+import com.ivanmorgillo.corsoandroid.teama.network.LoadCategoryError.InterruptedRequest
+import com.ivanmorgillo.corsoandroid.teama.network.LoadCategoryError.NoCategoryFound
+import com.ivanmorgillo.corsoandroid.teama.network.LoadCategoryError.NoInternet
+import com.ivanmorgillo.corsoandroid.teama.network.LoadCategoryError.ServerError
+import com.ivanmorgillo.corsoandroid.teama.network.LoadCategoryError.SlowInternet
 import com.ivanmorgillo.corsoandroid.teama.network.LoadCategoryResult
 import kotlinx.coroutines.launch
 
@@ -20,7 +29,6 @@ class CategoryViewModel(
 
     val states = MutableLiveData<CategoryScreenStates>() // potremmo passarci direttamente loading
     val actions = SingleLiveEvent<CategoryScreenAction>()
-
 
     fun send(event: CategoryScreenEvent) {
         when (event) {
@@ -53,11 +61,11 @@ class CategoryViewModel(
     private fun onFailure(result: LoadCategoryResult.Failure) {
         states.postValue(Error)
         when (result.error) {
-            LoadCategoryError.NoInternet -> actions.postValue(CategoryScreenAction.ShowNoInternetMessage)
-            LoadCategoryError.NoCategoryFound -> actions.postValue(CategoryScreenAction.ShowNoRecipeFoundMessage)
-            LoadCategoryError.ServerError -> actions.postValue(CategoryScreenAction.ShowServerErrorMessage)
-            LoadCategoryError.SlowInternet -> actions.postValue(CategoryScreenAction.ShowSlowInternetMessage)
-            LoadCategoryError.InterruptedRequest -> actions.postValue(CategoryScreenAction.ShowInterruptedRequestMessage)
+            NoInternet -> actions.postValue(ShowNoInternetMessage)
+            NoCategoryFound -> actions.postValue(ShowNoCategoryFoundMessage)
+            ServerError -> actions.postValue(ShowServerErrorMessage)
+            SlowInternet -> actions.postValue(ShowSlowInternetMessage)
+            InterruptedRequest -> actions.postValue(ShowInterruptedRequestMessage)
         }.exhaustive
     }
 
@@ -79,7 +87,7 @@ sealed class CategoryScreenAction {
     object ShowSlowInternetMessage : CategoryScreenAction()
     object ShowServerErrorMessage : CategoryScreenAction()
     object ShowInterruptedRequestMessage : CategoryScreenAction()
-    object ShowNoRecipeFoundMessage : CategoryScreenAction()
+    object ShowNoCategoryFoundMessage : CategoryScreenAction()
 }
 
 sealed class CategoryScreenStates {

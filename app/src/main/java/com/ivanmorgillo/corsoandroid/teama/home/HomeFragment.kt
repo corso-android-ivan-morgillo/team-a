@@ -24,7 +24,6 @@ import com.ivanmorgillo.corsoandroid.teama.MainScreenEvent.OnRecipeClick
 import com.ivanmorgillo.corsoandroid.teama.MainScreenStates
 import com.ivanmorgillo.corsoandroid.teama.MainViewModel
 import com.ivanmorgillo.corsoandroid.teama.R
-import com.ivanmorgillo.corsoandroid.teama.RecipesAdapter
 import com.ivanmorgillo.corsoandroid.teama.exhaustive
 import com.ivanmorgillo.corsoandroid.teama.gone
 import com.ivanmorgillo.corsoandroid.teama.showAlertDialog
@@ -36,8 +35,8 @@ import timber.log.Timber
 class HomeFragment : Fragment() {
     private val viewModel: MainViewModel by viewModel()
     private val args: HomeFragmentArgs by navArgs()
-    var lastClickedItem: View? = null
-    var categoryName = ""
+    private var lastClickedItem: View? = null
+    private var categoryName = ""
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment

@@ -21,7 +21,7 @@ class CategoryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val adapter = CategoryAdapter { item, view ->
+        val adapter = CategoryAdapter { item, _ ->
             viewModel.send(CategoryScreenEvent.OnCategoryClick(item))
         }
         category_list.adapter = adapter
@@ -49,7 +49,7 @@ class CategoryFragment : Fragment() {
                     }
                     CategoryScreenAction.ShowInterruptedRequestMessage -> TODO()
                     CategoryScreenAction.ShowNoInternetMessage -> TODO()
-                    CategoryScreenAction.ShowNoRecipeFoundMessage -> TODO()
+                    CategoryScreenAction.ShowNoCategoryFoundMessage -> TODO()
                     CategoryScreenAction.ShowServerErrorMessage -> TODO()
                     CategoryScreenAction.ShowSlowInternetMessage -> TODO()
                 }
