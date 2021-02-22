@@ -2,10 +2,8 @@ package com.ivanmorgillo.corsoandroid.teama.network
 
 import com.ivanmorgillo.corsoandroid.teama.Recipe
 import com.ivanmorgillo.corsoandroid.teama.category.Category
-import com.ivanmorgillo.corsoandroid.teama.category.CategoryDTO
 import com.ivanmorgillo.corsoandroid.teama.detail.Ingredient
 import com.ivanmorgillo.corsoandroid.teama.detail.RecipeDetails
-import com.ivanmorgillo.corsoandroid.teama.detail.RecipeDetailsDTO
 import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeDetailError.NoDetailFound
 import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeError.InterruptedRequest
 import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeError.NoInternet
@@ -23,7 +21,7 @@ import java.io.IOException
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 
-class RecipeAPI {
+class NetworkAPI {
     private val service: RecipeService
 
     init {

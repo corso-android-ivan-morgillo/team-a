@@ -3,7 +3,6 @@ package com.ivanmorgillo.corsoandroid.teama.category
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ivanmorgillo.corsoandroid.teama.SingleLiveEvent
 import com.ivanmorgillo.corsoandroid.teama.Tracking
 import com.ivanmorgillo.corsoandroid.teama.category.CategoryScreenAction.ShowInterruptedRequestMessage
 import com.ivanmorgillo.corsoandroid.teama.category.CategoryScreenAction.ShowNoCategoryFoundMessage
@@ -13,6 +12,7 @@ import com.ivanmorgillo.corsoandroid.teama.category.CategoryScreenAction.ShowSlo
 import com.ivanmorgillo.corsoandroid.teama.category.CategoryScreenStates.Content
 import com.ivanmorgillo.corsoandroid.teama.category.CategoryScreenStates.Error
 import com.ivanmorgillo.corsoandroid.teama.category.CategoryScreenStates.Loading
+import com.ivanmorgillo.corsoandroid.teama.crashlytics.SingleLiveEvent
 import com.ivanmorgillo.corsoandroid.teama.exhaustive
 import com.ivanmorgillo.corsoandroid.teama.network.LoadCategoryError.InterruptedRequest
 import com.ivanmorgillo.corsoandroid.teama.network.LoadCategoryError.NoCategoryFound
@@ -28,7 +28,8 @@ class CategoryViewModel(
 ) : ViewModel() {
 
     val states = MutableLiveData<CategoryScreenStates>() // potremmo passarci direttamente loading
-    val actions = SingleLiveEvent<CategoryScreenAction>()
+    val actions =
+        SingleLiveEvent<CategoryScreenAction>()
 
     fun send(event: CategoryScreenEvent) {
         when (event) {

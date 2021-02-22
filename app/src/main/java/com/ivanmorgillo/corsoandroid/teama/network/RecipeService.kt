@@ -1,7 +1,5 @@
 package com.ivanmorgillo.corsoandroid.teama.network
 
-import com.ivanmorgillo.corsoandroid.teama.category.CategoryDTO
-import com.ivanmorgillo.corsoandroid.teama.detail.RecipeDetailsDTO
 import retrofit2.http.GET
 import retrofit2.http.Query
 

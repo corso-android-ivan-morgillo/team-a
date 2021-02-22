@@ -1,4 +1,4 @@
-package com.ivanmorgillo.corsoandroid.teama
+package com.ivanmorgillo.corsoandroid.teama.crashlytics
 
 import android.util.Log
 import com.google.firebase.crashlytics.FirebaseCrashlytics

@@ -8,10 +8,11 @@ import com.ivanmorgillo.corsoandroid.teama.MainScreenAction.ShowNoInternetMessag
 import com.ivanmorgillo.corsoandroid.teama.MainScreenStates.Content
 import com.ivanmorgillo.corsoandroid.teama.MainScreenStates.Error
 import com.ivanmorgillo.corsoandroid.teama.MainScreenStates.Loading
-import com.ivanmorgillo.corsoandroid.teama.home.RecipeUI
+import com.ivanmorgillo.corsoandroid.teama.crashlytics.SingleLiveEvent
 import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeError
 import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeResult.Failure
 import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeResult.Success
+import com.ivanmorgillo.corsoandroid.teama.recipe.RecipeUI
 import kotlinx.coroutines.launch
 
 class MainViewModel(

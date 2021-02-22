@@ -1,13 +1,13 @@
 package com.ivanmorgillo.corsoandroid.teama.detail
 
 import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeDetailsResult
-import com.ivanmorgillo.corsoandroid.teama.network.RecipeAPI
+import com.ivanmorgillo.corsoandroid.teama.network.NetworkAPI
 
 interface RecipeDetailsRepository {
     suspend fun loadRecipeDetails(idMeal: Long): LoadRecipeDetailsResult
 }
 
-class RecipeDetailsRepositoryImpl(private val api: RecipeAPI) : RecipeDetailsRepository {
+class RecipeDetailsRepositoryImpl(private val api: NetworkAPI) : RecipeDetailsRepository {
     override suspend fun loadRecipeDetails(idMeal: Long): LoadRecipeDetailsResult {
         return api.loadRecipeDetails(idMeal)
     }
