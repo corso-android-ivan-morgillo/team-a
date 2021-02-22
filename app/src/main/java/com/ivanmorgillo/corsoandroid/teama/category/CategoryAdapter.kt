@@ -10,8 +10,7 @@ import coil.load
 import com.google.android.material.card.MaterialCardView
 import com.ivanmorgillo.corsoandroid.teama.R
 
-// private val onclick: (CategoryUI, View) -> Unit
-class CategoryAdapter : RecyclerView.Adapter<CategoryViewHolder>() {
+class CategoryAdapter(private val onclick: (CategoryUI, View) -> Unit) : RecyclerView.Adapter<CategoryViewHolder>() {
     private var categories = emptyList<CategoryUI>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
@@ -20,7 +19,7 @@ class CategoryAdapter : RecyclerView.Adapter<CategoryViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
-        holder.bind(categories[position])
+        holder.bind(categories[position], onclick)
     }
 
     override fun getItemCount(): Int {
@@ -42,13 +41,13 @@ class CategoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val image = itemView.findViewById<ImageView>(R.id.category_image)
     private val categoryCardView = itemView.findViewById<MaterialCardView>(R.id.category_root)
 
-    //fun bind(item: CategoryUI, onclick: (CategoryUI, View) -> Unit)
-
-    fun bind(item: CategoryUI) {
+    fun bind(item: CategoryUI, onclick: (CategoryUI, View) -> Unit) {
         title.text = item.title
         image.load(item.image)
         image.contentDescription = item.title
-
-        categoryCardView.transitionName = "category_transition_item${item.id}"
+        categoryCardView.setOnClickListener {
+            onclick(item, it)
+        }
+        //categoryCardView.transitionName = "category_transition_item${item.id}"
     }
 }

@@ -24,8 +24,8 @@ class MainViewModel(
     fun send(event: MainScreenEvent) {
         when (event) {
             // deve ricevere la lista delle ricette. La view deve ricevere eventi e reagire a stati.
-            MainScreenEvent.OnReady -> {
-                loadContent()
+            is MainScreenEvent.OnReady -> {
+                loadContent(event.categoryName)
             }
             is MainScreenEvent.OnRecipeClick -> {
                 onRecipeClick(event)
@@ -33,10 +33,10 @@ class MainViewModel(
         }
     }
 
-    private fun loadContent() {
+    private fun loadContent(categoryName: String) {
         states.postValue(Loading)
         viewModelScope.launch {
-            val result = repository.loadRecipes()
+            val result = repository.loadRecipes(categoryName)
             when (result) {
                 is Failure -> onFailure(result)
                 is Success -> onSuccess(result)
@@ -95,5 +95,5 @@ sealed class MainScreenEvent {
     /** Usiamo la dataclass perchè abbiamo bisogno di passare un parametro */
     data class OnRecipeClick(val recipe: RecipeUI) : MainScreenEvent()
 
-    object OnReady : MainScreenEvent()
+    data class OnReady(val categoryName: String) : MainScreenEvent()
 }

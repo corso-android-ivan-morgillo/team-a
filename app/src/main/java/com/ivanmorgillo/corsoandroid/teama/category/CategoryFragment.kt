@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.ivanmorgillo.corsoandroid.teama.R
 import com.ivanmorgillo.corsoandroid.teama.gone
 import com.ivanmorgillo.corsoandroid.teama.visible
@@ -20,7 +21,9 @@ class CategoryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val adapter = CategoryAdapter()
+        val adapter = CategoryAdapter { item, view ->
+            viewModel.send(CategoryScreenEvent.OnCategoryClick(item))
+        }
         category_list.adapter = adapter
         viewModel.states.observe(viewLifecycleOwner, { state ->
             when (state) {
@@ -36,8 +39,21 @@ class CategoryFragment : Fragment() {
                 }
             }
         })
+        viewModel.actions.observe(viewLifecycleOwner,
+            { action ->
+                when (action) {
+                    is CategoryScreenAction.NavigateToRecipes -> {
+                        val directions =
+                            CategoryFragmentDirections.actionCategoryFragmentToHomeFragment(action.category.title)
+                        findNavController().navigate(directions)
+                    }
+                    CategoryScreenAction.ShowInterruptedRequestMessage -> TODO()
+                    CategoryScreenAction.ShowNoInternetMessage -> TODO()
+                    CategoryScreenAction.ShowNoRecipeFoundMessage -> TODO()
+                    CategoryScreenAction.ShowServerErrorMessage -> TODO()
+                    CategoryScreenAction.ShowSlowInternetMessage -> TODO()
+                }
+            })
         viewModel.send(CategoryScreenEvent.OnReady)
     }
-
-
 }

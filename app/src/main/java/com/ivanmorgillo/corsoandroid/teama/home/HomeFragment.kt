@@ -10,6 +10,8 @@ import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
+import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.google.android.material.transition.MaterialElevationScale
 import com.ivanmorgillo.corsoandroid.teama.MainScreenAction
 import com.ivanmorgillo.corsoandroid.teama.MainScreenAction.NavigateToDetail
@@ -33,7 +35,10 @@ import timber.log.Timber
 
 class HomeFragment : Fragment() {
     private val viewModel: MainViewModel by viewModel()
+    private val args: HomeFragmentArgs by navArgs()
     var lastClickedItem: View? = null
+    var categoryName = ""
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_home, container, false)
@@ -57,47 +62,54 @@ class HomeFragment : Fragment() {
             viewModel.send(OnRecipeClick(item))
         }
         recipe_list.adapter = adapter
-        viewModel.states.observe(viewLifecycleOwner, { state ->
-            // riceve l'aggiornamento del nuovo valore
-            when (state) {
-                is MainScreenStates.Content -> {
-                    recipes_list_progressBar.gone()
-                    adapter.setRecipes(state.recipes)
-                }
-                MainScreenStates.Error -> {
-                    // non trova le ricette in fase di Loading ad esempio
-                    recipes_list_progressBar.gone()
-                }
-                MainScreenStates.Loading -> {
-                    recipes_list_progressBar.visible()
-                }
-            }
-        })
-        // Questo blocco serve a specificare che per le istruzioni interne il this è "view"
-        viewModel.actions.observe(viewLifecycleOwner, { action ->
-            when (action) {
-                is NavigateToDetail -> {
-                    lastClickedItem?.run {
-                        val extras = FragmentNavigatorExtras(this to "recipe_transition_item")
-                        val directions = HomeFragmentDirections.actionHomeFragmentToDetailFragment(action.recipe.id)
-                        Timber.d("Invio al details RecipeId= ${action.recipe.id}")
-                        findNavController().navigate(directions, extras)
+        categoryName = args.categoryName
+        if (categoryName.isEmpty()) {
+            // Torna indietro nella schermata da cui provieni.
+            findNavController().popBackStack()
+        } else {
+            viewModel.states.observe(viewLifecycleOwner, { state ->
+                // riceve l'aggiornamento del nuovo valore
+                when (state) {
+                    is MainScreenStates.Content -> {
+                        recipes_list_progressBar.gone()
+                        adapter.setRecipes(state.recipes)
+                    }
+                    MainScreenStates.Error -> {
+                        // non trova le ricette in fase di Loading ad esempio
+                        recipes_list_progressBar.gone()
+                    }
+                    MainScreenStates.Loading -> {
+                        recipes_list_progressBar.visible()
                     }
                 }
-                ShowNoInternetMessage -> showNoInternetMessage(view)
-                ShowInterruptedRequestMessage -> showInterruptedRequestMessage(view)
-                ShowSlowInternetMessage -> showNoInternetMessage(view)
-                ShowServerErrorMessage -> showServerErrorMessage(view)
-                MainScreenAction.ShowNoRecipeFoundMessage -> showNoRecipeFoundMessage(view)
-            }.exhaustive
-        })
-        viewModel.send(OnReady)
+            })
+            // Questo blocco serve a specificare che per le istruzioni interne il this è "view"
+            viewModel.actions.observe(viewLifecycleOwner, { action ->
+                when (action) {
+                    is NavigateToDetail -> {
+                        lastClickedItem?.run {
+                            val extras = FragmentNavigatorExtras(this to "recipe_transition_item")
+                            val directions = HomeFragmentDirections.actionHomeFragmentToDetailFragment(action.recipe.id)
+                            Timber.d("Invio al details RecipeId= ${action.recipe.id}")
+                            findNavController().navigate(directions, extras)
+                        }
+                    }
+                    ShowNoInternetMessage -> showNoInternetMessage(view)
+                    ShowInterruptedRequestMessage -> showInterruptedRequestMessage(view)
+                    ShowSlowInternetMessage -> showNoInternetMessage(view)
+                    ShowServerErrorMessage -> showServerErrorMessage(view)
+                    MainScreenAction.ShowNoRecipeFoundMessage -> showNoRecipeFoundMessage(view)
+                }.exhaustive
+            })
+            Timber.d(categoryName)
+            viewModel.send(OnReady(categoryName))
+        }
     }
 
     override fun onResume() {
         super.onResume()
         if (viewModel.states.value == null) {
-            viewModel.send(OnReady)
+            viewModel.send(OnReady(categoryName))
         }
     }
 
@@ -107,7 +119,7 @@ class HomeFragment : Fragment() {
             resources.getString(R.string.server_error_message),
             R.drawable.ic_error,
             resources.getString(R.string.retry),
-            { viewModel.send(OnReady) },
+            { viewModel.send(OnReady(categoryName)) },
             "",
             {}
         )
@@ -121,7 +133,7 @@ class HomeFragment : Fragment() {
             resources.getString(R.string.network_settings),
             { startActivity(Intent(Settings.ACTION_WIRELESS_SETTINGS)) },
             resources.getString(R.string.retry),
-            { viewModel.send(OnReady) }
+            { viewModel.send(OnReady(categoryName)) }
         )
     }
 
@@ -134,7 +146,7 @@ class HomeFragment : Fragment() {
             { startActivity(Intent(Settings.ACTION_WIRELESS_SETTINGS)) },
             resources.getString(R.string.retry),
             {
-                viewModel.send(OnReady)
+                viewModel.send(OnReady(categoryName))
             }
         )
     }
@@ -145,7 +157,7 @@ class HomeFragment : Fragment() {
             resources.getString(R.string.no_recipe_found_error_message),
             R.drawable.ic_sad_face,
             resources.getString(R.string.retry),
-            { viewModel.send(OnReady) },
+            { viewModel.send(OnReady(categoryName)) },
             "",
             {}
         )

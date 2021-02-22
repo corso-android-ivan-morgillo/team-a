@@ -108,9 +108,9 @@ class RecipeAPI {
     }
 
     @Suppress("TooGenericExceptionCaught")
-    suspend fun loadRecipes(): LoadRecipeResult {
+    suspend fun loadRecipes(categoryName: String): LoadRecipeResult {
         try {
-            val recipesList = service.loadRecipes()
+            val recipesList = service.loadRecipes(categoryName)
             val recipes = recipesList.meals
                 .mapNotNull {
                     it.toDomain()

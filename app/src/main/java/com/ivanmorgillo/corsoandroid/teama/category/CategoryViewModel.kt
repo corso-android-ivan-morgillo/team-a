@@ -28,9 +28,9 @@ class CategoryViewModel(
             CategoryScreenEvent.OnReady -> {
                 loadContent()
             }
-            /*is CategoryScreenEvent.OnRecipeClick -> {
-                onRecipeClick(event)
-            }*/
+            is CategoryScreenEvent.OnCategoryClick -> {
+                onCategoryClick(event)
+            }
         }
     }
 
@@ -45,13 +45,11 @@ class CategoryViewModel(
         }
     }
 
-    /*
-        private fun onRecipeClick(event: CategoryScreenEvent.OnRecipeClick) {
-            // Log.d("RECIPE", event.recipe.toString())
-            tracking.logEvent("recipe_clicked")
-            actions.postValue(NavigateToDetail(event.recipe))
-        }
-    */
+    private fun onCategoryClick(event: CategoryScreenEvent.OnCategoryClick) {
+        tracking.logEvent("category_clicked")
+        actions.postValue(CategoryScreenAction.NavigateToRecipes(event.category))
+    }
+
     private fun onFailure(result: LoadCategoryResult.Failure) {
         states.postValue(Error)
         when (result.error) {
