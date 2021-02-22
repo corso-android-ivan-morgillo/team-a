@@ -1,6 +1,5 @@
 package com.ivanmorgillo.corsoandroid.teama.home
 
-import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
@@ -11,9 +10,7 @@ import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.transition.MaterialElevationScale
-import androidx.navigation.Navigation.findNavController
 import com.ivanmorgillo.corsoandroid.teama.MainScreenAction
 import com.ivanmorgillo.corsoandroid.teama.MainScreenAction.NavigateToDetail
 import com.ivanmorgillo.corsoandroid.teama.MainScreenAction.ShowInterruptedRequestMessage
@@ -48,7 +45,6 @@ class HomeFragment : Fragment() {
         postponeEnterTransition()
         view.doOnPreDraw { startPostponedEnterTransition() }
 
-
         val adapter = RecipesAdapter { item, view ->
             lastClickedItem = view
             exitTransition = MaterialElevationScale(false).apply {
@@ -81,12 +77,12 @@ class HomeFragment : Fragment() {
         viewModel.actions.observe(viewLifecycleOwner, { action ->
             when (action) {
                 is NavigateToDetail -> {
-                        lastClickedItem?.run {
-                            val extras = FragmentNavigatorExtras(this to "recipe_transition_item")
-                            val directions = HomeFragmentDirections.actionHomeFragmentToDetailFragment(action.recipe.id)
-                            Timber.d("Invio al details RecipeId= ${action.recipe.id}")
-                            findNavController().navigate(directions, extras)
-                        }
+                    lastClickedItem?.run {
+                        val extras = FragmentNavigatorExtras(this to "recipe_transition_item")
+                        val directions = HomeFragmentDirections.actionHomeFragmentToDetailFragment(action.recipe.id)
+                        Timber.d("Invio al details RecipeId= ${action.recipe.id}")
+                        findNavController().navigate(directions, extras)
+                    }
                 }
                 ShowNoInternetMessage -> showNoInternetMessage(view)
                 ShowInterruptedRequestMessage -> showInterruptedRequestMessage(view)

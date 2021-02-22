@@ -1,6 +1,8 @@
 package com.ivanmorgillo.corsoandroid.teama.network
 
 import com.ivanmorgillo.corsoandroid.teama.Recipe
+import com.ivanmorgillo.corsoandroid.teama.category.Category
+import com.ivanmorgillo.corsoandroid.teama.category.CategoryDTO
 import com.ivanmorgillo.corsoandroid.teama.detail.Ingredient
 import com.ivanmorgillo.corsoandroid.teama.detail.RecipeDetails
 import com.ivanmorgillo.corsoandroid.teama.detail.RecipeDetailsDTO
@@ -130,6 +132,31 @@ class RecipeAPI {
         }
     }
 
+    @Suppress("TooGenericExceptionCaught")
+    suspend fun loadCategories(): LoadCategoryResult {
+        try {
+            val categoriesList = service.loadCategories()
+            val categories = categoriesList.categories
+                .mapNotNull {
+                    it.toDomain()
+                }
+            return if (categories.isEmpty()) {
+                LoadCategoryResult.Failure(LoadCategoryError.NoCategoryFound)
+            } else {
+                LoadCategoryResult.Success(categories)
+            }
+        } catch (e: IOException) { // no network available
+            return LoadCategoryResult.Failure(LoadCategoryError.NoInternet)
+        } catch (e: ConnectException) { // interrupted network request
+            return LoadCategoryResult.Failure(LoadCategoryError.InterruptedRequest)
+        } catch (e: SocketTimeoutException) { // server timeout error
+            return LoadCategoryResult.Failure(LoadCategoryError.SlowInternet)
+        } catch (e: Exception) { // other generic exception
+            Timber.e(e, "Generic Exception on LoadCategories")
+            return LoadCategoryResult.Failure(LoadCategoryError.ServerError)
+        }
+    }
+
     private fun RecipeDTO.Meal.toDomain(): Recipe? {
         val id = idMeal.toLongOrNull()
         return if (id != null) {
@@ -138,6 +165,20 @@ class RecipeAPI {
                 image = strMealThumb,
                 idMeal = id
             )
+        } else {
+            null
+        }
+    }
+
+    private fun CategoryDTO.Category.toDomain(): Category? {
+        val id = idCategory.toLongOrNull()
+        return if (id != null) {
+            Category(
+                name = strCategory,
+                image = strCategoryThumb,
+                id = idCategory
+            )
+            // possibilità di implementare la descrizione
         } else {
             null
         }
@@ -160,6 +201,14 @@ sealed class LoadRecipeDetailError {
     object ServerError : LoadRecipeDetailError()
 }
 
+sealed class LoadCategoryError {
+    object NoCategoryFound : LoadCategoryError()
+    object NoInternet : LoadCategoryError()
+    object InterruptedRequest : LoadCategoryError()
+    object SlowInternet : LoadCategoryError()
+    object ServerError : LoadCategoryError()
+}
+
 sealed class LoadRecipeResult {
     data class Success(val recipes: List<Recipe>) : LoadRecipeResult()
     data class Failure(val error: LoadRecipeError) : LoadRecipeResult()
@@ -168,4 +217,9 @@ sealed class LoadRecipeResult {
 sealed class LoadRecipeDetailsResult {
     data class Success(val details: RecipeDetails) : LoadRecipeDetailsResult()
     data class Failure(val error: LoadRecipeDetailError) : LoadRecipeDetailsResult()
+}
+
+sealed class LoadCategoryResult {
+    data class Success(val categories: List<Category>) : LoadCategoryResult()
+    data class Failure(val error: LoadCategoryError) : LoadCategoryResult()
 }

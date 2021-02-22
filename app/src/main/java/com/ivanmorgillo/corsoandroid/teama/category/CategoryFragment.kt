@@ -6,11 +6,38 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.ivanmorgillo.corsoandroid.teama.R
+import com.ivanmorgillo.corsoandroid.teama.gone
+import com.ivanmorgillo.corsoandroid.teama.visible
+import kotlinx.android.synthetic.main.fragment_category.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class CategoryFragment : Fragment() {
+    private val viewModel: CategoryViewModel by viewModel()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_category, container, false)
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val adapter = CategoryAdapter()
+        category_list.adapter = adapter
+        viewModel.states.observe(viewLifecycleOwner, { state ->
+            when (state) {
+                is CategoryScreenStates.Content -> {
+                    category_list_progressBar.gone()
+                    adapter.setCategories(state.categories)
+                }
+                CategoryScreenStates.Error -> {
+                    category_list_progressBar.gone()
+                }
+                CategoryScreenStates.Loading -> {
+                    category_list_progressBar.visible()
+                }
+            }
+        })
+        viewModel.send(CategoryScreenEvent.OnReady)
+    }
+
+
 }
