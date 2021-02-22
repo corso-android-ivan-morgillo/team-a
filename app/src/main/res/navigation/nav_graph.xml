@@ -11,7 +11,7 @@
         android:label="CategoryFragment"
         tools:layout="@layout/fragment_category">
         <action
-            android:id="@+id/action_categoryFragment_to_homeFragment"
+            android:id="@+id/action_categoryFragment_to_recipeFragment"
             app:destination="@id/homeFragment" />
     </fragment>
     <fragment
@@ -20,7 +20,7 @@
         android:label="HomeFragment"
         tools:layout="@layout/fragment_recipe">
         <action
-            android:id="@+id/action_homeFragment_to_detailFragment"
+            android:id="@+id/action_recipeFragment_to_detailFragment"
             app:destination="@id/detailFragment" />
         <argument
             android:name="category_name"

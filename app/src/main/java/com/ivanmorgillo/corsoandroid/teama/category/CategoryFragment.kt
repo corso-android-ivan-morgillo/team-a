@@ -44,7 +44,7 @@ class CategoryFragment : Fragment() {
                 when (action) {
                     is CategoryScreenAction.NavigateToRecipes -> {
                         val directions =
-                            CategoryFragmentDirections.actionCategoryFragmentToHomeFragment(action.category.title)
+                            CategoryFragmentDirections.actionCategoryFragmentToRecipeFragment(action.category.title)
                         findNavController().navigate(directions)
                     }
                     CategoryScreenAction.ShowInterruptedRequestMessage -> TODO()

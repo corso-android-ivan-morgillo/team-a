@@ -34,7 +34,7 @@ import timber.log.Timber
 
 class RecipeFragment : Fragment() {
     private val viewModel: MainViewModel by viewModel()
-    private val args: HomeFragmentArgs by navArgs()
+    private val args: RecipeFragmentArgs by navArgs()
     private var lastClickedItem: View? = null
     private var categoryName = ""
 
@@ -88,7 +88,8 @@ class RecipeFragment : Fragment() {
                     is NavigateToDetail -> {
                         lastClickedItem?.run {
                             val extras = FragmentNavigatorExtras(this to "recipe_transition_item")
-                            val directions = HomeFragmentDirections.actionHomeFragmentToDetailFragment(action.recipe.id)
+                            val directions =
+                                RecipeFragmentDirections.actionRecipeFragmentToDetailFragment(action.recipe.id)
                             Timber.d("Invio al details RecipeId= ${action.recipe.id}")
                             findNavController().navigate(directions, extras)
                         }
