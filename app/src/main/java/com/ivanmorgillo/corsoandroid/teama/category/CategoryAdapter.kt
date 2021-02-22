@@ -48,6 +48,6 @@ class CategoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         categoryCardView.setOnClickListener {
             onclick(item, it)
         }
-        categoryCardView.transitionName = "category_transition_item${item.id}"
+        // categoryCardView.transitionName = "category_transition_item${item.id}"
     }
 }
