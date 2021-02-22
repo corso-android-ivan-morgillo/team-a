@@ -55,7 +55,6 @@ class DetailFragment : Fragment() {
             findNavController().popBackStack()
         } else {
             viewModel.states.observe(viewLifecycleOwner, { state ->
-                // riceve l'aggiornamento del nuovo valore
                 when (state) {
                     is DetailScreenStates.Content -> {
                         details_list_progressBar.gone()
