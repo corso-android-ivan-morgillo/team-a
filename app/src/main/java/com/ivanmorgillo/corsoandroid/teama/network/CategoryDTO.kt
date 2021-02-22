@@ -1,4 +1,4 @@
-package com.ivanmorgillo.corsoandroid.teama.category
+package com.ivanmorgillo.corsoandroid.teama.network
 
 import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName

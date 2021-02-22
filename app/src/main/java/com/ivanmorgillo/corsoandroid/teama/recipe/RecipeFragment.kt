@@ -1,4 +1,4 @@
-package com.ivanmorgillo.corsoandroid.teama.home
+package com.ivanmorgillo.corsoandroid.teama.recipe
 
 import android.content.Intent
 import android.os.Bundle
@@ -28,11 +28,11 @@ import com.ivanmorgillo.corsoandroid.teama.exhaustive
 import com.ivanmorgillo.corsoandroid.teama.gone
 import com.ivanmorgillo.corsoandroid.teama.showAlertDialog
 import com.ivanmorgillo.corsoandroid.teama.visible
-import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.android.synthetic.main.fragment_recipe.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
-class HomeFragment : Fragment() {
+class RecipeFragment : Fragment() {
     private val viewModel: MainViewModel by viewModel()
     private val args: HomeFragmentArgs by navArgs()
     private var lastClickedItem: View? = null
@@ -40,7 +40,7 @@ class HomeFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false)
+        return inflater.inflate(R.layout.fragment_recipe, container, false)
     }
 
     // Equivalente alla onCreate di un activity

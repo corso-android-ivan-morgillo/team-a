@@ -1,4 +1,4 @@
-package com.ivanmorgillo.corsoandroid.teama.home
+package com.ivanmorgillo.corsoandroid.teama.recipe
 
 import android.view.LayoutInflater
 import android.view.View

@@ -16,9 +16,9 @@
     </fragment>
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.ivanmorgillo.corsoandroid.teama.home.HomeFragment"
+        android:name="com.ivanmorgillo.corsoandroid.teama.recipe.RecipeFragment"
         android:label="HomeFragment"
-        tools:layout="@layout/fragment_home">
+        tools:layout="@layout/fragment_recipe">
         <action
             android:id="@+id/action_homeFragment_to_detailFragment"
             app:destination="@id/detailFragment" />

@@ -14,15 +14,15 @@
  *  limitations under the License.
  */
 
-package com.ivanmorgillo.corsoandroid.teama;
+package com.ivanmorgillo.corsoandroid.teama.crashlytics;
 
-import android.util.Log;
 import androidx.annotation.MainThread;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import org.jetbrains.annotations.NotNull;
+import timber.log.Timber;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -47,7 +47,7 @@ public class SingleLiveEvent<T> extends MutableLiveData<T> {
     public void observe(@NotNull LifecycleOwner owner, @NotNull final Observer<? super T> observer) {
 
         if (hasActiveObservers()) {
-            Log.w(TAG, "Multiple observers registered but only one will be notified of changes.");
+            Timber.tag(TAG).w("Multiple observers registered but only one will be notified of changes.");
         }
 
         // Observe the internal MutableLiveData

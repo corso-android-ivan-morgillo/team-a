@@ -6,13 +6,13 @@ import com.ivanmorgillo.corsoandroid.teama.category.CategoryViewModel
 import com.ivanmorgillo.corsoandroid.teama.detail.DetailViewModel
 import com.ivanmorgillo.corsoandroid.teama.detail.RecipeDetailsRepository
 import com.ivanmorgillo.corsoandroid.teama.detail.RecipeDetailsRepositoryImpl
-import com.ivanmorgillo.corsoandroid.teama.network.RecipeAPI
+import com.ivanmorgillo.corsoandroid.teama.network.NetworkAPI
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val appModule = module {
     single {
-        RecipeAPI()
+        NetworkAPI()
     }
     single<RecipesRepository> {
         RecipeRepositoryImpl(api = get())

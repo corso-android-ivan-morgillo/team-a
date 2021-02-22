@@ -1,4 +1,4 @@
-package com.ivanmorgillo.corsoandroid.teama.home
+package com.ivanmorgillo.corsoandroid.teama.recipe
 
 data class RecipeUI(
     val id: Long,
