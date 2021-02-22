@@ -101,14 +101,7 @@ class RecipeFragment : Fragment() {
                     MainScreenAction.ShowNoRecipeFoundMessage -> showNoRecipeFoundMessage(view)
                 }.exhaustive
             })
-            Timber.d(categoryName)
-            viewModel.send(OnReady(categoryName))
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        if (viewModel.states.value == null) {
+            // Timber.d(categoryName)
             viewModel.send(OnReady(categoryName))
         }
     }
