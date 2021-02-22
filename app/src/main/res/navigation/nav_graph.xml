@@ -12,12 +12,12 @@
         tools:layout="@layout/fragment_category">
         <action
             android:id="@+id/action_categoryFragment_to_recipeFragment"
-            app:destination="@id/homeFragment" />
+            app:destination="@id/recipeFragment" />
     </fragment>
     <fragment
-        android:id="@+id/homeFragment"
+        android:id="@+id/recipeFragment"
         android:name="com.ivanmorgillo.corsoandroid.teama.recipe.RecipeFragment"
-        android:label="HomeFragment"
+        android:label="RecipeFragment"
         tools:layout="@layout/fragment_recipe">
         <action
             android:id="@+id/action_recipeFragment_to_detailFragment"

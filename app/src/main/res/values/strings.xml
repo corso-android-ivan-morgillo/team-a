@@ -9,6 +9,8 @@
     <string name="no_recipe_found_error_message">Sorry, no recipes found</string>
     <string name="no_recipe_detail_found_error_title">No recipe found</string>
     <string name="no_recipe_detail_found_error_message">Sorry, unable to load recipe</string>
+    <string name="no_category_found_error_title">No category found</string>
+    <string name="no_category_found_error_message">Sorry, unable to load recipes</string>
     <string name="server_error_message">Something went wrong!</string>
     <string name="connection_lost_error_message">Connection interrupted</string>
     <string name="no_internet_error_message">No connection available</string>
