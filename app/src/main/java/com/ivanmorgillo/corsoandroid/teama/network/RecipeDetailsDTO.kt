@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName
 @Keep
 data class RecipeDetailsDTO(
     @SerializedName("meals")
-    val details: List<Detail>
+    val details: List<Detail>,
 ) {
     @Keep
     data class Detail(
@@ -111,6 +111,6 @@ data class RecipeDetailsDTO(
         @SerializedName("strTags")
         val strTags: String,
         @SerializedName("strYoutube")
-        val strYoutube: String
+        val strYoutube: String?,
     )
 }

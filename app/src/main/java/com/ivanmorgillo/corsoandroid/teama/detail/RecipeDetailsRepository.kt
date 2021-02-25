@@ -16,7 +16,8 @@ class RecipeDetailsRepositoryImpl(private val api: NetworkAPI) : RecipeDetailsRe
 data class RecipeDetails(
     val name: String,
     val image: String,
+    val video: String,
     val idMeal: String,
     val ingredients: List<Ingredient>,
-    val instructions: String
+    val instructions: String,
 )
