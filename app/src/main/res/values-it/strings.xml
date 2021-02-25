@@ -17,4 +17,5 @@
     <string name="no_internet_error_message">Nessuna connessione disponibile</string>
     <string name="retry">Riprova</string>
     <string name="network_settings">Impostazioni di rete</string>
+    <string name="search_recipe_hint">Cerca per titolo…</string>
 </resources>
