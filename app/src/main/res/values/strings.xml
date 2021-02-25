@@ -16,4 +16,5 @@
     <string name="no_internet_error_message">No connection available</string>
     <string name="retry">Retry</string>
     <string name="network_settings">Network settings</string>
+    <string name="search_recipe_hint">Search by title…</string>
 </resources>
