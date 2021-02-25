@@ -18,6 +18,7 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.transition.MaterialElevationScale
 import com.ivanmorgillo.corsoandroid.teama.MainScreenAction
 import com.ivanmorgillo.corsoandroid.teama.MainScreenAction.NavigateToDetail
@@ -32,6 +33,7 @@ import com.ivanmorgillo.corsoandroid.teama.MainViewModel
 import com.ivanmorgillo.corsoandroid.teama.R
 import com.ivanmorgillo.corsoandroid.teama.exhaustive
 import com.ivanmorgillo.corsoandroid.teama.gone
+import com.ivanmorgillo.corsoandroid.teama.recipe.RecipeFragmentDirections.Companion.actionRecipeFragmentToDetailFragment
 import com.ivanmorgillo.corsoandroid.teama.showAlertDialog
 import com.ivanmorgillo.corsoandroid.teama.visible
 import kotlinx.android.synthetic.main.fragment_recipe.*
@@ -56,7 +58,8 @@ class RecipeFragment : Fragment(), SearchView.OnQueryTextListener {
         super.onViewCreated(view, savedInstanceState)
         postponeEnterTransition()
         view.doOnPreDraw { startPostponedEnterTransition() }
-
+        val refresh: SwipeRefreshLayout = recipes_refresh // swipe to refresh
+        refresh.setOnRefreshListener { viewModel.send(OnReady(categoryName)) }
         val adapter = RecipesAdapter { item, view ->
             lastClickedItem = view
             exitTransition = MaterialElevationScale(false).apply {
@@ -65,7 +68,6 @@ class RecipeFragment : Fragment(), SearchView.OnQueryTextListener {
             reenterTransition = MaterialElevationScale(true).apply {
                 duration = resources.getInteger(R.integer.motion_duration_large).toLong()
             }
-
             viewModel.send(OnRecipeClick(item))
         }
         recipe_list.adapter = adapter
@@ -81,10 +83,12 @@ class RecipeFragment : Fragment(), SearchView.OnQueryTextListener {
                         recipes_list_progressBar.gone()
                         recipes = state.recipes
                         adapter.setRecipes(recipes)
+                        refresh.isRefreshing = false
                     }
                     MainScreenStates.Error -> {
                         // non trova le ricette in fase di Loading ad esempio
                         recipes_list_progressBar.gone()
+                        refresh.isRefreshing = false
                     }
                     MainScreenStates.Loading -> {
                         recipes_list_progressBar.visible()
@@ -97,8 +101,7 @@ class RecipeFragment : Fragment(), SearchView.OnQueryTextListener {
                     is NavigateToDetail -> {
                         lastClickedItem?.run {
                             val extras = FragmentNavigatorExtras(this to "recipe_transition_item")
-                            val directions =
-                                RecipeFragmentDirections.actionRecipeFragmentToDetailFragment(action.recipe.id)
+                            val directions = actionRecipeFragmentToDetailFragment(action.recipe.id)
                             Timber.d("Invio al details RecipeId= ${action.recipe.id}")
                             findNavController().navigate(directions, extras)
                         }
@@ -110,7 +113,6 @@ class RecipeFragment : Fragment(), SearchView.OnQueryTextListener {
                     MainScreenAction.ShowNoRecipeFoundMessage -> showNoRecipeFoundMessage(view)
                 }.exhaustive
             })
-            // Timber.d(categoryName)
             viewModel.send(OnReady(categoryName))
         }
     }
