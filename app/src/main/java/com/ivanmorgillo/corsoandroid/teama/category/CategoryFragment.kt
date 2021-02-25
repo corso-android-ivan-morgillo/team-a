@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.ivanmorgillo.corsoandroid.teama.R
 import com.ivanmorgillo.corsoandroid.teama.category.CategoryScreenAction.NavigateToRecipes
 import com.ivanmorgillo.corsoandroid.teama.category.CategoryScreenAction.ShowInterruptedRequestMessage
@@ -31,6 +32,10 @@ class CategoryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val refresh: SwipeRefreshLayout = category_refresh
+        refresh.setOnRefreshListener { // swipe to refresh
+            viewModel.send(CategoryScreenEvent.OnReady)
+        }
         val adapter = CategoryAdapter { item, _ ->
             viewModel.send(CategoryScreenEvent.OnCategoryClick(item))
         }
@@ -40,9 +45,11 @@ class CategoryFragment : Fragment() {
                 is CategoryScreenStates.Content -> {
                     category_list_progressBar.gone()
                     adapter.setCategories(state.categories)
+                    refresh.isRefreshing = false
                 }
                 CategoryScreenStates.Error -> {
                     category_list_progressBar.gone()
+                    refresh.isRefreshing = false
                 }
                 CategoryScreenStates.Loading -> {
                     category_list_progressBar.visible()
