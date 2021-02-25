@@ -4,7 +4,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
+import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.ivanmorgillo.corsoandroid.teama.R
 
 data class IngredientUI(
@@ -36,8 +38,12 @@ class ListIngredientAdapter : RecyclerView.Adapter<ListIngredientViewHolder>() {
  * */
 class ListIngredientViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val ingredientDetails = itemView.findViewById<CheckBox>(R.id.ingredient_details)
+    private val ingredientIcon = itemView.findViewById<ImageView>(R.id.icon_ingredients)
 
     fun bind(item: IngredientUI) {
-        ingredientDetails.text = item.ingredientName + ": " + item.ingredientQuantity
+        val ingredientName = item.ingredientName
+        val iconUrl = "https://www.themealdb.com/images/ingredients/$ingredientName-Small.png"
+        ingredientIcon.load(iconUrl)
+        ingredientDetails.text = ingredientName + ": " + item.ingredientQuantity
     }
 }

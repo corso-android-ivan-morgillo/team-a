@@ -6,8 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    app:cardElevation="8dp"
-    app:cardCornerRadius="12dp">
+    app:cardElevation="4dp"
+    app:cardCornerRadius="8dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -17,7 +17,7 @@
         <ImageView
             android:id="@+id/category_image"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="120dp"
             android:scaleType="centerCrop"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -34,7 +34,9 @@
             app:layout_constraintStart_toStartOf="parent"
             style="@style/TextAppearance.MaterialComponents.Headline5"
             android:gravity="center"
-            tools:text="Lorem Ipsum....babababababbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbabababab" />
+            tools:text="Lorem Ipsum....babababababbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbabababab"
+            android:fontFamily="@font/lora_variable"
+            android:textStyle="italic" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
