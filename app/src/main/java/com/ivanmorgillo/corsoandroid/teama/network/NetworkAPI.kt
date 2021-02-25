@@ -47,9 +47,14 @@ class NetworkAPI {
             } else {
                 val recipeDetail: RecipeDetailsDTO.Detail = recipesDetailsDTO.details[0]
                 val ingredients = getIngredients(recipeDetail)
+                var video = recipeDetail.strYoutube
+                if (video.isNullOrBlank()) {
+                    video = ""
+                }
                 val recipeDetails = RecipeDetails(
                     name = recipeDetail.strMeal,
                     image = recipeDetail.strMealThumb,
+                    video = video,
                     idMeal = recipeDetail.idMeal,
                     ingredients = ingredients,
                     instructions = recipeDetail.strInstructions

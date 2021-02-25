@@ -56,6 +56,7 @@ class DetailViewModel(private val repository: RecipeDetailsRepository) : ViewMod
             details.idMeal,
             details.name,
             details.image,
+            details.video,
             details.ingredients.map { IngredientUI(it.ingredientName, it.ingredientQuantity) },
             details.instructions
         )

@@ -4,6 +4,7 @@ data class RecipeDetailsUI(
     val id: String,
     val title: String,
     val image: String,
+    val video: String,
     val ingredients: List<IngredientUI>,
-    val instructions: String
+    val instructions: String,
 )

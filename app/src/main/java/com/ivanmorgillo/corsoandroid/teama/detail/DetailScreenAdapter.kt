@@ -9,10 +9,16 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.google.android.material.tabs.TabLayout
 import com.ivanmorgillo.corsoandroid.teama.R
-import com.ivanmorgillo.corsoandroid.teama.detail.DetailScreenViewHolder.ImageViewHolder
 import com.ivanmorgillo.corsoandroid.teama.detail.DetailScreenViewHolder.IngredientInstructionListViewHolder
+import com.ivanmorgillo.corsoandroid.teama.detail.DetailScreenViewHolder.TabLayoutViewHolder
 import com.ivanmorgillo.corsoandroid.teama.detail.DetailScreenViewHolder.TitleViewHolder
+import com.ivanmorgillo.corsoandroid.teama.detail.DetailScreenViewHolder.VideoViewHolder
 import com.ivanmorgillo.corsoandroid.teama.exhaustive
+import com.ivanmorgillo.corsoandroid.teama.gone
+import com.ivanmorgillo.corsoandroid.teama.visible
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
 import timber.log.Timber
 
 // gli oggetti dentro questa sealed li stiamo aggiungendo a seconda dell'ordine della nostra schermata
@@ -20,17 +26,18 @@ import timber.log.Timber
 sealed class DetailScreenItems {
 
     data class Title(val title: String) : DetailScreenItems()
-    data class Image(val image: String) : DetailScreenItems()
+    data class Video(val video: String, val image: String) : DetailScreenItems()
     data class IngredientsInstructionsList(val ingredients: List<IngredientUI>, val instruction: String) :
         DetailScreenItems()
 
     object TabLayout : DetailScreenItems()
 }
 
-private const val IMAGEVAL_VIEWTYPE = 1
+private const val VIDEO_VIEWTYPE = 1
 private const val IGNREDIENTSINSTRUCTIONS_VIEWTYPE = 2
 private const val TITLE_VIEWTYPE = 3
 private const val TABLAYOUT_VIEWTYPE = 4
+private const val YOUTUBE_INDEX = 8
 
 class DetailScreenAdapter(private val onIngredientsClick: () -> Unit, private val onInstructionsClick: () -> Unit) :
     RecyclerView.Adapter<DetailScreenViewHolder>() {
@@ -46,7 +53,7 @@ class DetailScreenAdapter(private val onIngredientsClick: () -> Unit, private va
     override fun getItemViewType(position: Int): Int {
         val item = items[position]
         return when (item) {
-            is DetailScreenItems.Image -> IMAGEVAL_VIEWTYPE
+            is DetailScreenItems.Video -> VIDEO_VIEWTYPE
             is DetailScreenItems.IngredientsInstructionsList -> IGNREDIENTSINSTRUCTIONS_VIEWTYPE
             is DetailScreenItems.Title -> TITLE_VIEWTYPE
             is DetailScreenItems.TabLayout -> TABLAYOUT_VIEWTYPE
@@ -56,9 +63,9 @@ class DetailScreenAdapter(private val onIngredientsClick: () -> Unit, private va
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DetailScreenViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         return when (viewType) {
-            IMAGEVAL_VIEWTYPE -> {
-                val view = layoutInflater.inflate(R.layout.detail_screen_image, parent, false)
-                ImageViewHolder(view)
+            VIDEO_VIEWTYPE -> {
+                val view = layoutInflater.inflate(R.layout.detail_screen_video, parent, false)
+                VideoViewHolder(view)
             }
             IGNREDIENTSINSTRUCTIONS_VIEWTYPE -> {
                 val view = layoutInflater.inflate(R.layout.detail_ingredient_instruction, parent, false)
@@ -70,7 +77,7 @@ class DetailScreenAdapter(private val onIngredientsClick: () -> Unit, private va
             }
             TABLAYOUT_VIEWTYPE -> {
                 val view = layoutInflater.inflate(R.layout.tab_button_details, parent, false)
-                DetailScreenViewHolder.TabLayoutViewHolder(view)
+                TabLayoutViewHolder(view)
             }
             else -> error("ViewTypeNotValid!")
         }
@@ -78,12 +85,12 @@ class DetailScreenAdapter(private val onIngredientsClick: () -> Unit, private va
 
     override fun onBindViewHolder(holder: DetailScreenViewHolder, position: Int) {
         when (holder) {
-            is ImageViewHolder -> holder.bind(items[position] as DetailScreenItems.Image)
+            is VideoViewHolder -> holder.bind(items[position] as DetailScreenItems.Video)
             is IngredientInstructionListViewHolder -> holder.bind(
                 items[position] as DetailScreenItems.IngredientsInstructionsList
             )
             is TitleViewHolder -> holder.bind(items[position] as DetailScreenItems.Title)
-            is DetailScreenViewHolder.TabLayoutViewHolder -> holder.bind(onIngredientsClick, onInstructionsClick)
+            is TabLayoutViewHolder -> holder.bind(onIngredientsClick, onInstructionsClick)
         }
     }
 
@@ -91,7 +98,6 @@ class DetailScreenAdapter(private val onIngredientsClick: () -> Unit, private va
 }
 
 sealed class DetailScreenViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
     // view holder per il titolo
     class TitleViewHolder(itemView: View) : DetailScreenViewHolder(itemView) {
         private val titleDetail = itemView.findViewById<TextView>(R.id.detail_screen_title)
@@ -100,10 +106,27 @@ sealed class DetailScreenViewHolder(itemView: View) : RecyclerView.ViewHolder(it
         }
     }
 
-    class ImageViewHolder(itemView: View) : DetailScreenViewHolder(itemView) {
-        private val imageDetail = itemView.findViewById<ImageView>(R.id.detail_screen_image)
-        fun bind(image: DetailScreenItems.Image) {
-            imageDetail.load(image.image)
+    class VideoViewHolder(itemView: View) : DetailScreenViewHolder(itemView) {
+        private var startSeconds = 0f // secondi a cui far iniziare il video (0 = dall'inizio)
+        fun bind(video: DetailScreenItems.Video) {
+            val imageDetail = itemView.findViewById<ImageView>(R.id.detail_screen_image)
+            val videoDetail = itemView.findViewById<YouTubePlayerView>(R.id.detail_screen_video)
+            if (video.video.isEmpty()) { // se il video è vuoto (non esiste) mostra l'immagine
+                imageDetail.load(video.image)
+                imageDetail.visible()
+                videoDetail.gone()
+            } else { // altrimenti nasconde l'immagine e mostra il video
+                videoDetail.visible()
+                imageDetail.gone()
+                videoDetail.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
+                    override fun onReady(youTubePlayer: YouTubePlayer) {
+                        // esempio video URL: https://www.youtube.com/watch?v=SQnr4Z-7rok
+                        val videoId = video.video.substring(video.video.indexOf("watch?v=") + YOUTUBE_INDEX)
+                        Timber.d("Sto caricando: https://www.youtube.com/watch?v=$videoId")
+                        youTubePlayer.loadVideo(videoId, startSeconds)
+                    }
+                })
+            }
         }
     }
 
