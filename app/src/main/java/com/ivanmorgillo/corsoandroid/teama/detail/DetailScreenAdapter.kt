@@ -16,6 +16,7 @@ import com.ivanmorgillo.corsoandroid.teama.detail.DetailScreenViewHolder.VideoVi
 import com.ivanmorgillo.corsoandroid.teama.exhaustive
 import com.ivanmorgillo.corsoandroid.teama.gone
 import com.ivanmorgillo.corsoandroid.teama.visible
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
@@ -124,6 +125,13 @@ sealed class DetailScreenViewHolder(itemView: View) : RecyclerView.ViewHolder(it
                         val videoId = video.video.substring(video.video.indexOf("watch?v=") + YOUTUBE_INDEX)
                         Timber.d("Sto caricando: https://www.youtube.com/watch?v=$videoId")
                         youTubePlayer.loadVideo(videoId, startSeconds)
+                    }
+
+                    override fun onError(youTubePlayer: YouTubePlayer, error: PlayerConstants.PlayerError) {
+                        super.onError(youTubePlayer, error)
+                        imageDetail.load(video.image)
+                        imageDetail.visible()
+                        videoDetail.gone()
                     }
                 })
             }
