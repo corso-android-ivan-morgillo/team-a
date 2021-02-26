@@ -47,8 +47,6 @@ class CategoryFragment : Fragment() {
 
         val fab: FloatingActionButton = fab
         fab.setOnClickListener { view ->
-            /*Snackbar.make(view, "Sto cercando una ricetta random...", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()*/
             Toast.makeText(context, "Sto caricando una ricetta random...", Toast.LENGTH_SHORT).show()
             val directions = CategoryFragmentDirections.actionCategoryFragmentToDetailFragment(-1L)
             Timber.d("Invio al details una ricetta random")
