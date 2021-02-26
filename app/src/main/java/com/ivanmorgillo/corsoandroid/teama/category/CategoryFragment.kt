@@ -39,14 +39,14 @@ class CategoryFragment : Fragment() {
         refresh.setOnRefreshListener { // swipe to refresh
             viewModel.send(CategoryScreenEvent.OnRefresh)
         }
-        val adapter = CategoryAdapter { item, _ ->
+        val categoryCardAdapter = CategoryAdapter { item: CategoryUI, _: View ->
             viewModel.send(CategoryScreenEvent.OnCategoryClick(item))
         }
-        category_list.adapter = adapter
+
+        category_list.adapter = categoryCardAdapter
+
         val fab: FloatingActionButton = fab
         fab.setOnClickListener { view ->
-            /*Snackbar.make(view, "Sto cercando una ricetta random...", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()*/
             Toast.makeText(context, "Sto caricando una ricetta random...", Toast.LENGTH_SHORT).show()
             val directions = CategoryFragmentDirections.actionCategoryFragmentToDetailFragment(-1L)
             Timber.d("Invio al details una ricetta random")
@@ -56,7 +56,7 @@ class CategoryFragment : Fragment() {
             when (state) {
                 is CategoryScreenStates.Content -> {
                     category_list_progressBar.gone()
-                    adapter.setCategories(state.categories)
+                    categoryCardAdapter.setCategories(state.categories)
                     refresh.isRefreshing = false
                 }
                 CategoryScreenStates.Error -> {
@@ -83,6 +83,7 @@ class CategoryFragment : Fragment() {
                     ShowNoCategoryFoundMessage -> showNoCategoryFoundMessage(view)
                 }.exhaustive
             })
+
         viewModel.send(CategoryScreenEvent.OnReady)
     }
 
