@@ -1,6 +1,6 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="Theme.Delicious" parent="Theme.MaterialComponents.DayNight">
+    <style name="Theme.Delicious" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryVariant">@color/colorPrimaryDark</item>
@@ -9,7 +9,19 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!--<item name="android:windowLightStatusBar">false</item>-->
+
+        <!-- Secondary brand color. -->
+        <!-- Set colorSecondary to change background of FAB (backgroundTint) -->
+        <!--<item name="colorSecondary">@color/teal_200</item>-->
+        <!--<item name="colorSecondaryVariant">@color/teal_700</item>-->
+        <!-- Customize colorSecondary to change icon/text of FAB (maps to tint and rippleColor) -->
+        <item name="colorSecondary">@color/colorPrimary</item>
+        <item name="colorOnSecondary">@color/white</item>
     </style>
+
+    <style name="Theme.Delicious.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.Delicious.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="CardViewStyle" parent="CardView">
         <item name="android:backgroundTint">@color/grey</item>

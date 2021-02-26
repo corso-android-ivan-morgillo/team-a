@@ -34,19 +34,18 @@ class CategoryViewModel(
     fun send(event: CategoryScreenEvent) {
         when (event) {
             // deve ricevere la lista delle ricette. La view deve ricevere eventi e reagire a stati.
-            CategoryScreenEvent.OnReady -> {
-                loadContent()
-            }
+            CategoryScreenEvent.OnReady -> loadContent(false)
             is CategoryScreenEvent.OnCategoryClick -> {
                 onCategoryClick(event)
             }
-        }
+            CategoryScreenEvent.OnRefresh -> loadContent(true)
+        }.exhaustive
     }
 
-    private fun loadContent() {
+    private fun loadContent(forced: Boolean) {
         states.postValue(Loading)
         viewModelScope.launch {
-            val result = repository.loadCategories()
+            val result = repository.loadCategories(forced)
             when (result) {
                 is LoadCategoryResult.Failure -> onFailure(result)
                 is LoadCategoryResult.Success -> onSuccess(result)
@@ -105,4 +104,5 @@ sealed class CategoryScreenEvent {
     data class OnCategoryClick(val category: CategoryUI) : CategoryScreenEvent()
 
     object OnReady : CategoryScreenEvent()
+    object OnRefresh : CategoryScreenEvent()
 }

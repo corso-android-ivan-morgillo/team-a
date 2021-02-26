@@ -4,11 +4,18 @@ import com.ivanmorgillo.corsoandroid.teama.network.LoadCategoryResult
 import com.ivanmorgillo.corsoandroid.teama.network.NetworkAPI
 
 interface CategoryRepository {
-    suspend fun loadCategories(): LoadCategoryResult
+    suspend fun loadCategories(forced: Boolean): LoadCategoryResult
 }
 
 class CategoryRepositoryImpl(private val api: NetworkAPI) : CategoryRepository {
-    override suspend fun loadCategories(): LoadCategoryResult {
-        return api.loadCategories()
+    private var cache: LoadCategoryResult? = null
+    override suspend fun loadCategories(forced: Boolean): LoadCategoryResult {
+        return if (cache == null || forced) {
+            val result = api.loadCategories()
+            cache = result
+            result
+        } else {
+            cache!!
+        }
     }
 }
