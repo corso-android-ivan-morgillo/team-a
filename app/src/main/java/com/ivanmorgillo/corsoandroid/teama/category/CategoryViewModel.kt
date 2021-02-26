@@ -35,9 +35,7 @@ class CategoryViewModel(
         when (event) {
             // deve ricevere la lista delle ricette. La view deve ricevere eventi e reagire a stati.
             CategoryScreenEvent.OnReady -> loadContent(false)
-            is CategoryScreenEvent.OnCategoryClick -> {
-                onCategoryClick(event)
-            }
+            is CategoryScreenEvent.OnCategoryClick -> onCategoryClick(event)
             CategoryScreenEvent.OnRefresh -> loadContent(true)
         }.exhaustive
     }
