@@ -12,4 +12,7 @@ interface RecipeService {
 
     @GET("lookup.php")
     suspend fun loadRecipeDetails(@Query("i") idMeal: Long): RecipeDetailsDTO
+
+    @GET("random.php")
+    suspend fun loadRandomRecipe(): RecipeDetailsDTO
 }

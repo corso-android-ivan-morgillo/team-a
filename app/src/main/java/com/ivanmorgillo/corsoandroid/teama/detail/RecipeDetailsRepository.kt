@@ -9,7 +9,11 @@ interface RecipeDetailsRepository {
 
 class RecipeDetailsRepositoryImpl(private val api: NetworkAPI) : RecipeDetailsRepository {
     override suspend fun loadRecipeDetails(idMeal: Long): LoadRecipeDetailsResult {
-        return api.loadRecipeDetails(idMeal)
+        return if (idMeal == -1L) {
+            api.loadRandomRecipe()
+        } else {
+            api.loadRecipeDetails(idMeal)
+        }
     }
 }
 

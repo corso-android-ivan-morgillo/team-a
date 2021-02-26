@@ -6,9 +6,11 @@ import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.ivanmorgillo.corsoandroid.teama.R
 import com.ivanmorgillo.corsoandroid.teama.category.CategoryScreenAction.NavigateToRecipes
 import com.ivanmorgillo.corsoandroid.teama.category.CategoryScreenAction.ShowInterruptedRequestMessage
@@ -22,6 +24,7 @@ import com.ivanmorgillo.corsoandroid.teama.showAlertDialog
 import com.ivanmorgillo.corsoandroid.teama.visible
 import kotlinx.android.synthetic.main.fragment_category.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 class CategoryFragment : Fragment() {
     private val viewModel: CategoryViewModel by viewModel()
@@ -40,6 +43,15 @@ class CategoryFragment : Fragment() {
             viewModel.send(CategoryScreenEvent.OnCategoryClick(item))
         }
         category_list.adapter = adapter
+        val fab: FloatingActionButton = fab
+        fab.setOnClickListener { view ->
+            /*Snackbar.make(view, "Sto cercando una ricetta random...", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show()*/
+            Toast.makeText(context, "Sto caricando una ricetta random...", Toast.LENGTH_SHORT).show()
+            val directions = CategoryFragmentDirections.actionCategoryFragmentToDetailFragment(-1L)
+            Timber.d("Invio al details una ricetta random")
+            findNavController().navigate(directions)
+        }
         viewModel.states.observe(viewLifecycleOwner, { state ->
             when (state) {
                 is CategoryScreenStates.Content -> {

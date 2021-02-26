@@ -160,6 +160,41 @@ class NetworkAPI {
         }
     }
 
+    @Suppress("TooGenericExceptionCaught")
+    suspend fun loadRandomRecipe(): LoadRecipeDetailsResult {
+        try {
+            val recipesDetailsDTO = service.loadRandomRecipe()
+            return if (recipesDetailsDTO.details.isEmpty()) {
+                LoadRecipeDetailsResult.Failure(NoDetailFound)
+            } else {
+                val recipeDetail: RecipeDetailsDTO.Detail = recipesDetailsDTO.details[0]
+                val ingredients = getIngredients(recipeDetail)
+                var video = recipeDetail.strYoutube
+                if (video.isNullOrBlank()) {
+                    video = ""
+                }
+                val recipeDetails = RecipeDetails(
+                    name = recipeDetail.strMeal,
+                    image = recipeDetail.strMealThumb,
+                    video = video,
+                    idMeal = recipeDetail.idMeal,
+                    ingredients = ingredients,
+                    instructions = recipeDetail.strInstructions
+                )
+                LoadRecipeDetailsResult.Success(recipeDetails)
+            }
+        } catch (e: IOException) { // no network available
+            return LoadRecipeDetailsResult.Failure(LoadRecipeDetailError.NoInternet)
+        } catch (e: ConnectException) { // interrupted network request
+            return LoadRecipeDetailsResult.Failure(LoadRecipeDetailError.InterruptedRequest)
+        } catch (e: SocketTimeoutException) { // server timeout error
+            return LoadRecipeDetailsResult.Failure(LoadRecipeDetailError.SlowInternet)
+        } catch (e: Exception) { // other generic exception
+            Timber.e(e, "Generic Exception on LoadRecipeDetails")
+            return LoadRecipeDetailsResult.Failure(LoadRecipeDetailError.ServerError)
+        }
+    }
+
     private fun RecipeDTO.Meal.toDomain(): Recipe? {
         val id = idMeal.toLongOrNull()
         return if (id != null) {
