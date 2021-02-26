@@ -30,7 +30,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:orientation="vertical"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-            app:spanCount="2"
+            app:spanCount="1"
             tools:listitem="@layout/category_item"
             android:transitionGroup="true" />
 

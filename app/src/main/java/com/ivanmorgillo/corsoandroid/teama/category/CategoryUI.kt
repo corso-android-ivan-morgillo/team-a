@@ -4,4 +4,12 @@ data class CategoryUI(
     val id: Long,
     val title: String,
     val image: String,
+    val recipesCount: String,
+    val flags: List<FlagUI>
+
+)
+
+data class FlagUI(
+
+    val flag: String
 )
