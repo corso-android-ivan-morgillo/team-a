@@ -2,22 +2,27 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/nav_graph.xml"
-    app:startDestination="@id/categoryFragment">
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/categoryFragment">
+
+    <!-- Tutti i fragment (menu laterale e non) -->
 
     <fragment
         android:id="@+id/categoryFragment"
         android:name="com.ivanmorgillo.corsoandroid.teama.category.CategoryFragment"
-        android:label="CategoryFragment"
+        android:label="@string/category_fragment"
         tools:layout="@layout/fragment_category">
         <action
             android:id="@+id/action_categoryFragment_to_recipeFragment"
             app:destination="@id/recipeFragment" />
+        <action
+            android:id="@+id/action_categoryFragment_to_detailFragment"
+            app:destination="@id/detailFragment" />
     </fragment>
     <fragment
         android:id="@+id/recipeFragment"
         android:name="com.ivanmorgillo.corsoandroid.teama.recipe.RecipeFragment"
-        android:label="RecipeFragment"
+        android:label="@string/recipe_fragment"
         tools:layout="@layout/fragment_recipe">
         <action
             android:id="@+id/action_recipeFragment_to_detailFragment"
@@ -30,7 +35,7 @@
     <fragment
         android:id="@+id/detailFragment"
         android:name="com.ivanmorgillo.corsoandroid.teama.detail.DetailFragment"
-        android:label="DetailFragment"
+        android:label="@string/detail_fragment"
         tools:layout="@layout/fragment_detail">
         <!-- Questo è il modo di scrivere un parametro in ricezione. -->
         <argument
@@ -38,4 +43,16 @@
             app:argType="long"
             android:defaultValue="0L" />
     </fragment>
+
+    <fragment
+        android:id="@+id/nav_gallery"
+        android:name="com.ivanmorgillo.corsoandroid.teama.ui.gallery.GalleryFragment"
+        android:label="@string/menu_gallery"
+        tools:layout="@layout/fragment_gallery" />
+
+    <fragment
+        android:id="@+id/nav_slideshow"
+        android:name="com.ivanmorgillo.corsoandroid.teama.ui.slideshow.SlideshowFragment"
+        android:label="@string/menu_slideshow"
+        tools:layout="@layout/fragment_slideshow" />
 </navigation>
