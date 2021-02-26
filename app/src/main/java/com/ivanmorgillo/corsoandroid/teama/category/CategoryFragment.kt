@@ -34,7 +34,7 @@ class CategoryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val refresh: SwipeRefreshLayout = category_refresh
         refresh.setOnRefreshListener { // swipe to refresh
-            viewModel.send(CategoryScreenEvent.OnReady)
+            viewModel.send(CategoryScreenEvent.OnRefresh)
         }
         val adapter = CategoryAdapter { item, _ ->
             viewModel.send(CategoryScreenEvent.OnCategoryClick(item))
