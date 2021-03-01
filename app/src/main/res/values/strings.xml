@@ -17,6 +17,7 @@
     <string name="retry">Retry</string>
     <string name="network_settings">Network settings</string>
     <string name="search_recipe_hint">Search by title…</string>
+    <string name="search_favourite_hint">Search by title…</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -25,7 +26,7 @@
     <string name="nav_header_desc">Navigation header</string>
 
 
-    <string name="category_fragment">@string/app_name</string>
+    <string name="category_fragment">Recipes</string>
     <string name="recipe_fragment">Recipes</string>
     <string name="detail_fragment">Recipe</string>
     <string name="menu_gallery">Favourites</string>
