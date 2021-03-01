@@ -38,9 +38,10 @@ class CategoryFlagAdapter :
 class CategoryFlagViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     private val image = itemView.findViewById<ImageView>(R.id.flag_country)
-    private val flagUrl = ""
+    private var flagUrl = ""
     fun bind(item: FlagUI) {
-        image.load(item.flag)
+        flagUrl = "https://www.themealdb.com/images/icons/flags/big/64/${item.flag}.png"
+        image.load(flagUrl)
         image.contentDescription = item.flag
 
         // categoryCardView.transitionName = "category_transition_item${item.id}"

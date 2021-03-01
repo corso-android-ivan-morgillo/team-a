@@ -7,12 +7,13 @@ import com.ivanmorgillo.corsoandroid.teama.detail.DetailViewModel
 import com.ivanmorgillo.corsoandroid.teama.detail.RecipeDetailsRepository
 import com.ivanmorgillo.corsoandroid.teama.detail.RecipeDetailsRepositoryImpl
 import com.ivanmorgillo.corsoandroid.teama.network.NetworkAPI
+import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val appModule = module {
     single {
-        NetworkAPI()
+        NetworkAPI(androidApplication().cacheDir)
     }
     single<RecipesRepository> {
         RecipeRepositoryImpl(api = get())

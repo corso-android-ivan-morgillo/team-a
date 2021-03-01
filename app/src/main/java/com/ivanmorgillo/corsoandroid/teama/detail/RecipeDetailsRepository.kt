@@ -24,4 +24,5 @@ data class RecipeDetails(
     val idMeal: String,
     val ingredients: List<Ingredient>,
     val instructions: String,
+    val area: String
 )

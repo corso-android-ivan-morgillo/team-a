@@ -84,7 +84,7 @@ class CategoryFragment : Fragment() {
                 }.exhaustive
             })
 
-        viewModel.send(CategoryScreenEvent.OnReady)
+        // viewModel.send(CategoryScreenEvent.OnReady)
     }
 
     override fun onResume() {

@@ -69,22 +69,15 @@ class CategoryViewModel(
 
     private fun onSuccess(result: LoadCategoryResult.Success) {
 
-        val categories = result.categories.map {
+        val categories = result.categories.map { it ->
             CategoryUI(
                 title = it.name,
                 image = it.image,
                 id = it.id.toLong(),
-                flags = listOf<FlagUI>(
-
-                    FlagUI(flag = "https://www.themealdb.com/images/icons/flags/big/64/it.png"),
-                    FlagUI(flag = "https://www.themealdb.com/images/icons/flags/big/64/gb.png"),
-                    FlagUI(flag = "https://www.themealdb.com/images/icons/flags/big/64/de.png"),
-                    FlagUI(flag = "https://www.themealdb.com/images/icons/flags/big/64/es.png"),
-                    FlagUI(flag = "https://www.themealdb.com/images/icons/flags/big/64/fr.png"),
-                    FlagUI(flag = "https://www.themealdb.com/images/icons/flags/big/64/it.png"),
-                    FlagUI(flag = "https://www.themealdb.com/images/icons/flags/big/64/br.png")
-                ),
-                recipesCount = "23"
+                flags = it.categoryArea.map {
+                    FlagUI(it)
+                },
+                recipesCount = it.recipeAmount
 
             )
         }
