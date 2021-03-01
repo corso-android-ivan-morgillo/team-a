@@ -84,7 +84,7 @@ class CategoryViewModel(
                     FlagUI(flag = "https://www.themealdb.com/images/icons/flags/big/64/it.png"),
                     FlagUI(flag = "https://www.themealdb.com/images/icons/flags/big/64/br.png")
                 ),
-                recipesCount = "23"
+                recipesCount = it.recipeAmount
 
             )
         }

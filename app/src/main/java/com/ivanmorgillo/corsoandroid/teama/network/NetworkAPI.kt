@@ -160,6 +160,15 @@ class NetworkAPI {
         }
     }
 
+    private suspend fun loadCategoriesInfo(categoryName: String): String {
+        // qui dovremmo per ogni categoria contare i piatti.
+        val recipesList: LoadRecipeResult = loadRecipes(categoryName)
+        if (recipesList is Success) {
+            return recipesList.recipes.size.toString()
+        }
+        return ""
+    }
+
     @Suppress("TooGenericExceptionCaught")
     suspend fun loadRandomRecipe(): LoadRecipeDetailsResult {
         try {
@@ -208,13 +217,15 @@ class NetworkAPI {
         }
     }
 
-    private fun CategoryDTO.Category.toDomain(): Category? {
+    private suspend fun CategoryDTO.Category.toDomain(): Category? {
         val id = idCategory.toLongOrNull()
         return if (id != null) {
             Category(
                 name = strCategory,
                 image = strCategoryThumb,
-                id = idCategory
+                id = idCategory,
+                recipeAmount = loadCategoriesInfo(strCategory),
+                categoryArea = emptyList()
             )
             // possibilità di implementare la descrizione
         } else {
