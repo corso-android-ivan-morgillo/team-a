@@ -18,6 +18,7 @@
     <string name="retry">Riprova</string>
     <string name="network_settings">Impostazioni di rete</string>
     <string name="search_recipe_hint">Cerca per titolo…</string>
+    <string name="search_favourite_hint">Cerca per titolo…</string>
 
     <string name="navigation_drawer_open">Apri menu laterale</string>
     <string name="navigation_drawer_close">Chiudi menu laterale</string>
@@ -26,7 +27,7 @@
     <string name="nav_header_desc">Navigation header</string>
 
 
-    <string name="category_fragment">@string/app_name</string>
+    <string name="category_fragment">Ricette</string>
     <string name="recipe_fragment">Ricette</string>
     <string name="detail_fragment">Ricetta</string>
     <string name="menu_gallery">Preferiti</string>

@@ -131,7 +131,7 @@ class RecipeFragment : Fragment(), SearchView.OnQueryTextListener {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.recipes_menu, menu)
         val searchManager = activity?.getSystemService(Context.SEARCH_SERVICE) as SearchManager
-        val searchMenuItem = menu.findItem(R.id.action_search)
+        val searchMenuItem = menu.findItem(R.id.recipes_search)
         val searchView = searchMenuItem.actionView as SearchView
         searchView.setSearchableInfo(searchManager.getSearchableInfo(activity?.componentName))
         searchView.queryHint = resources.getString(R.string.search_recipe_hint)
@@ -140,7 +140,7 @@ class RecipeFragment : Fragment(), SearchView.OnQueryTextListener {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
-        return if (id == R.id.action_search) {
+        return if (id == R.id.recipes_search) {
             false
         } else super.onOptionsItemSelected(item)
     }
