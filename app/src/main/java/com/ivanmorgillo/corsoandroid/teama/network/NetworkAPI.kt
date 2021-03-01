@@ -12,16 +12,39 @@ import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeError.ServerError
 import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeError.SlowInternet
 import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeResult.Failure
 import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeResult.Success
+import okhttp3.Cache
+import okhttp3.CacheControl
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import timber.log.Timber
+import java.io.File
 import java.io.IOException
 import java.net.ConnectException
 import java.net.SocketTimeoutException
 
-class NetworkAPI {
+class CacheInterceptor : Interceptor {
+    @Throws(IOException::class)
+    override fun intercept(chain: Interceptor.Chain): Response {
+        val response: Response = chain.proceed(chain.request())
+        val cacheControl: CacheControl = CacheControl.Builder()
+            //   .maxAge(15, java.util.concurrent.TimeUnit.MINUTES) // 15 minutes cache
+            .build()
+        return response.newBuilder()
+            .removeHeader("Pragma")
+            .removeHeader("Cache-Control")
+            .header("Cache-Control", cacheControl.toString())
+            .build()
+    }
+}
+
+private const val SIZEONE = 50L
+private const val SIZETWO = 1024L
+
+class NetworkAPI(cacheDir: File) {
     private val service: RecipeService
 
     init {
@@ -29,6 +52,14 @@ class NetworkAPI {
         logging.level = HttpLoggingInterceptor.Level.BODY
         val client: OkHttpClient = OkHttpClient.Builder()
             .addInterceptor(logging)
+            .addNetworkInterceptor(CacheInterceptor())
+            .cache(
+                Cache(
+                    directory = File(cacheDir, "http_cache"),
+                    // $0.05 worth of phone storage in 2020
+                    maxSize = SIZEONE * SIZETWO * SIZETWO // 50 MiB
+                )
+            )
             .build()
         val retrofit = Retrofit.Builder()
             .baseUrl("https://www.themealdb.com/api/json/v1/1/")
@@ -57,7 +88,8 @@ class NetworkAPI {
                     video = video,
                     idMeal = recipeDetail.idMeal,
                     ingredients = ingredients,
-                    instructions = recipeDetail.strInstructions
+                    instructions = recipeDetail.strInstructions,
+                    area = recipeDetail.strArea
                 )
                 LoadRecipeDetailsResult.Success(recipeDetails)
             }
@@ -160,13 +192,68 @@ class NetworkAPI {
         }
     }
 
-    private suspend fun loadCategoriesInfo(categoryName: String): String {
-        // qui dovremmo per ogni categoria contare i piatti.
+    private suspend fun loadCategoryInfo(categoryName: String): CategoryInfo {
         val recipesList: LoadRecipeResult = loadRecipes(categoryName)
+        val categoryInfo: CategoryInfo
         if (recipesList is Success) {
-            return recipesList.recipes.size.toString()
+            val recipesAmount = recipesList.recipes.size.toString()
+            val areaNames = loadCategoriesFlags(recipesList.recipes)
+            categoryInfo = CategoryInfo(recipesAmount, areaNames)
+            return categoryInfo
+        } else {
+            TODO()
         }
-        return ""
+    }
+
+    data class CategoryInfo(
+
+        var recipesAmount: String,
+        var areaNames: List<String>
+    )
+
+    private suspend fun loadCategoriesFlags(recipes: List<Recipe>): List<String> {
+
+        return recipes
+            .map {
+                loadRecipeDetails(it.idMeal)
+            }
+            .filterIsInstance(LoadRecipeDetailsResult.Success::class.java)
+            .map {
+                reformatFlagName(it.details.area)
+            }
+            .distinct()
+            .sortedDescending()
+    }
+
+    private fun reformatFlagName(areaName: String): String {
+
+        return when (areaName) {
+            "American" -> "us"
+            "British" -> "gb"
+            "Canadian" -> "ca"
+            "Chinese" -> "cn"
+            "Dutch" -> "nl"
+            "Egyptian" -> "eg"
+            "French" -> "fr"
+            "Greek" -> "gr"
+            "Indian" -> "in"
+            "Irish" -> "ie"
+            "Italian" -> "it"
+            "Jamaican" -> "jm"
+            "Japanese" -> "jp"
+            "Kenyan" -> "ke"
+            "Malaysian" -> "my"
+            "Mexican" -> "mx"
+            "Moroccan" -> "ma"
+            "Polish" -> "pl"
+            "Russian" -> "ru"
+            "Spanish" -> "es"
+            "Thai" -> "th"
+            "Tunisian" -> "tm"
+            "Turkish" -> "tr"
+            "Vietnamese" -> "vn"
+            else -> ""
+        }
     }
 
     @Suppress("TooGenericExceptionCaught")
@@ -188,7 +275,8 @@ class NetworkAPI {
                     video = video,
                     idMeal = recipeDetail.idMeal,
                     ingredients = ingredients,
-                    instructions = recipeDetail.strInstructions
+                    instructions = recipeDetail.strInstructions,
+                    area = recipeDetail.strArea
                 )
                 LoadRecipeDetailsResult.Success(recipeDetails)
             }
@@ -220,12 +308,13 @@ class NetworkAPI {
     private suspend fun CategoryDTO.Category.toDomain(): Category? {
         val id = idCategory.toLongOrNull()
         return if (id != null) {
+            val categoryInfo = loadCategoryInfo(strCategory)
             Category(
                 name = strCategory,
                 image = strCategoryThumb,
                 id = idCategory,
-                recipeAmount = loadCategoriesInfo(strCategory),
-                categoryArea = emptyList()
+                recipeAmount = categoryInfo.recipesAmount,
+                categoryArea = categoryInfo.areaNames
             )
             // possibilità di implementare la descrizione
         } else {
