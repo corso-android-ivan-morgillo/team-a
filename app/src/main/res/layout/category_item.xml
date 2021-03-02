@@ -24,7 +24,7 @@
             app:layout_constraintTop_toBottomOf="@id/header_container"
             tools:src="@mipmap/ic_launcher"
             android:contentDescription="categoryImage" />
-        <!-- tools:src serve per mettere dentro l'immagine un'anteprima da vedere solamente nella preview -->
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/header_container"
