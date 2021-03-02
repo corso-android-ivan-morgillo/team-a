@@ -19,7 +19,7 @@ import com.ivanmorgillo.corsoandroid.teama.gone
 import com.ivanmorgillo.corsoandroid.teama.visible
 
 class CategoryAdapter(
-    private val onclick: (CategoryUI, View) -> Unit
+    private val onclick: (CategoryUI, View) -> Unit,
 ) : RecyclerView.Adapter<CategoryViewHolder>() {
     private var categories = emptyList<CategoryUI>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
@@ -66,32 +66,33 @@ class CategoryViewHolder(
         title.text = item.title
         image.load(item.image)
         image.contentDescription = item.title
-        goToRecipes.setOnClickListener {
+        goToRecipes.setOnClickListener { // per aprire il dettaglio della ricetta
             onclick(item, it)
         }
-
-        goToRecipes.setOnClickListener {
-            onclick(item, it)
+        categoryCardView.setOnClickListener { // per espandere o collassare la card
+            expandOrCollapse()
         }
-
-        arrowForExpand.setOnClickListener {
-            if (hiddenConstraintLayout.isVisible) {
-                TransitionManager.beginDelayedTransition(
-                    categoryCardView,
-                    AutoTransition()
-                )
-                arrowForExpand.setImageResource(R.drawable.arrow_down)
-                hiddenConstraintLayout.gone()
-            } else {
-                TransitionManager.beginDelayedTransition(
-                    categoryCardView,
-                    AutoTransition()
-                )
-                arrowForExpand.setImageResource(R.drawable.arrow_up)
-                hiddenConstraintLayout.visible()
-            }
+        arrowForExpand.setOnClickListener { // per espandere o collassare la card
+            expandOrCollapse()
         }
+        // categoryCardView.transitionName = "category_transition_item${item.id}"
     }
 
-    // categoryCardView.transitionName = "category_transition_item${item.id}"
+    private fun expandOrCollapse() {
+        if (hiddenConstraintLayout.isVisible) {
+            TransitionManager.beginDelayedTransition(
+                categoryCardView,
+                AutoTransition()
+            )
+            arrowForExpand.setImageResource(R.drawable.arrow_down)
+            hiddenConstraintLayout.gone()
+        } else {
+            TransitionManager.beginDelayedTransition(
+                categoryCardView,
+                AutoTransition()
+            )
+            arrowForExpand.setImageResource(R.drawable.arrow_up)
+            hiddenConstraintLayout.visible()
+        }
+    }
 }
