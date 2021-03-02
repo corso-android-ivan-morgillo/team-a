@@ -119,12 +119,14 @@ sealed class DetailScreenViewHolder(itemView: View) : RecyclerView.ViewHolder(it
             } else { // altrimenti nasconde l'immagine e mostra il video
                 videoDetail.visible()
                 imageDetail.gone()
+                videoDetail.enableBackgroundPlayback(false)
                 videoDetail.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
                     override fun onReady(youTubePlayer: YouTubePlayer) {
                         // esempio video URL: https://www.youtube.com/watch?v=SQnr4Z-7rok
                         val videoId = video.video.substring(video.video.indexOf("watch?v=") + YOUTUBE_INDEX)
                         Timber.d("Sto caricando: https://www.youtube.com/watch?v=$videoId")
                         youTubePlayer.loadVideo(videoId, startSeconds)
+                        youTubePlayer.pause()
                     }
 
                     override fun onError(youTubePlayer: YouTubePlayer, error: PlayerConstants.PlayerError) {
