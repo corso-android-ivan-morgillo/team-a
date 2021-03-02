@@ -19,9 +19,7 @@ import com.ivanmorgillo.corsoandroid.teama.category.CategoryScreenAction.ShowNoI
 import com.ivanmorgillo.corsoandroid.teama.category.CategoryScreenAction.ShowServerErrorMessage
 import com.ivanmorgillo.corsoandroid.teama.category.CategoryScreenAction.ShowSlowInternetMessage
 import com.ivanmorgillo.corsoandroid.teama.exhaustive
-import com.ivanmorgillo.corsoandroid.teama.gone
 import com.ivanmorgillo.corsoandroid.teama.showAlertDialog
-import com.ivanmorgillo.corsoandroid.teama.visible
 import kotlinx.android.synthetic.main.fragment_category.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
@@ -55,16 +53,14 @@ class CategoryFragment : Fragment() {
         viewModel.states.observe(viewLifecycleOwner, { state ->
             when (state) {
                 is CategoryScreenStates.Content -> {
-                    category_list_progressBar.gone()
                     categoryCardAdapter.setCategories(state.categories)
                     refresh.isRefreshing = false
                 }
                 CategoryScreenStates.Error -> {
-                    category_list_progressBar.gone()
                     refresh.isRefreshing = false
                 }
                 CategoryScreenStates.Loading -> {
-                    category_list_progressBar.visible()
+                    refresh.isRefreshing = true
                 }
             }
         })
@@ -95,7 +91,7 @@ class CategoryFragment : Fragment() {
     }
 
     private fun showServerErrorMessage(view: View) {
-        category_list_progressBar.gone()
+        category_refresh.isRefreshing = false
         view.showAlertDialog(resources.getString(R.string.server_error_title),
             resources.getString(R.string.server_error_message),
             R.drawable.ic_error,
@@ -107,7 +103,7 @@ class CategoryFragment : Fragment() {
     }
 
     private fun showInterruptedRequestMessage(view: View) {
-        category_list_progressBar.gone()
+        category_refresh.isRefreshing = false
         view.showAlertDialog(resources.getString(R.string.connection_lost_error_title),
             resources.getString(R.string.connection_lost_error_message),
             R.drawable.ic_wifi_off,
@@ -119,7 +115,7 @@ class CategoryFragment : Fragment() {
     }
 
     private fun showNoInternetMessage(view: View) {
-        category_list_progressBar.gone()
+        category_refresh.isRefreshing = false
         view.showAlertDialog(resources.getString(R.string.no_internet_error_title),
             resources.getString(R.string.no_internet_error_message),
             R.drawable.ic_wifi_off,
@@ -133,7 +129,7 @@ class CategoryFragment : Fragment() {
     }
 
     private fun showNoCategoryFoundMessage(view: View) {
-        category_list_progressBar.gone()
+        category_refresh.isRefreshing = false
         view.showAlertDialog(resources.getString(R.string.no_category_found_error_title),
             resources.getString(R.string.no_category_found_error_message),
             R.drawable.ic_sad_face,

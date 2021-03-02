@@ -12,6 +12,9 @@ import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeError.ServerError
 import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeError.SlowInternet
 import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeResult.Failure
 import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeResult.Success
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import okhttp3.Cache
 import okhttp3.CacheControl
 import okhttp3.Interceptor
@@ -168,27 +171,28 @@ class NetworkAPI(cacheDir: File) {
     }
 
     @Suppress("TooGenericExceptionCaught")
-    suspend fun loadCategories(): LoadCategoryResult {
+    suspend fun loadCategories(): LoadCategoryResult = coroutineScope {
         try {
             val categoriesList = service.loadCategories()
             val categories = categoriesList.categories
-                .mapNotNull {
-                    it.toDomain()
-                }
-            return if (categories.isEmpty()) {
+                .map {
+                    async { it.toDomain() }
+                }.awaitAll()
+                .filterNotNull()
+            if (categories.isEmpty()) {
                 LoadCategoryResult.Failure(LoadCategoryError.NoCategoryFound)
             } else {
                 LoadCategoryResult.Success(categories)
             }
         } catch (e: IOException) { // no network available
-            return LoadCategoryResult.Failure(LoadCategoryError.NoInternet)
+            LoadCategoryResult.Failure(LoadCategoryError.NoInternet)
         } catch (e: ConnectException) { // interrupted network request
-            return LoadCategoryResult.Failure(LoadCategoryError.InterruptedRequest)
+            LoadCategoryResult.Failure(LoadCategoryError.InterruptedRequest)
         } catch (e: SocketTimeoutException) { // server timeout error
-            return LoadCategoryResult.Failure(LoadCategoryError.SlowInternet)
+            LoadCategoryResult.Failure(LoadCategoryError.SlowInternet)
         } catch (e: Exception) { // other generic exception
             Timber.e(e, "Generic Exception on LoadCategories")
-            return LoadCategoryResult.Failure(LoadCategoryError.ServerError)
+            LoadCategoryResult.Failure(LoadCategoryError.ServerError)
         }
     }
 
@@ -197,7 +201,9 @@ class NetworkAPI(cacheDir: File) {
         val categoryInfo: CategoryInfo
         if (recipesList is Success) {
             val recipesAmount = recipesList.recipes.size.toString()
+            Timber.d("Loading categories Start")
             val areaNames = loadCategoriesFlags(recipesList.recipes)
+            Timber.d("Loading categories End")
             categoryInfo = CategoryInfo(recipesAmount, areaNames)
             return categoryInfo
         } else {
@@ -211,12 +217,12 @@ class NetworkAPI(cacheDir: File) {
         var areaNames: List<String>
     )
 
-    private suspend fun loadCategoriesFlags(recipes: List<Recipe>): List<String> {
+    private suspend fun loadCategoriesFlags(recipes: List<Recipe>): List<String> = coroutineScope {
 
-        return recipes
+        recipes
             .map {
-                loadRecipeDetails(it.idMeal)
-            }
+                async { loadRecipeDetails(it.idMeal) }
+            }.awaitAll()
             .filterIsInstance(LoadRecipeDetailsResult.Success::class.java)
             .map {
                 reformatFlagName(it.details.area)
