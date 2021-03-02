@@ -3,6 +3,7 @@ package com.ivanmorgillo.corsoandroid.teama.category
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -46,16 +47,18 @@ class CategoryViewHolder(
     private val flagList = itemView.findViewById<RecyclerView>(R.id.flag_list)
     private val flagCounter = itemView.findViewById<TextView>(R.id.recipe_counter)
 
+    private val goToRecipes = itemView.findViewById<Button>(R.id.category_to_recipes)
+
     fun bind(item: CategoryUI, onclick: (CategoryUI, View) -> Unit) {
         val categoryFlagAdapter = CategoryFlagAdapter()
 
         flagList.adapter = categoryFlagAdapter
         categoryFlagAdapter.setFlagCategories(item.flags)
-        flagCounter.text = item.recipesCount
+        flagCounter.text = "${item.recipesCount} recipes"
         title.text = item.title
         image.load(item.image)
         image.contentDescription = item.title
-        categoryCardView.setOnClickListener {
+        goToRecipes.setOnClickListener {
             onclick(item, it)
         }
 
