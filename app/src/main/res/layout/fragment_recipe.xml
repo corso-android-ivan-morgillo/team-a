@@ -32,16 +32,6 @@
             tools:listitem="@layout/recipe_item"
             android:transitionGroup="true" />
 
-        <ProgressBar
-            android:id="@+id/recipes_list_progressBar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:visibility="gone"
-            tools:visibility="visible" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

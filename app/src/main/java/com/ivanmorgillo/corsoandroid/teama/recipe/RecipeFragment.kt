@@ -32,10 +32,8 @@ import com.ivanmorgillo.corsoandroid.teama.MainScreenStates
 import com.ivanmorgillo.corsoandroid.teama.MainViewModel
 import com.ivanmorgillo.corsoandroid.teama.R
 import com.ivanmorgillo.corsoandroid.teama.exhaustive
-import com.ivanmorgillo.corsoandroid.teama.gone
 import com.ivanmorgillo.corsoandroid.teama.recipe.RecipeFragmentDirections.Companion.actionRecipeFragmentToDetailFragment
 import com.ivanmorgillo.corsoandroid.teama.showAlertDialog
-import com.ivanmorgillo.corsoandroid.teama.visible
 import kotlinx.android.synthetic.main.fragment_recipe.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
@@ -80,18 +78,17 @@ class RecipeFragment : Fragment(), SearchView.OnQueryTextListener {
                 // riceve l'aggiornamento del nuovo valore
                 when (state) {
                     is MainScreenStates.Content -> {
-                        recipes_list_progressBar.gone()
+
                         recipes = state.recipes
                         adapter.setRecipes(recipes)
                         refresh.isRefreshing = false
                     }
                     MainScreenStates.Error -> {
-                        // non trova le ricette in fase di Loading ad esempio
-                        recipes_list_progressBar.gone()
+
                         refresh.isRefreshing = false
                     }
                     MainScreenStates.Loading -> {
-                        recipes_list_progressBar.visible()
+                        refresh.isRefreshing = true
                     }
                 }
             })
@@ -146,7 +143,7 @@ class RecipeFragment : Fragment(), SearchView.OnQueryTextListener {
     }
 
     private fun showServerErrorMessage(view: View) {
-        recipes_list_progressBar.gone()
+        recipes_refresh.isRefreshing = false
         view.showAlertDialog(resources.getString(R.string.server_error_title),
             resources.getString(R.string.server_error_message),
             R.drawable.ic_error,
@@ -158,7 +155,7 @@ class RecipeFragment : Fragment(), SearchView.OnQueryTextListener {
     }
 
     private fun showInterruptedRequestMessage(view: View) {
-        recipes_list_progressBar.gone()
+        recipes_refresh.isRefreshing = false
         view.showAlertDialog(resources.getString(R.string.connection_lost_error_title),
             resources.getString(R.string.connection_lost_error_message),
             R.drawable.ic_wifi_off,
@@ -170,7 +167,7 @@ class RecipeFragment : Fragment(), SearchView.OnQueryTextListener {
     }
 
     private fun showNoInternetMessage(view: View) {
-        recipes_list_progressBar.gone()
+        recipes_refresh.isRefreshing = false
         view.showAlertDialog(resources.getString(R.string.no_internet_error_title),
             resources.getString(R.string.no_internet_error_message),
             R.drawable.ic_wifi_off,
@@ -184,7 +181,7 @@ class RecipeFragment : Fragment(), SearchView.OnQueryTextListener {
     }
 
     private fun showNoRecipeFoundMessage(view: View) {
-        recipes_list_progressBar.gone()
+        recipes_refresh.isRefreshing = false
         view.showAlertDialog(resources.getString(R.string.no_recipe_found_error_title),
             resources.getString(R.string.no_recipe_found_error_message),
             R.drawable.ic_sad_face,
