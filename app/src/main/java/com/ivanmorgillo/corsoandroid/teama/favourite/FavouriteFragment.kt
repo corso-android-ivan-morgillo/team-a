@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import com.ivanmorgillo.corsoandroid.teama.R
 import com.ivanmorgillo.corsoandroid.teama.exhaustive
 import com.ivanmorgillo.corsoandroid.teama.gone
@@ -33,10 +34,15 @@ class FavouriteFragment : Fragment(), SearchView.OnQueryTextListener {
     // Equivalente alla onCreate di un activity
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val adapter = FavouriteAdapter { item, view ->
+        val adapter = FavouriteAdapter({ item, view ->
             viewModel.send(FavouriteScreenEvent.OnFavouriteClick(item))
-        }
+        }, favourite_list)
         favourite_list.adapter = adapter
+
+        val view = favourites_list_root
+        val itemTouchHelper = ItemTouchHelper(SwipeToDeleteCallback(adapter, context, view))
+        itemTouchHelper.attachToRecyclerView(favourite_list)
+
         viewModel.states.observe(viewLifecycleOwner, { state ->
             // riceve l'aggiornamento del nuovo valore
             when (state) {

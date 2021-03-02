@@ -24,7 +24,8 @@
     <string name="nav_header_title">@string/app_name</string>
     <string name="nav_header_subtitle">Team A</string>
     <string name="nav_header_desc">Navigation header</string>
-
+    <string name="undo">Undo</string>
+    <string name="favourite_deleted">Successfully deleted!</string>
 
     <string name="category_fragment">Recipes</string>
     <string name="recipe_fragment">Recipes</string>

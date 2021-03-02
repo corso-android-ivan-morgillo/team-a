@@ -8,10 +8,14 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.google.android.material.card.MaterialCardView
+import com.google.android.material.snackbar.Snackbar
 import com.ivanmorgillo.corsoandroid.teama.R
 
-class FavouriteAdapter(private val onclick: (FavouriteUI, View) -> Unit) : RecyclerView.Adapter<RecipeViewHolder>() {
-    private var favourites = emptyList<FavouriteUI>()
+class FavouriteAdapter(
+    private val onclick: (FavouriteUI, View) -> Unit,
+    private val recyclerView: RecyclerView,
+) : RecyclerView.Adapter<RecipeViewHolder>() {
+    private var favourites = mutableListOf<FavouriteUI>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipeViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.favourite_item, parent, false)
@@ -27,7 +31,7 @@ class FavouriteAdapter(private val onclick: (FavouriteUI, View) -> Unit) : Recyc
     }
 
     fun setFavourites(items: List<FavouriteUI>) {
-        favourites = items
+        favourites = items.toMutableList()
         notifyDataSetChanged()
     }
 
@@ -40,6 +44,22 @@ class FavouriteAdapter(private val onclick: (FavouriteUI, View) -> Unit) : Recyc
             }
         }
         return filteredList
+    }
+
+    fun deleteItem(position: Int, view: View) {
+        val deletedItem: FavouriteUI = favourites[position]
+        favourites.removeAt(position)
+        notifyItemRemoved(position)
+        val snackbar: Snackbar =
+            Snackbar.make(view,
+                recyclerView.context.resources.getString(R.string.favourite_deleted),
+                Snackbar.LENGTH_LONG)
+        snackbar.setAction(recyclerView.context.resources.getString(R.string.undo)) { v ->
+            favourites.add(position, deletedItem)
+            notifyItemInserted(position)
+            recyclerView.scrollToPosition(position)
+        }
+        snackbar.show()
     }
 }
 
