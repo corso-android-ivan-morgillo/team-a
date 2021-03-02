@@ -6,10 +6,16 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
+import androidx.transition.AutoTransition
+import androidx.transition.TransitionManager
 import coil.load
 import com.google.android.material.card.MaterialCardView
 import com.ivanmorgillo.corsoandroid.teama.R
+import com.ivanmorgillo.corsoandroid.teama.gone
+import com.ivanmorgillo.corsoandroid.teama.visible
 
 class CategoryAdapter(
     private val onclick: (CategoryUI, View) -> Unit
@@ -46,7 +52,7 @@ class CategoryViewHolder(
     private val categoryCardView = itemView.findViewById<MaterialCardView>(R.id.category_root)
     private val flagList = itemView.findViewById<RecyclerView>(R.id.flag_list)
     private val flagCounter = itemView.findViewById<TextView>(R.id.recipe_counter)
-
+    private val hiddenConstraintLayout = itemView.findViewById<ConstraintLayout>(R.id.category_item_expanded)
     private val goToRecipes = itemView.findViewById<Button>(R.id.category_to_recipes)
 
     fun bind(item: CategoryUI, onclick: (CategoryUI, View) -> Unit) {
@@ -60,6 +66,23 @@ class CategoryViewHolder(
         image.contentDescription = item.title
         goToRecipes.setOnClickListener {
             onclick(item, it)
+        }
+
+        categoryCardView.setOnClickListener {
+            if (hiddenConstraintLayout.isVisible) {
+
+                TransitionManager.beginDelayedTransition(
+                    categoryCardView,
+                    AutoTransition()
+                )
+                hiddenConstraintLayout.gone()
+            } else {
+                TransitionManager.beginDelayedTransition(
+                    categoryCardView,
+                    AutoTransition()
+                )
+                hiddenConstraintLayout.visible()
+            }
         }
 
         // categoryCardView.transitionName = "category_transition_item${item.id}"
