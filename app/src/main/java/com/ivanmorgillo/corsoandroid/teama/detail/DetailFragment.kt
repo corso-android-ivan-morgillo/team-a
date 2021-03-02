@@ -5,6 +5,9 @@ import android.graphics.Color
 import android.os.Bundle
 import android.provider.Settings
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
@@ -37,6 +40,7 @@ class DetailFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        setHasOptionsMenu(true) // necessario per consentire al fragment di avere un menu
         return inflater.inflate(R.layout.fragment_detail, container, false)
     }
 
@@ -146,5 +150,16 @@ class DetailFragment : Fragment() {
             "",
             {}
         )
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.details_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val id = item.itemId
+        return if (id == R.id.add_favourite_button) { // quando si clicca il pulsante per aggiungere ai preferiti
+            false
+        } else super.onOptionsItemSelected(item)
     }
 }

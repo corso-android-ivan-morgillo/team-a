@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Delicious</string>
     <string name="ingredients">Ingredients</string>
@@ -26,6 +27,8 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="undo">Undo</string>
     <string name="favourite_deleted">Successfully deleted!</string>
+    <string name="add_to_favourites">Add to favourites</string>
+    <string name="share">Share</string>
 
     <string name="category_fragment">Recipes</string>
     <string name="recipe_fragment">Recipes</string>

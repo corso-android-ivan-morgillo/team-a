@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -18,7 +19,7 @@ import com.ivanmorgillo.corsoandroid.teama.gone
 import com.ivanmorgillo.corsoandroid.teama.visible
 
 class CategoryAdapter(
-    private val onclick: (CategoryUI, View) -> Unit
+    private val onclick: (CategoryUI, View) -> Unit,
 ) : RecyclerView.Adapter<CategoryViewHolder>() {
     private var categories = emptyList<CategoryUI>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
@@ -54,6 +55,7 @@ class CategoryViewHolder(
     private val flagCounter = itemView.findViewById<TextView>(R.id.recipe_counter)
     private val hiddenConstraintLayout = itemView.findViewById<ConstraintLayout>(R.id.category_item_expanded)
     private val goToRecipes = itemView.findViewById<Button>(R.id.category_to_recipes)
+    private val arrowForExpand = itemView.findViewById<ImageButton>(R.id.arrow_button)
 
     fun bind(item: CategoryUI, onclick: (CategoryUI, View) -> Unit) {
         val categoryFlagAdapter = CategoryFlagAdapter()
@@ -64,27 +66,33 @@ class CategoryViewHolder(
         title.text = item.title
         image.load(item.image)
         image.contentDescription = item.title
-        goToRecipes.setOnClickListener {
+        goToRecipes.setOnClickListener { // per aprire il dettaglio della ricetta
             onclick(item, it)
         }
-
-        categoryCardView.setOnClickListener {
-            if (hiddenConstraintLayout.isVisible) {
-
-                TransitionManager.beginDelayedTransition(
-                    categoryCardView,
-                    AutoTransition()
-                )
-                hiddenConstraintLayout.gone()
-            } else {
-                TransitionManager.beginDelayedTransition(
-                    categoryCardView,
-                    AutoTransition()
-                )
-                hiddenConstraintLayout.visible()
-            }
+        categoryCardView.setOnClickListener { // per espandere o collassare la card
+            expandOrCollapse()
         }
-
+        arrowForExpand.setOnClickListener { // per espandere o collassare la card
+            expandOrCollapse()
+        }
         // categoryCardView.transitionName = "category_transition_item${item.id}"
+    }
+
+    private fun expandOrCollapse() {
+        if (hiddenConstraintLayout.isVisible) {
+            TransitionManager.beginDelayedTransition(
+                categoryCardView,
+                AutoTransition()
+            )
+            arrowForExpand.setImageResource(R.drawable.arrow_down)
+            hiddenConstraintLayout.gone()
+        } else {
+            TransitionManager.beginDelayedTransition(
+                categoryCardView,
+                AutoTransition()
+            )
+            arrowForExpand.setImageResource(R.drawable.arrow_up)
+            hiddenConstraintLayout.visible()
+        }
     }
 }
