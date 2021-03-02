@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -54,6 +55,7 @@ class CategoryViewHolder(
     private val flagCounter = itemView.findViewById<TextView>(R.id.recipe_counter)
     private val hiddenConstraintLayout = itemView.findViewById<ConstraintLayout>(R.id.category_item_expanded)
     private val goToRecipes = itemView.findViewById<Button>(R.id.category_to_recipes)
+    private val arrowForExpand = itemView.findViewById<ImageButton>(R.id.arrow_button)
 
     fun bind(item: CategoryUI, onclick: (CategoryUI, View) -> Unit) {
         val categoryFlagAdapter = CategoryFlagAdapter()
@@ -68,23 +70,28 @@ class CategoryViewHolder(
             onclick(item, it)
         }
 
-        categoryCardView.setOnClickListener {
-            if (hiddenConstraintLayout.isVisible) {
+        goToRecipes.setOnClickListener {
+            onclick(item, it)
+        }
 
+        arrowForExpand.setOnClickListener {
+            if (hiddenConstraintLayout.isVisible) {
                 TransitionManager.beginDelayedTransition(
                     categoryCardView,
                     AutoTransition()
                 )
+                arrowForExpand.setImageResource(R.drawable.arrow_down)
                 hiddenConstraintLayout.gone()
             } else {
                 TransitionManager.beginDelayedTransition(
                     categoryCardView,
                     AutoTransition()
                 )
+                arrowForExpand.setImageResource(R.drawable.arrow_up)
                 hiddenConstraintLayout.visible()
             }
         }
-
-        // categoryCardView.transitionName = "category_transition_item${item.id}"
     }
+
+    // categoryCardView.transitionName = "category_transition_item${item.id}"
 }
