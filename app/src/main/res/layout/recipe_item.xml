@@ -53,7 +53,7 @@
             android:textColor="#8f2d90" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/buttom_go_to_recipe"
+            android:id="@+id/go_to_detail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"

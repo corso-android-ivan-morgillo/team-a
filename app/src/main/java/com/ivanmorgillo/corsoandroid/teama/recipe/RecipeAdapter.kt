@@ -3,6 +3,7 @@ package com.ivanmorgillo.corsoandroid.teama.recipe
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -51,6 +52,7 @@ class RecipeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val title = itemView.findViewById<TextView>(R.id.recipe_title)
     private val image = itemView.findViewById<ImageView>(R.id.recipe_image)
     private val recipeCardView = itemView.findViewById<MaterialCardView>(R.id.recipe_root)
+    private val goToDetailButton = itemView.findViewById<Button>(R.id.go_to_detail)
 
     /**@param onclick: è la funzione che riceverà in ingresso il parametro
      *  di tipo RecipeUi e ritornerà unit. Questo pezzo di funzionalità ci serve per
@@ -66,9 +68,9 @@ class RecipeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         image.contentDescription = item.title
         /** Il click deve essere gestito inviando indietro al viewModel
          * il click dell'utente e l'oggetto che è stato cliccato */
-        recipeCardView.setOnClickListener {
+        goToDetailButton.setOnClickListener {
             onclick(item, it)
         }
-        recipeCardView.transitionName = "recipe_transition_item${item.id}"
+        goToDetailButton.transitionName = "recipe_transition_item${item.id}"
     }
 }
