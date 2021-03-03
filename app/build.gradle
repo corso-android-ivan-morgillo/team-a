@@ -6,6 +6,9 @@ apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: "androidx.navigation.safeargs.kotlin"
 
+def keyStorePassword = System.getenv('KEYSTOREPASSWORD')
+def aliasPassword = System.getenv('ALIASPASSWORD')
+
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
@@ -20,12 +23,24 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        release {
+            storeFile file("deliciouskeystore.keystore")
+            storePassword keyStorePassword
+            keyAlias "Delicious"
+            keyPassword aliasPassword
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             manifestPlaceholders = [crashlyticsCollectionEnabled: "true"]
+            signingConfig signingConfigs.release
         }
+
+
         debug {
             manifestPlaceholders = [crashlyticsCollectionEnabled: "false"]
 
@@ -36,6 +51,10 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    buildFeatures {
+        viewBinding true
     }
 
     // Required for Coil library
@@ -74,7 +93,7 @@ dependencies {
     implementation "org.koin:koin-androidx-viewmodel:$koin_version"
     implementation "org.koin:koin-androidx-fragment:$koin_version"
 
-    //Kotlin corountines
+    //Kotlin coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.2'
 
     // Retrofit
