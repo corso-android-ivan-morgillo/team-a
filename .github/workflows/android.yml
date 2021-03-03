@@ -1,3 +1,4 @@
+
 name: Android CI
 
 on:
@@ -17,7 +18,6 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 1.8
-
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: build release
@@ -26,7 +26,7 @@ jobs:
           ALIASPASSWORD: ${{ secrets.ALIASPASSWORD }}
         run: ./gradlew detekt assembleRelease
       - name: upload artifact to Firebase App Distribution
-      - uses: wzieba/Firebase-Distribution-Github-Action@v1
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
           appId: ${{secrets.FIREBASE_APP_ID}}
           token: ${{secrets.FIREBASE_TOKEN}}
