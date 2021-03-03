@@ -35,4 +35,6 @@
     <string name="detail_fragment">Ricetta</string>
     <string name="menu_gallery">Preferiti</string>
     <string name="menu_slideshow">Impostazioni</string>
+    <string name="loading_random_recipe">Sto caricando una ricetta random…</string>
+    <string name="recipes">ricette</string>
 </resources>

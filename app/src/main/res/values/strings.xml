@@ -35,4 +35,6 @@
     <string name="detail_fragment">Recipe</string>
     <string name="menu_gallery">Favourites</string>
     <string name="menu_slideshow">Settings</string>
+    <string name="loading_random_recipe">Loading random recipe…</string>
+    <string name="recipes">recipes</string>
 </resources>

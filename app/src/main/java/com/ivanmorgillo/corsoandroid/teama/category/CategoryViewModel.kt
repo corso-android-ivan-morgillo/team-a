@@ -22,14 +22,10 @@ import com.ivanmorgillo.corsoandroid.teama.network.LoadCategoryError.SlowInterne
 import com.ivanmorgillo.corsoandroid.teama.network.LoadCategoryResult
 import kotlinx.coroutines.launch
 
-class CategoryViewModel(
-    private val repository: CategoryRepository,
-    private val tracking: Tracking,
-) : ViewModel() {
+class CategoryViewModel(private val repository: CategoryRepository, private val tracking: Tracking) : ViewModel() {
 
     val states = MutableLiveData<CategoryScreenStates>() // potremmo passarci direttamente loading
-    val actions =
-        SingleLiveEvent<CategoryScreenAction>()
+    val actions = SingleLiveEvent<CategoryScreenAction>()
 
     fun send(event: CategoryScreenEvent) {
         when (event) {
@@ -68,7 +64,6 @@ class CategoryViewModel(
     }
 
     private fun onSuccess(result: LoadCategoryResult.Success) {
-
         val categories = result.categories.map { it ->
             CategoryUI(
                 title = it.name,
@@ -78,7 +73,6 @@ class CategoryViewModel(
                     FlagUI(it)
                 },
                 recipesCount = it.recipeAmount
-
             )
         }
         states.postValue(Content(categories))
