@@ -8,7 +8,8 @@ apply plugin: "androidx.navigation.safeargs.kotlin"
 
 def keyStorePassword = System.getenv('KEYSTOREPASSWORD')
 def aliasPassword = System.getenv('ALIASPASSWORD')
-
+def buildNumber = System.getenv('GITHUB_RUN_NUMBER') ?: "1"
+def _versionCode = buildNumber.toInteger()
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
@@ -17,17 +18,17 @@ android {
         applicationId "com.ateam.delicious"
         minSdkVersion 23
         targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
+        versionCode _versionCode
+        versionName "1.0.0." + _versionCode
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     signingConfigs {
         release {
-            storeFile file("../deliciouskeystore.keystore")
+            storeFile file("./../deliciouskeystore.keystore")
             storePassword keyStorePassword
-            keyAlias "Delicious"
+            keyAlias "Delicious2"
             keyPassword aliasPassword
         }
     }
