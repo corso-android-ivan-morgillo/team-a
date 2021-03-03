@@ -24,13 +24,13 @@ jobs:
         env:
           KEYSTOREPASSWORD: ${{ secrets.KEYSTOREPASSWORD }}
           ALIASPASSWORD: ${{ secrets.ALIASPASSWORD }}
-      run: ./gradlew detekt assembleRelease
-             - name: upload artifact to Firebase App Distribution
-             - uses: wzieba/Firebase-Distribution-Github-Action@v1
-             with:
-             appId: ${{secrets.FIREBASE_APP_ID}}
-             token: ${{secrets.FIREBASE_TOKEN}}
-                      - groups: testers
-                      - file:app/build/outputs/apk/release/app-release-unsigned.apk
-                      - name: gradlew assembleDebug with Gradle
-             run: ./gradlew --no-build-cache clean detekt assembleDebug
+        run: ./gradlew detekt assembleRelease
+      - name: upload artifact to Firebase App Distribution
+      - uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{secrets.FIREBASE_APP_ID}}
+          token: ${{secrets.FIREBASE_TOKEN}}
+          groups: testers
+          file: app/build/outputs/apk/release/app-release-unsigned.apk
+      - name: gradlew assembleDebug with Gradle
+        run: ./gradlew --no-build-cache clean detekt assembleDebug
