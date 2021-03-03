@@ -44,44 +44,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@+id/recipe_image"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             android:text="Pollo Caseruola"
-            style="@style/TextAppearance.MaterialComponents.Caption"
+            style="@style/TextAppearance.MaterialComponents.Headline5"
             android:textSize="12sp"
             android:layout_marginTop="8dp"
             android:padding="8dp"
-            android:textColor="#8f2d90" />
+            android:textColor="#6b4323" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/go_to_detail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/recipe_tag"
-            style="?attr/materialButtonOutlinedStyle"
-            android:text="Recipe" />
-
-        <com.google.android.material.button.MaterialButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/buttom_preferiti"
-            app:layout_constraintTop_toBottomOf="@+id/recipe_tag"
-            android:text="Note"
-            android:layout_marginBottom="4dp"
-            style="?attr/materialButtonOutlinedStyle" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/buttom_preferiti"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/recipe_tag"
-            android:text="Favorites"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/recipe_image"
             style="?attr/materialButtonOutlinedStyle"
-            android:layout_marginBottom="4dp" />
+            android:layout_marginTop="8dp"
+            android:text="Recipe" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

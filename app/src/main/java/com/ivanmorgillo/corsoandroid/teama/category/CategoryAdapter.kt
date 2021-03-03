@@ -48,6 +48,7 @@ class CategoryViewHolder(private val binding: CategoryItemBinding) : RecyclerVie
         binding.recipeCounter.text = recipesCounterText
         binding.categoryTitle.text = item.title
         binding.categoryImage.load(item.image)
+        binding.categoryImageCollapsed.load(item.image)
         binding.categoryImage.contentDescription = item.title
         binding.categoryToRecipes.setOnClickListener { // per aprire il dettaglio della ricetta
             onclick(item, it)
@@ -68,6 +69,7 @@ class CategoryViewHolder(private val binding: CategoryItemBinding) : RecyclerVie
                 AutoTransition()
             )
             binding.arrowButton.setImageResource(R.drawable.arrow_down)
+            binding.categoryImageCollapsed.visible()
             binding.categoryItemExpanded.gone()
         } else {
             TransitionManager.beginDelayedTransition(
@@ -75,6 +77,7 @@ class CategoryViewHolder(private val binding: CategoryItemBinding) : RecyclerVie
                 AutoTransition()
             )
             binding.arrowButton.setImageResource(R.drawable.arrow_up)
+            binding.categoryImageCollapsed.gone()
             binding.categoryItemExpanded.visible()
         }
     }

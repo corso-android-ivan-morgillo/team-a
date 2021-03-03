@@ -29,6 +29,18 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
+                <ImageView
+                    android:id="@+id/category_image_collapsed"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    tools:src="@mipmap/ic_launcher"
+                    android:contentDescription="categoryImage" />
+
                 <TextView
                     android:id="@+id/category_title"
                     style="@style/TextAppearance.MaterialComponents.Headline4"
@@ -48,10 +60,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
+                    android:layout_marginBottom="8dp"
                     android:paddingTop="5dp"
+                    android:layout_marginStart="8dp"
                     android:paddingBottom="5dp"
-                    tools:text="15"
-                    android:textColor="#ff3d00"
+                    tools:text="15 Recipes"
+                    android:textColor="#000000"
                     android:textSize="15sp"
                     app:layout_constraintTop_toBottomOf="@+id/category_title"
                     app:layout_constraintStart_toStartOf="parent"
@@ -63,9 +77,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/arrow_down"
+                    android:layout_marginEnd="2dp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/category_title"
-                    app:layout_constraintBottom_toBottomOf="parent" />
+                    app:layout_constraintTop_toBottomOf="@id/category_title"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    style="?attr/materialButtonOutlinedStyle" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -119,6 +136,7 @@
                 android:id="@+id/actions_category"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/flag_container_category"
                 app:layout_constraintStart_toStartOf="parent"
@@ -131,6 +149,8 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_marginStart="8dp"
                     android:text="Open" />
 
                 <com.google.android.material.button.MaterialButton
@@ -141,6 +161,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    style="?attr/materialButtonOutlinedStyle"
                     android:text="Info" />
 
 
