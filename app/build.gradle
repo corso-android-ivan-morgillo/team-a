@@ -25,7 +25,7 @@ android {
 
     signingConfigs {
         release {
-            storeFile file("deliciouskeystore.keystore")
+            storeFile file("../deliciouskeystore.keystore")
             storePassword keyStorePassword
             keyAlias "Delicious"
             keyPassword aliasPassword
