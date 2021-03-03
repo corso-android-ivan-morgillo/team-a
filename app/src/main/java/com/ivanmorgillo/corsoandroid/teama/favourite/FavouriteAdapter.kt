@@ -57,7 +57,9 @@ class FavouriteAdapter(
         snackbar.setAction(recyclerView.context.resources.getString(R.string.undo)) { v ->
             favourites.add(position, deletedItem)
             notifyItemInserted(position)
-            recyclerView.scrollToPosition(position)
+            if (position == 0 || position == favourites.size - 1) { // per fare l'animazione corretta
+                recyclerView.scrollToPosition(position)
+            }
         }
         snackbar.show()
     }

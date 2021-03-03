@@ -201,9 +201,7 @@ class NetworkAPI(cacheDir: File) {
         val categoryInfo: CategoryInfo
         if (recipesList is Success) {
             val recipesAmount = recipesList.recipes.size.toString()
-            Timber.d("Loading categories Start")
             val areaNames = loadCategoriesFlags(recipesList.recipes)
-            Timber.d("Loading categories End")
             categoryInfo = CategoryInfo(recipesAmount, areaNames)
             return categoryInfo
         } else {
@@ -214,7 +212,7 @@ class NetworkAPI(cacheDir: File) {
     data class CategoryInfo(
 
         var recipesAmount: String,
-        var areaNames: List<String>
+        var areaNames: List<String>,
     )
 
     private suspend fun loadCategoriesFlags(recipes: List<Recipe>): List<String> = coroutineScope {
