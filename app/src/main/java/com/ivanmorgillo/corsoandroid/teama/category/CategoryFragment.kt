@@ -20,7 +20,6 @@ import com.ivanmorgillo.corsoandroid.teama.exhaustive
 import com.ivanmorgillo.corsoandroid.teama.showAlertDialog
 import com.ivanmorgillo.corsoandroid.teama.utils.viewBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import timber.log.Timber
 
 class CategoryFragment : Fragment(R.layout.fragment_category) {
     private val viewModel: CategoryViewModel by viewModel()
@@ -41,7 +40,6 @@ class CategoryFragment : Fragment(R.layout.fragment_category) {
         fab.setOnClickListener { view ->
             Toast.makeText(context, getString(R.string.loading_random_recipe), Toast.LENGTH_SHORT).show()
             val directions = CategoryFragmentDirections.actionCategoryFragmentToDetailFragment(-1L)
-            Timber.d("Invio al details una ricetta random")
             findNavController().navigate(directions)
         }
         viewModel.states.observe(viewLifecycleOwner, { state ->
@@ -50,12 +48,8 @@ class CategoryFragment : Fragment(R.layout.fragment_category) {
                     categoryCardAdapter.setCategories(state.categories)
                     binding.categoryRefresh.isRefreshing = false
                 }
-                CategoryScreenStates.Error -> {
-                    binding.categoryRefresh.isRefreshing = false
-                }
-                CategoryScreenStates.Loading -> {
-                    binding.categoryRefresh.isRefreshing = true
-                }
+                CategoryScreenStates.Error -> binding.categoryRefresh.isRefreshing = false
+                CategoryScreenStates.Loading -> binding.categoryRefresh.isRefreshing = true
             }
         })
         viewModel.actions.observe(viewLifecycleOwner,

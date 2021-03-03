@@ -3,28 +3,21 @@ package com.ivanmorgillo.corsoandroid.teama.category
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
 import coil.load
-import com.google.android.material.card.MaterialCardView
 import com.ivanmorgillo.corsoandroid.teama.R
+import com.ivanmorgillo.corsoandroid.teama.databinding.CategoryItemBinding
 import com.ivanmorgillo.corsoandroid.teama.gone
 import com.ivanmorgillo.corsoandroid.teama.visible
 
-class CategoryAdapter(
-    private val onclick: (CategoryUI, View) -> Unit,
-) : RecyclerView.Adapter<CategoryViewHolder>() {
+class CategoryAdapter(private val onclick: (CategoryUI, View) -> Unit) : RecyclerView.Adapter<CategoryViewHolder>() {
     private var categories = emptyList<CategoryUI>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.category_item, parent, false)
-        return CategoryViewHolder(view)
+        val binding = CategoryItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return CategoryViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
@@ -45,54 +38,44 @@ class CategoryAdapter(
  *
  *
  * */
-class CategoryViewHolder(
-    itemView: View,
-) : RecyclerView.ViewHolder(itemView) {
-    private val title = itemView.findViewById<TextView>(R.id.category_title)
-    private val image = itemView.findViewById<ImageView>(R.id.category_image)
-    private val categoryCardView = itemView.findViewById<MaterialCardView>(R.id.category_root)
-    private val flagList = itemView.findViewById<RecyclerView>(R.id.flag_list)
-    private val flagCounter = itemView.findViewById<TextView>(R.id.recipe_counter)
-    private val hiddenConstraintLayout = itemView.findViewById<ConstraintLayout>(R.id.category_item_expanded)
-    private val goToRecipes = itemView.findViewById<Button>(R.id.category_to_recipes)
-    private val arrowForExpand = itemView.findViewById<ImageButton>(R.id.arrow_button)
+class CategoryViewHolder(private val binding: CategoryItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(item: CategoryUI, onclick: (CategoryUI, View) -> Unit) {
         val categoryFlagAdapter = CategoryFlagAdapter()
-
-        flagList.adapter = categoryFlagAdapter
+        binding.flagList.adapter = categoryFlagAdapter
         categoryFlagAdapter.setFlagCategories(item.flags)
-        flagCounter.text = "${item.recipesCount} recipes"
-        title.text = item.title
-        image.load(item.image)
-        image.contentDescription = item.title
-        goToRecipes.setOnClickListener { // per aprire il dettaglio della ricetta
+        val recipesCounterText = item.recipesCount + " " + binding.root.resources.getString(R.string.recipes)
+        binding.recipeCounter.text = recipesCounterText
+        binding.categoryTitle.text = item.title
+        binding.categoryImage.load(item.image)
+        binding.categoryImage.contentDescription = item.title
+        binding.categoryToRecipes.setOnClickListener { // per aprire il dettaglio della ricetta
             onclick(item, it)
         }
-        categoryCardView.setOnClickListener { // per espandere o collassare la card
+        binding.categoryRoot.setOnClickListener { // per espandere o collassare la card
             expandOrCollapse()
         }
-        arrowForExpand.setOnClickListener { // per espandere o collassare la card
+        binding.arrowButton.setOnClickListener { // per espandere o collassare la card
             expandOrCollapse()
         }
         // categoryCardView.transitionName = "category_transition_item${item.id}"
     }
 
     private fun expandOrCollapse() {
-        if (hiddenConstraintLayout.isVisible) {
+        if (binding.categoryItemExpanded.isVisible) {
             TransitionManager.beginDelayedTransition(
-                categoryCardView,
+                binding.categoryRoot,
                 AutoTransition()
             )
-            arrowForExpand.setImageResource(R.drawable.arrow_down)
-            hiddenConstraintLayout.gone()
+            binding.arrowButton.setImageResource(R.drawable.arrow_down)
+            binding.categoryItemExpanded.gone()
         } else {
             TransitionManager.beginDelayedTransition(
-                categoryCardView,
+                binding.categoryRoot,
                 AutoTransition()
             )
-            arrowForExpand.setImageResource(R.drawable.arrow_up)
-            hiddenConstraintLayout.visible()
+            binding.arrowButton.setImageResource(R.drawable.arrow_up)
+            binding.categoryItemExpanded.visible()
         }
     }
 }

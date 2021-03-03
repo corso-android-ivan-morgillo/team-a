@@ -46,7 +46,7 @@ import androidx.viewbinding.ViewBinding
  *
  * NOTE: although this extension allows for a cleaner way of declaring and using the viewBinding the
  * binding is still only available in between [Fragment.onCreateView] and [Fragment.onDestroyView].
- * Trying to access the binding outside of this interval will cause an [IllegalStateExcetion] to be
+ * Trying to access the binding outside of this interval will cause an [IllegalStateException] to be
  * thrown.
  */
 
