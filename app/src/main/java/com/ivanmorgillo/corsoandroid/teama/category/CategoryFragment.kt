@@ -16,8 +16,8 @@ import com.ivanmorgillo.corsoandroid.teama.category.CategoryScreenAction.ShowNoI
 import com.ivanmorgillo.corsoandroid.teama.category.CategoryScreenAction.ShowServerErrorMessage
 import com.ivanmorgillo.corsoandroid.teama.category.CategoryScreenAction.ShowSlowInternetMessage
 import com.ivanmorgillo.corsoandroid.teama.databinding.FragmentCategoryBinding
-import com.ivanmorgillo.corsoandroid.teama.exhaustive
-import com.ivanmorgillo.corsoandroid.teama.showAlertDialog
+import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
+import com.ivanmorgillo.corsoandroid.teama.extension.showAlertDialog
 import com.ivanmorgillo.corsoandroid.teama.utils.viewBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 

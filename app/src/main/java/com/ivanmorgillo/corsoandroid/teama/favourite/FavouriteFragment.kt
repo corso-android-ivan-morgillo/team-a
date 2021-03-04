@@ -14,9 +14,9 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import com.ivanmorgillo.corsoandroid.teama.R
-import com.ivanmorgillo.corsoandroid.teama.exhaustive
-import com.ivanmorgillo.corsoandroid.teama.gone
-import com.ivanmorgillo.corsoandroid.teama.visible
+import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
+import com.ivanmorgillo.corsoandroid.teama.extension.gone
+import com.ivanmorgillo.corsoandroid.teama.extension.visible
 import kotlinx.android.synthetic.main.fragment_favourite.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber

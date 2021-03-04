@@ -10,13 +10,16 @@ import com.ivanmorgillo.corsoandroid.teama.favourite.FavouriteRepository
 import com.ivanmorgillo.corsoandroid.teama.favourite.FavouriteRepositoryImpl
 import com.ivanmorgillo.corsoandroid.teama.favourite.FavouriteViewModel
 import com.ivanmorgillo.corsoandroid.teama.network.NetworkAPI
+import com.ivanmorgillo.corsoandroid.teama.network.NetworkApiImpl
+import com.ivanmorgillo.corsoandroid.teama.recipe.RecipeRepositoryImpl
+import com.ivanmorgillo.corsoandroid.teama.recipe.RecipesRepository
 import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val appModule = module {
-    single {
-        NetworkAPI(androidApplication().cacheDir)
+    single<NetworkAPI> {
+        NetworkApiImpl(androidApplication().cacheDir)
     }
     single<RecipesRepository> {
         RecipeRepositoryImpl(api = get())

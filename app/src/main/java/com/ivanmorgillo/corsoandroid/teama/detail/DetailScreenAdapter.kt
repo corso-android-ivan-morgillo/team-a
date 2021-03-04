@@ -13,9 +13,9 @@ import com.ivanmorgillo.corsoandroid.teama.detail.DetailScreenViewHolder.Ingredi
 import com.ivanmorgillo.corsoandroid.teama.detail.DetailScreenViewHolder.TabLayoutViewHolder
 import com.ivanmorgillo.corsoandroid.teama.detail.DetailScreenViewHolder.TitleViewHolder
 import com.ivanmorgillo.corsoandroid.teama.detail.DetailScreenViewHolder.VideoViewHolder
-import com.ivanmorgillo.corsoandroid.teama.exhaustive
-import com.ivanmorgillo.corsoandroid.teama.gone
-import com.ivanmorgillo.corsoandroid.teama.visible
+import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
+import com.ivanmorgillo.corsoandroid.teama.extension.gone
+import com.ivanmorgillo.corsoandroid.teama.extension.visible
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.PlayerConstants
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener

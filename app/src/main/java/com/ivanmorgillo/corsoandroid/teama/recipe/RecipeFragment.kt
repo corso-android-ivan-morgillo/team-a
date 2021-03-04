@@ -31,9 +31,9 @@ import com.ivanmorgillo.corsoandroid.teama.MainScreenEvent.OnRecipeClick
 import com.ivanmorgillo.corsoandroid.teama.MainScreenStates
 import com.ivanmorgillo.corsoandroid.teama.MainViewModel
 import com.ivanmorgillo.corsoandroid.teama.R
-import com.ivanmorgillo.corsoandroid.teama.exhaustive
+import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
+import com.ivanmorgillo.corsoandroid.teama.extension.showAlertDialog
 import com.ivanmorgillo.corsoandroid.teama.recipe.RecipeFragmentDirections.Companion.actionRecipeFragmentToDetailFragment
-import com.ivanmorgillo.corsoandroid.teama.showAlertDialog
 import kotlinx.android.synthetic.main.fragment_recipe.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber

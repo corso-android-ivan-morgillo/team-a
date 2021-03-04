@@ -15,11 +15,11 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.transition.MaterialContainerTransform
 import com.ivanmorgillo.corsoandroid.teama.R
-import com.ivanmorgillo.corsoandroid.teama.exhaustive
-import com.ivanmorgillo.corsoandroid.teama.gone
-import com.ivanmorgillo.corsoandroid.teama.showAlertDialog
-import com.ivanmorgillo.corsoandroid.teama.themeColor
-import com.ivanmorgillo.corsoandroid.teama.visible
+import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
+import com.ivanmorgillo.corsoandroid.teama.extension.gone
+import com.ivanmorgillo.corsoandroid.teama.extension.showAlertDialog
+import com.ivanmorgillo.corsoandroid.teama.extension.themeColor
+import com.ivanmorgillo.corsoandroid.teama.extension.visible
 import kotlinx.android.synthetic.main.detail_ingredient_instruction.*
 import kotlinx.android.synthetic.main.fragment_detail.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
