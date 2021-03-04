@@ -3,9 +3,8 @@ package com.ivanmorgillo.corsoandroid.teama.detail
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ivanmorgillo.corsoandroid.teama.Tracking
 import com.ivanmorgillo.corsoandroid.teama.crashlytics.SingleLiveEvent
-import com.ivanmorgillo.corsoandroid.teama.detail.DetailScreenAction.ShowIngredients
-import com.ivanmorgillo.corsoandroid.teama.detail.DetailScreenAction.ShowInstructions
 import com.ivanmorgillo.corsoandroid.teama.detail.DetailScreenAction.ShowInterruptedRequestMessage
 import com.ivanmorgillo.corsoandroid.teama.detail.DetailScreenAction.ShowNoInternetMessage
 import com.ivanmorgillo.corsoandroid.teama.detail.DetailScreenAction.ShowServerErrorMessage
@@ -23,7 +22,7 @@ import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeDetailsResult.Failu
 import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeDetailsResult.Success
 import kotlinx.coroutines.launch
 
-class DetailViewModel(private val repository: RecipeDetailsRepository) : ViewModel() {
+class DetailViewModel(private val repository: RecipeDetailsRepository, private val tracking: Tracking) : ViewModel() {
 
     val states = MutableLiveData<DetailScreenStates>()
     val actions =
@@ -57,8 +56,9 @@ class DetailViewModel(private val repository: RecipeDetailsRepository) : ViewMod
             details.name,
             details.image,
             details.video,
-            details.ingredients.map { IngredientUI(it.ingredientName, it.ingredientQuantity) },
-            details.instructions
+            details.ingredients.map { IngredientUI(it.ingredientName, it.ingredientQuantity, it.ingredientImage) },
+            details.instructions,
+            isIngredientsSelected = true
         )
         states.postValue(Content(detailUI))
     }
@@ -75,11 +75,23 @@ class DetailViewModel(private val repository: RecipeDetailsRepository) : ViewMod
     }
 
     private fun onIngredientsClick() {
-        actions.postValue(ShowIngredients)
+        tracking.logEvent("detail_ingredients_clicked")
+        val currentState = states.value
+        if (currentState != null && currentState is Content) {
+            val updatedDetails = currentState.recipes.copy(isIngredientsSelected = true)
+            val content = Content(updatedDetails)
+            states.postValue(content)
+        }
     }
 
     private fun onInstructionsClick() {
-        actions.postValue(ShowInstructions)
+        tracking.logEvent("detail_instructions_clicked")
+        val currentState = states.value
+        if (currentState != null && currentState is Content) {
+            val updatedDetails = currentState.recipes.copy(isIngredientsSelected = false)
+            val content = Content(updatedDetails)
+            states.postValue(content)
+        }
     }
 }
 
@@ -93,8 +105,6 @@ sealed class DetailScreenStates {
 }
 
 sealed class DetailScreenAction {
-    object ShowIngredients : DetailScreenAction()
-    object ShowInstructions : DetailScreenAction()
     object ShowNoInternetMessage : DetailScreenAction()
     object ShowSlowInternetMessage : DetailScreenAction()
     object ShowServerErrorMessage : DetailScreenAction()

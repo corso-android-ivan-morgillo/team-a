@@ -10,18 +10,21 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
+import com.ivanmorgillo.corsoandroid.teama.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
-
+    private lateinit var binding: ActivityMainBinding
     private lateinit var appBarConfiguration: AppBarConfiguration
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        val toolbar: Toolbar = findViewById(R.id.toolbar)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
+        val toolbar: Toolbar = binding.appBarMain.toolbar
         setSupportActionBar(toolbar)
-        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
-        val navView: NavigationView = findViewById(R.id.nav_view)
+        val drawerLayout: DrawerLayout = binding.drawerLayout
+        val navView: NavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.

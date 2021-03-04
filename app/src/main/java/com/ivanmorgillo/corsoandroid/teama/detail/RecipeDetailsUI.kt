@@ -7,4 +7,5 @@ data class RecipeDetailsUI(
     val video: String,
     val ingredients: List<IngredientUI>,
     val instructions: String,
+    val isIngredientsSelected: Boolean,
 )

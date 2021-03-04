@@ -31,8 +31,14 @@ class CategoryViewModel(private val repository: CategoryRepository, private val 
         when (event) {
             // deve ricevere la lista delle ricette. La view deve ricevere eventi e reagire a stati.
             CategoryScreenEvent.OnReady -> loadContent(false)
-            is CategoryScreenEvent.OnCategoryClick -> onCategoryClick(event)
-            CategoryScreenEvent.OnRefresh -> loadContent(true)
+            is CategoryScreenEvent.OnCategoryClick -> {
+                tracking.logEvent("category_clicked")
+                onCategoryClick(event)
+            }
+            CategoryScreenEvent.OnRefresh -> {
+                tracking.logEvent("category_refresh_clicked")
+                loadContent(true)
+            }
         }.exhaustive
     }
 
@@ -48,7 +54,6 @@ class CategoryViewModel(private val repository: CategoryRepository, private val 
     }
 
     private fun onCategoryClick(event: CategoryScreenEvent.OnCategoryClick) {
-        tracking.logEvent("category_clicked")
         actions.postValue(CategoryScreenAction.NavigateToRecipes(event.category))
     }
 

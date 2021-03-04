@@ -125,9 +125,13 @@ class NetworkApiImpl(cacheDir: File) : NetworkAPI {
     private fun getIngredient(strIngredient: String?, strMeasure: String?): Ingredient? {
         return if (!strIngredient.isNullOrBlank()) {
             if (strMeasure.isNullOrBlank()) {
-                Ingredient(strIngredient, "qb") // ad esempio il sale
+                Ingredient(strIngredient,
+                    "qb",
+                    "https://www.themealdb.com/images/ingredients/$strIngredient-Small.png") // ad esempio il sale
             } else {
-                Ingredient(strIngredient, strMeasure)
+                Ingredient(strIngredient,
+                    strMeasure,
+                    "https://www.themealdb.com/images/ingredients/$strIngredient-Small.png")
             }
         } else {
             null
@@ -199,7 +203,6 @@ class NetworkApiImpl(cacheDir: File) : NetworkAPI {
                 LoadCategoryResult.Success(categories)
             }
         } catch (e: IOException) { // no network available
-            Timber.d(e.message)
             LoadCategoryResult.Failure(LoadCategoryError.NoInternet)
         } catch (e: ConnectException) { // interrupted network request
             LoadCategoryResult.Failure(LoadCategoryError.InterruptedRequest)
@@ -331,7 +334,9 @@ class NetworkApiImpl(cacheDir: File) : NetworkAPI {
                 image = strCategoryThumb,
                 id = idCategory,
                 recipeAmount = categoryInfo.recipesAmount,
-                categoryArea = categoryInfo.areaNames
+                categoryArea = categoryInfo.areaNames.map {
+                    "https://www.themealdb.com/images/icons/flags/big/64/$it.png"
+                }
             )
             // possibilità di implementare la descrizione
         } else {

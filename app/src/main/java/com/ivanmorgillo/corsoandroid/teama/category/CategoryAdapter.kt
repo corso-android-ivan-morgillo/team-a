@@ -64,21 +64,21 @@ class CategoryViewHolder(private val binding: CategoryItemBinding) : RecyclerVie
 
     private fun expandOrCollapse() {
         if (binding.categoryItemExpanded.isVisible) {
-            TransitionManager.beginDelayedTransition(
-                binding.categoryRoot,
-                AutoTransition()
-            )
             binding.arrowButton.setImageResource(R.drawable.arrow_down)
-            binding.categoryImageCollapsed.visible()
             binding.categoryItemExpanded.gone()
-        } else {
+            binding.categoryImageCollapsed.visible()
             TransitionManager.beginDelayedTransition(
                 binding.categoryRoot,
                 AutoTransition()
             )
+        } else {
             binding.arrowButton.setImageResource(R.drawable.arrow_up)
             binding.categoryImageCollapsed.gone()
             binding.categoryItemExpanded.visible()
+            TransitionManager.beginDelayedTransition(
+                binding.categoryRoot,
+                AutoTransition()
+            )
         }
     }
 }
