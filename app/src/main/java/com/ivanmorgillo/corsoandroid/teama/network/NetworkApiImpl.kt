@@ -1,6 +1,5 @@
 package com.ivanmorgillo.corsoandroid.teama.network
 
-import com.ivanmorgillo.corsoandroid.teama.Recipe
 import com.ivanmorgillo.corsoandroid.teama.category.Category
 import com.ivanmorgillo.corsoandroid.teama.detail.Ingredient
 import com.ivanmorgillo.corsoandroid.teama.detail.RecipeDetails
@@ -12,6 +11,7 @@ import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeError.ServerError
 import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeError.SlowInternet
 import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeResult.Failure
 import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeResult.Success
+import com.ivanmorgillo.corsoandroid.teama.recipe.Recipe
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -47,7 +47,21 @@ class CacheInterceptor : Interceptor {
 private const val SIZEONE = 50L
 private const val SIZETWO = 1024L
 
-class NetworkAPI(cacheDir: File) {
+interface NetworkAPI {
+    @Suppress("TooGenericExceptionCaught")
+    suspend fun loadRecipeDetails(idMeal: Long): LoadRecipeDetailsResult
+
+    @Suppress("TooGenericExceptionCaught")
+    suspend fun loadRecipes(categoryName: String): LoadRecipeResult
+
+    @Suppress("TooGenericExceptionCaught")
+    suspend fun loadCategories(): LoadCategoryResult
+
+    @Suppress("TooGenericExceptionCaught")
+    suspend fun loadRandomRecipe(): LoadRecipeDetailsResult
+}
+
+class NetworkApiImpl(cacheDir: File) : NetworkAPI {
     private val service: RecipeService
 
     init {
@@ -73,7 +87,7 @@ class NetworkAPI(cacheDir: File) {
     }
 
     @Suppress("TooGenericExceptionCaught")
-    suspend fun loadRecipeDetails(idMeal: Long): LoadRecipeDetailsResult {
+    override suspend fun loadRecipeDetails(idMeal: Long): LoadRecipeDetailsResult {
         try {
             val recipesDetailsDTO = service.loadRecipeDetails(idMeal)
             return if (recipesDetailsDTO.details.isEmpty()) {
@@ -146,7 +160,7 @@ class NetworkAPI(cacheDir: File) {
     }
 
     @Suppress("TooGenericExceptionCaught")
-    suspend fun loadRecipes(categoryName: String): LoadRecipeResult {
+    override suspend fun loadRecipes(categoryName: String): LoadRecipeResult {
         try {
             val recipesList = service.loadRecipes(categoryName)
             val recipes = recipesList.meals
@@ -171,7 +185,7 @@ class NetworkAPI(cacheDir: File) {
     }
 
     @Suppress("TooGenericExceptionCaught")
-    suspend fun loadCategories(): LoadCategoryResult = coroutineScope {
+    override suspend fun loadCategories(): LoadCategoryResult = coroutineScope {
         try {
             val categoriesList = service.loadCategories()
             val categories = categoriesList.categories
@@ -260,7 +274,7 @@ class NetworkAPI(cacheDir: File) {
     }
 
     @Suppress("TooGenericExceptionCaught")
-    suspend fun loadRandomRecipe(): LoadRecipeDetailsResult {
+    override suspend fun loadRandomRecipe(): LoadRecipeDetailsResult {
         try {
             val recipesDetailsDTO = service.loadRandomRecipe()
             return if (recipesDetailsDTO.details.isEmpty()) {

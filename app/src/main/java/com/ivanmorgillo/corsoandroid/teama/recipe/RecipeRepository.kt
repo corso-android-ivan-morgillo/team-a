@@ -1,4 +1,4 @@
-package com.ivanmorgillo.corsoandroid.teama
+package com.ivanmorgillo.corsoandroid.teama.recipe
 
 import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeResult
 import com.ivanmorgillo.corsoandroid.teama.network.NetworkAPI
