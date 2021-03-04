@@ -3,6 +3,7 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+
     android:id="@+id/category_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -10,10 +11,12 @@
     app:cardCornerRadius="8dp"
     app:cardElevation="8dp">
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="vertical"
         android:layout_height="wrap_content">
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/category_item_collapsed"
@@ -24,151 +27,183 @@
                 android:id="@+id/header_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
+
                 <ImageView
-                    android:id="@+id/category_image_collapsed"
+                    android:id="@+id/category_background"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:scaleType="centerCrop"
+                    android:layout_height="170dp"
+                    android:contentDescription="categoryImage"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    android:scaleType="centerCrop"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
+                    android:src="@drawable/woodbackgroudhorizontal" />
+
+                <ImageView
+                    android:id="@+id/trapezoid"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="trapezoidshape"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/triangle_shape"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    tools:src="@mipmap/ic_launcher"
-                    android:contentDescription="categoryImage" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/category_title"
-                    style="@style/TextAppearance.MaterialComponents.Headline4"
+                    style="@style/TextAppearance.MaterialComponents.Headline6"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/lora_variable"
                     android:gravity="center"
-                    android:textStyle="italic"
                     android:textColor="#000000"
+                    android:textStyle="italic"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginStart="8dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
                     tools:text="Titolo Categoria..." />
+
+                <!--  <androidx.constraintlayout.widget.ConstraintLayout
+                      android:id="@+id/category_image_container"
+                      android:layout_width="178dp"
+                      android:layout_height="170dp"
+                      app:layout_constraintBottom_toBottomOf="parent"
+                      app:layout_constraintEnd_toEndOf="parent"
+                      app:layout_constraintStart_toEndOf="@id/trapezoid"
+                      app:layout_constraintTop_toTopOf="parent"> -->
+
+                <!--    </androidx.constraintlayout.widget.ConstraintLayout> -->
 
                 <TextView
                     android:id="@+id/recipe_counter"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:layout_marginBottom="8dp"
                     android:paddingTop="5dp"
-                    android:layout_marginStart="8dp"
                     android:paddingBottom="5dp"
-                    tools:text="15 Recipes"
                     android:textColor="#000000"
                     android:textSize="15sp"
-                    app:layout_constraintTop_toBottomOf="@+id/category_title"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginStart="8dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    tools:layout_editor_absoluteX="5dp" />
+                    app:layout_constraintTop_toBottomOf="@+id/category_title"
+                    tools:text="15 Recipes" />
 
-                <ImageButton
-                    android:contentDescription="expand arrow"
-                    android:id="@+id/arrow_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/arrow_down"
-                    android:layout_marginEnd="2dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/category_title"
+
+                <ImageView
+                    android:id="@+id/category_image_collapsed"
+                    android:layout_width="200dp"
+                    android:layout_height="170dp"
+                    android:contentDescription="categoryImage"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    style="?attr/materialButtonOutlinedStyle" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:src="@drawable/beef" />
 
+                <!--        <ImageButton
+                            android:id="@+id/arrow_button"
+                            style="?attr/materialButtonOutlinedStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="expand arrow"
+                            android:src="@drawable/arrow_down"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/recipe_counter" /> -->
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!--
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/category_item_expanded"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="visible">
+
+                    <ImageView
+                        android:id="@+id/category_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:src="@mipmap/ic_launcher"
+                        android:contentDescription="categoryImage" />
+        -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/flag_container_category"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            app:layout_constraintBottom_toTopOf="@id/actions_category"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/flag_list"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:orientation="horizontal"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/category_flag_country"
+                android:transitionGroup="true"
+                android:background="#9F9E9C" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/category_item_expanded"
+            android:id="@+id/actions_category"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone">
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/flag_container_category"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:background="#979592">
 
-            <ImageView
-                android:id="@+id/category_image"
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
-                android:scaleType="centerCrop"
-                app:layout_constraintEnd_toEndOf="parent"
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/category_to_recipes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:src="@mipmap/ic_launcher"
-                android:contentDescription="categoryImage" />
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/flag_container_category"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_constraintTop_toBottomOf="@id/category_image"
-                app:layout_constraintBottom_toTopOf="@id/actions_category"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/flag_list"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    android:orientation="horizontal"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    tools:listitem="@layout/category_flag_country"
-                    android:transitionGroup="true" />
-
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/actions_category"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/flag_container_category"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent">
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_marginStart="8dp"
+                android:text="Open" />
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/category_to_recipes"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    style="?attr/materialButtonOutlinedStyle"
-                    android:layout_marginStart="8dp"
-                    android:text="Open" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/category_info"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    style="?attr/materialButtonOutlinedStyle"
-                    android:text="Info" />
-
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/category_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                style="?attr/materialButtonOutlinedStyle"
+                android:text="Info" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <!-- </androidx.constraintlayout.widget.ConstraintLayout> -->
     </LinearLayout>
 
 
