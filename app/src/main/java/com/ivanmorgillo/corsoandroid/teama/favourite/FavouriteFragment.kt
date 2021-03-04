@@ -3,58 +3,57 @@ package com.ivanmorgillo.corsoandroid.teama.favourite
 import android.app.SearchManager
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.ivanmorgillo.corsoandroid.teama.R
+import com.ivanmorgillo.corsoandroid.teama.databinding.FragmentFavouriteBinding
 import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
 import com.ivanmorgillo.corsoandroid.teama.extension.gone
 import com.ivanmorgillo.corsoandroid.teama.extension.visible
-import kotlinx.android.synthetic.main.fragment_favourite.*
+import com.ivanmorgillo.corsoandroid.teama.utils.viewBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
-class FavouriteFragment : Fragment(), SearchView.OnQueryTextListener {
+class FavouriteFragment : Fragment(R.layout.fragment_favourite), SearchView.OnQueryTextListener {
     private val viewModel: FavouriteViewModel by viewModel()
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        setHasOptionsMenu(true) // necessario per consentire al fragment di avere un menu
-        return inflater.inflate(R.layout.fragment_favourite, container, false)
-    }
+    private val binding by viewBinding(FragmentFavouriteBinding::bind)
 
     private var favourites: List<FavouriteUI> = emptyList<FavouriteUI>() // necessario salvare qui per la ricerca
 
     // Equivalente alla onCreate di un activity
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setHasOptionsMenu(true) // necessario per consentire al fragment di avere un menu
         val adapter = FavouriteAdapter({ item, view ->
             viewModel.send(FavouriteScreenEvent.OnFavouriteClick(item))
-        }, favourite_list)
-        favourite_list.adapter = adapter
-
-        val view = favourites_list_root
-        val itemTouchHelper = ItemTouchHelper(SwipeToDeleteCallback(adapter, context, view))
-        itemTouchHelper.attachToRecyclerView(favourite_list)
+        }, binding.favouriteList)
+        binding.favouriteList.adapter = adapter
+        val itemTouchHelper = ItemTouchHelper(SwipeToDeleteCallback(context,
+            object : SwipeToDeleteCallback.ItemTouchHelperListener {
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder?, direction: Int, position: Int) {
+                    // lifecycleScope.launch { viewModel.send(FavouriteScreenEvents.OnItemSwiped(position)) }
+                    viewModel.send(FavouriteScreenEvent.OnFavouriteSwiped(position))
+                }
+            }))
+        itemTouchHelper.attachToRecyclerView(binding.favouriteList)
 
         viewModel.states.observe(viewLifecycleOwner, { state ->
             // riceve l'aggiornamento del nuovo valore
             when (state) {
                 is FavouriteScreenStates.Content -> {
-                    favourite_list_progressBar.gone()
+                    binding.favouriteListProgressBar.gone()
                     favourites = state.favourites
                     adapter.setFavourites(favourites)
                 }
-                FavouriteScreenStates.Error -> {
-                    favourite_list_progressBar.gone()
-                }
-                FavouriteScreenStates.Loading -> favourite_list_progressBar.visible()
+                FavouriteScreenStates.Error -> binding.favouriteListProgressBar.gone()
+                FavouriteScreenStates.Loading -> binding.favouriteListProgressBar.visible()
             }.exhaustive
         })
         // Questo blocco serve a specificare che per le istruzioni interne il this è "view"
@@ -66,7 +65,11 @@ class FavouriteFragment : Fragment(), SearchView.OnQueryTextListener {
                     Timber.d("Invio al details il preferito con id = ${action.favourite.id}")
                     findNavController().navigate(directions)
                 }
-                FavouriteScreenAction.ShowNoFavouriteFoundMessage -> TODO()
+                is FavouriteScreenAction.Delete -> {
+                    val position = action.position
+                    adapter.deleteItem(position, binding.favouritesListRoot)
+                }
+                FavouriteScreenAction.ShowNoFavouriteFoundMessage -> TODO() // nessun preferito salvato
             }.exhaustive
         })
         viewModel.send(FavouriteScreenEvent.OnReady)
@@ -77,7 +80,7 @@ class FavouriteFragment : Fragment(), SearchView.OnQueryTextListener {
     }
 
     override fun onQueryTextChange(query: String): Boolean {
-        val adapter: FavouriteAdapter = favourite_list.adapter as FavouriteAdapter
+        val adapter: FavouriteAdapter = binding.favouriteList.adapter as FavouriteAdapter
         val filteredFavouritesList: List<FavouriteUI> = adapter.filter(favourites, query)
         adapter.setFavourites(filteredFavouritesList)
         return true

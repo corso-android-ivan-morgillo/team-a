@@ -3,20 +3,18 @@ package com.ivanmorgillo.corsoandroid.teama.recipe
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import com.google.android.material.card.MaterialCardView
-import com.ivanmorgillo.corsoandroid.teama.R
+import com.ivanmorgillo.corsoandroid.teama.databinding.RecipeItemBinding
+import java.util.*
+import kotlin.collections.ArrayList
 
 class RecipesAdapter(private val onclick: (RecipeUI, View) -> Unit) : RecyclerView.Adapter<RecipeViewHolder>() {
     private var recipes = emptyList<RecipeUI>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipeViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.recipe_item, parent, false)
-        return RecipeViewHolder(view)
+        val binding = RecipeItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return RecipeViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: RecipeViewHolder, position: Int) {
@@ -36,7 +34,9 @@ class RecipesAdapter(private val onclick: (RecipeUI, View) -> Unit) : RecyclerVi
         val filteredList: MutableList<RecipeUI> = ArrayList<RecipeUI>()
         for (item in mList) {
             // condizione = titolo della ricetta
-            if (item.title.toLowerCase().contains(query.toLowerCase().trim()) || query.isBlank()) {
+            if (item.title.toLowerCase(Locale.getDefault())
+                    .contains(query.toLowerCase(Locale.getDefault()).trim()) || query.isBlank()
+            ) {
                 filteredList.add(item)
             }
         }
@@ -48,12 +48,7 @@ class RecipesAdapter(private val onclick: (RecipeUI, View) -> Unit) : RecyclerVi
  *
  *
  * */
-class RecipeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    private val title = itemView.findViewById<TextView>(R.id.recipe_title)
-    private val image = itemView.findViewById<ImageView>(R.id.recipe_image)
-    private val recipeCardView = itemView.findViewById<MaterialCardView>(R.id.recipe_root)
-    private val goToDetailButton = itemView.findViewById<Button>(R.id.go_to_detail)
-
+class RecipeViewHolder(private val binding: RecipeItemBinding) : RecyclerView.ViewHolder(binding.root) {
     /**@param onclick: è la funzione che riceverà in ingresso il parametro
      *  di tipo RecipeUi e ritornerà unit. Questo pezzo di funzionalità ci serve per
      * far funzionare il click.
@@ -63,14 +58,12 @@ class RecipeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
      * nostra funzione accetta come secondo parametro in
      * ingresso una funzione anonima (senza nome specifico/signature).*/
     fun bind(item: RecipeUI, onclick: (RecipeUI, View) -> Unit) {
-        title.text = item.title
-        image.load(item.image)
-        image.contentDescription = item.title
+        binding.recipeTitle.text = item.title
+        binding.recipeImage.load(item.image)
+        binding.recipeImage.contentDescription = item.title
         /** Il click deve essere gestito inviando indietro al viewModel
          * il click dell'utente e l'oggetto che è stato cliccato */
-        goToDetailButton.setOnClickListener {
-            onclick(item, it)
-        }
-        goToDetailButton.transitionName = "recipe_transition_item${item.id}"
+        binding.goToDetail.setOnClickListener { onclick(item, it) }
+        binding.goToDetail.transitionName = "recipe_transition_item${item.id}"
     }
 }

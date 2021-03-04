@@ -3,13 +3,13 @@ package com.ivanmorgillo.corsoandroid.teama.favourite
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import com.google.android.material.card.MaterialCardView
 import com.google.android.material.snackbar.Snackbar
 import com.ivanmorgillo.corsoandroid.teama.R
+import com.ivanmorgillo.corsoandroid.teama.databinding.FavouriteItemBinding
+import java.util.*
+import kotlin.collections.ArrayList
 
 class FavouriteAdapter(
     private val onclick: (FavouriteUI, View) -> Unit,
@@ -18,8 +18,8 @@ class FavouriteAdapter(
     private var favourites = mutableListOf<FavouriteUI>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipeViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.favourite_item, parent, false)
-        return RecipeViewHolder(view)
+        val binding = FavouriteItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return RecipeViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: RecipeViewHolder, position: Int) {
@@ -39,7 +39,9 @@ class FavouriteAdapter(
         val filteredList: MutableList<FavouriteUI> = ArrayList<FavouriteUI>()
         for (item in mList) {
             // condizione = titolo della ricetta
-            if (item.title.toLowerCase().contains(query.toLowerCase().trim()) || query.isBlank()) {
+            if (item.title.toLowerCase(Locale.getDefault())
+                    .contains(query.toLowerCase(Locale.getDefault()).trim()) || query.isBlank()
+            ) {
                 filteredList.add(item)
             }
         }
@@ -69,11 +71,7 @@ class FavouriteAdapter(
  *
  *
  * */
-class RecipeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    private val title = itemView.findViewById<TextView>(R.id.favourite_title)
-    private val image = itemView.findViewById<ImageView>(R.id.favourite_image)
-    private val favouriteCardView = itemView.findViewById<MaterialCardView>(R.id.favourite_root)
-
+class RecipeViewHolder(private val binding: FavouriteItemBinding) : RecyclerView.ViewHolder(binding.root) {
     /**@param onclick: è la funzione che riceverà in ingresso il parametro
      *  di tipo FavouriteUI e ritornerà unit. Questo pezzo di funzionalità ci serve per
      * far funzionare il click.
@@ -83,12 +81,12 @@ class RecipeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
      * nostra funzione accetta come secondo parametro in
      * ingresso una funzione anonima (senza nome specifico/signature).*/
     fun bind(item: FavouriteUI, onclick: (FavouriteUI, View) -> Unit) {
-        title.text = item.title
-        image.load(item.image)
-        image.contentDescription = item.title
+        binding.favouriteTitle.text = item.title
+        binding.favouriteImage.load(item.image)
+        binding.favouriteImage.contentDescription = item.title
         /** Il click deve essere gestito inviando indietro al viewModel
          * il click dell'utente e l'oggetto che è stato cliccato */
-        favouriteCardView.setOnClickListener {
+        binding.favouriteRoot.setOnClickListener {
             onclick(item, it)
         }
     }

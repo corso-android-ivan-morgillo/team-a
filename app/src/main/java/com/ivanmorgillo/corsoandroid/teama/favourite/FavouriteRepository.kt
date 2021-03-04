@@ -2,6 +2,8 @@ package com.ivanmorgillo.corsoandroid.teama.favourite
 
 interface FavouriteRepository {
     suspend fun loadFavourites(): LoadFavouriteResult
+    fun addFavourite(favourite: Favourite): Boolean
+    fun deleteFavourite(favourite: Favourite): Boolean
 }
 
 private const val MAGIC_NUMBER = 10
@@ -20,6 +22,14 @@ class FavouriteRepositoryImpl : FavouriteRepository {
             )
         }
         return LoadFavouriteResult.Success(favourites)
+    }
+
+    override fun addFavourite(favourite: Favourite): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun deleteFavourite(favourite: Favourite): Boolean {
+        TODO("Not yet implemented")
     }
 }
 

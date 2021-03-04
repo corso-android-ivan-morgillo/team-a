@@ -37,7 +37,7 @@ val appModule = module {
         TrackingImpl()
     }
     viewModel { CategoryViewModel(repository = get(), tracking = get()) }
-    viewModel { MainViewModel(repository = get(), tracking = get()) }
-    viewModel { DetailViewModel(repository = get()) }
+    viewModel { RecipeViewModel(repository = get(), tracking = get()) }
+    viewModel { DetailViewModel(repository = get(), tracking = get()) }
     viewModel { FavouriteViewModel(repository = get(), tracking = get()) }
 }
