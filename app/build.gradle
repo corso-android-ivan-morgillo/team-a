@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'io.gitlab.arturbosch.detekt'
 apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.firebase.crashlytics'
@@ -10,6 +9,7 @@ def keyStorePassword = System.getenv('KEYSTOREPASSWORD')
 def aliasPassword = System.getenv('ALIASPASSWORD')
 def buildNumber = System.getenv('GITHUB_RUN_NUMBER') ?: "1"
 def _versionCode = buildNumber.toInteger()
+
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"

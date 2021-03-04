@@ -5,12 +5,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.doOnPreDraw
 import androidx.fragment.app.Fragment
@@ -18,36 +16,35 @@ import androidx.navigation.findNavController
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.google.android.material.transition.MaterialElevationScale
-import com.ivanmorgillo.corsoandroid.teama.MainScreenAction
-import com.ivanmorgillo.corsoandroid.teama.MainScreenAction.NavigateToDetail
-import com.ivanmorgillo.corsoandroid.teama.MainScreenAction.ShowInterruptedRequestMessage
-import com.ivanmorgillo.corsoandroid.teama.MainScreenAction.ShowNoInternetMessage
-import com.ivanmorgillo.corsoandroid.teama.MainScreenAction.ShowServerErrorMessage
-import com.ivanmorgillo.corsoandroid.teama.MainScreenAction.ShowSlowInternetMessage
-import com.ivanmorgillo.corsoandroid.teama.MainScreenEvent.OnReady
-import com.ivanmorgillo.corsoandroid.teama.MainScreenEvent.OnRecipeClick
-import com.ivanmorgillo.corsoandroid.teama.MainScreenStates
-import com.ivanmorgillo.corsoandroid.teama.MainViewModel
 import com.ivanmorgillo.corsoandroid.teama.R
+import com.ivanmorgillo.corsoandroid.teama.RecipeScreenAction
+import com.ivanmorgillo.corsoandroid.teama.RecipeScreenAction.NavigateToDetail
+import com.ivanmorgillo.corsoandroid.teama.RecipeScreenAction.ShowInterruptedRequestMessage
+import com.ivanmorgillo.corsoandroid.teama.RecipeScreenAction.ShowNoInternetMessage
+import com.ivanmorgillo.corsoandroid.teama.RecipeScreenAction.ShowServerErrorMessage
+import com.ivanmorgillo.corsoandroid.teama.RecipeScreenAction.ShowSlowInternetMessage
+import com.ivanmorgillo.corsoandroid.teama.RecipeScreenEvent.OnReady
+import com.ivanmorgillo.corsoandroid.teama.RecipeScreenEvent.OnRecipeClick
+import com.ivanmorgillo.corsoandroid.teama.RecipeScreenEvent.OnRefresh
+import com.ivanmorgillo.corsoandroid.teama.RecipeScreenStates.Content
+import com.ivanmorgillo.corsoandroid.teama.RecipeScreenStates.Error
+import com.ivanmorgillo.corsoandroid.teama.RecipeScreenStates.Loading
+import com.ivanmorgillo.corsoandroid.teama.RecipeViewModel
+import com.ivanmorgillo.corsoandroid.teama.databinding.FragmentRecipeBinding
 import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
 import com.ivanmorgillo.corsoandroid.teama.extension.showAlertDialog
 import com.ivanmorgillo.corsoandroid.teama.recipe.RecipeFragmentDirections.Companion.actionRecipeFragmentToDetailFragment
-import kotlinx.android.synthetic.main.fragment_recipe.*
+import com.ivanmorgillo.corsoandroid.teama.utils.viewBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
-class RecipeFragment : Fragment(), SearchView.OnQueryTextListener {
-    private val viewModel: MainViewModel by viewModel()
+class RecipeFragment : Fragment(R.layout.fragment_recipe), SearchView.OnQueryTextListener {
+    private val viewModel: RecipeViewModel by viewModel()
+    private val binding by viewBinding(FragmentRecipeBinding::bind)
     private val args: RecipeFragmentArgs by navArgs()
     private var lastClickedItem: View? = null
     private var categoryName = ""
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        setHasOptionsMenu(true) // necessario per consentire al fragment di avere un menu
-        return inflater.inflate(R.layout.fragment_recipe, container, false)
-    }
 
     private var recipes: List<RecipeUI> = emptyList<RecipeUI>()
 
@@ -56,8 +53,7 @@ class RecipeFragment : Fragment(), SearchView.OnQueryTextListener {
         super.onViewCreated(view, savedInstanceState)
         postponeEnterTransition()
         view.doOnPreDraw { startPostponedEnterTransition() }
-        val refresh: SwipeRefreshLayout = recipes_refresh // swipe to refresh
-        refresh.setOnRefreshListener { viewModel.send(OnReady(categoryName)) }
+        binding.recipesRefresh.setOnRefreshListener { viewModel.send(OnReady(categoryName)) }
         val adapter = RecipesAdapter { item, view ->
             lastClickedItem = view
             exitTransition = MaterialElevationScale(false).apply {
@@ -68,7 +64,7 @@ class RecipeFragment : Fragment(), SearchView.OnQueryTextListener {
             }
             viewModel.send(OnRecipeClick(item))
         }
-        recipe_list.adapter = adapter
+        binding.recipeList.adapter = adapter
         categoryName = args.categoryName
         if (categoryName.isEmpty()) {
             // Torna indietro nella schermata da cui provieni.
@@ -77,19 +73,13 @@ class RecipeFragment : Fragment(), SearchView.OnQueryTextListener {
             viewModel.states.observe(viewLifecycleOwner, { state ->
                 // riceve l'aggiornamento del nuovo valore
                 when (state) {
-                    is MainScreenStates.Content -> {
-
+                    is Content -> {
                         recipes = state.recipes
                         adapter.setRecipes(recipes)
-                        refresh.isRefreshing = false
+                        binding.recipesRefresh.isRefreshing = false
                     }
-                    MainScreenStates.Error -> {
-
-                        refresh.isRefreshing = false
-                    }
-                    MainScreenStates.Loading -> {
-                        refresh.isRefreshing = true
-                    }
+                    Error -> binding.recipesRefresh.isRefreshing = false
+                    Loading -> binding.recipesRefresh.isRefreshing = true
                 }
             })
             // Questo blocco serve a specificare che per le istruzioni interne il this è "view"
@@ -103,11 +93,11 @@ class RecipeFragment : Fragment(), SearchView.OnQueryTextListener {
                             findNavController().navigate(directions, extras)
                         }
                     }
-                    ShowNoInternetMessage -> showNoInternetMessage(view)
-                    ShowInterruptedRequestMessage -> showInterruptedRequestMessage(view)
-                    ShowSlowInternetMessage -> showNoInternetMessage(view)
-                    ShowServerErrorMessage -> showServerErrorMessage(view)
-                    MainScreenAction.ShowNoRecipeFoundMessage -> showNoRecipeFoundMessage(view)
+                    ShowNoInternetMessage -> showNoInternetMessage()
+                    ShowInterruptedRequestMessage -> showInterruptedRequestMessage()
+                    ShowSlowInternetMessage -> showNoInternetMessage()
+                    ShowServerErrorMessage -> showServerErrorMessage()
+                    RecipeScreenAction.ShowNoRecipeFoundMessage -> showNoRecipeFoundMessage()
                 }.exhaustive
             })
             viewModel.send(OnReady(categoryName))
@@ -119,7 +109,7 @@ class RecipeFragment : Fragment(), SearchView.OnQueryTextListener {
     }
 
     override fun onQueryTextChange(query: String): Boolean {
-        val adapter: RecipesAdapter = recipe_list.adapter as RecipesAdapter
+        val adapter: RecipesAdapter = binding.recipeList.adapter as RecipesAdapter
         val filteredRecipesList: List<RecipeUI> = adapter.filter(recipes, query)
         adapter.setRecipes(filteredRecipesList)
         return true
@@ -142,51 +132,51 @@ class RecipeFragment : Fragment(), SearchView.OnQueryTextListener {
         } else super.onOptionsItemSelected(item)
     }
 
-    private fun showServerErrorMessage(view: View) {
-        recipes_refresh.isRefreshing = false
-        view.showAlertDialog(resources.getString(R.string.server_error_title),
+    private fun showServerErrorMessage() {
+        binding.recipesRefresh.isRefreshing = false
+        binding.root.showAlertDialog(resources.getString(R.string.server_error_title),
             resources.getString(R.string.server_error_message),
             R.drawable.ic_error,
             resources.getString(R.string.retry),
-            { viewModel.send(OnReady(categoryName)) },
+            { viewModel.send(OnRefresh(categoryName)) },
             "",
             {}
         )
     }
 
-    private fun showInterruptedRequestMessage(view: View) {
-        recipes_refresh.isRefreshing = false
-        view.showAlertDialog(resources.getString(R.string.connection_lost_error_title),
+    private fun showInterruptedRequestMessage() {
+        binding.recipesRefresh.isRefreshing = false
+        binding.root.showAlertDialog(resources.getString(R.string.connection_lost_error_title),
             resources.getString(R.string.connection_lost_error_message),
             R.drawable.ic_wifi_off,
             resources.getString(R.string.network_settings),
             { startActivity(Intent(Settings.ACTION_WIRELESS_SETTINGS)) },
             resources.getString(R.string.retry),
-            { viewModel.send(OnReady(categoryName)) }
+            { viewModel.send(OnRefresh(categoryName)) }
         )
     }
 
-    private fun showNoInternetMessage(view: View) {
-        recipes_refresh.isRefreshing = false
-        view.showAlertDialog(resources.getString(R.string.no_internet_error_title),
+    private fun showNoInternetMessage() {
+        binding.recipesRefresh.isRefreshing = false
+        binding.root.showAlertDialog(resources.getString(R.string.no_internet_error_title),
             resources.getString(R.string.no_internet_error_message),
             R.drawable.ic_wifi_off,
             resources.getString(R.string.network_settings),
             { startActivity(Intent(Settings.ACTION_WIRELESS_SETTINGS)) },
             resources.getString(R.string.retry),
             {
-                viewModel.send(OnReady(categoryName))
+                viewModel.send(OnRefresh(categoryName))
             }
         )
     }
 
-    private fun showNoRecipeFoundMessage(view: View) {
-        recipes_refresh.isRefreshing = false
-        view.showAlertDialog(resources.getString(R.string.no_recipe_found_error_title),
+    private fun showNoRecipeFoundMessage() {
+        binding.recipesRefresh.isRefreshing = false
+        binding.root.showAlertDialog(resources.getString(R.string.no_recipe_found_error_title),
             resources.getString(R.string.no_recipe_found_error_message),
             R.drawable.ic_sad_face,
             resources.getString(R.string.retry),
-            { viewModel.send(OnReady(categoryName)) },
+            { viewModel.send(OnRefresh(categoryName)) },
             "",
             {}
         )

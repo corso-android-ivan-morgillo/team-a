@@ -4,29 +4,27 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.provider.Settings
-import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.transition.MaterialContainerTransform
 import com.ivanmorgillo.corsoandroid.teama.R
+import com.ivanmorgillo.corsoandroid.teama.databinding.FragmentDetailBinding
 import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
 import com.ivanmorgillo.corsoandroid.teama.extension.gone
 import com.ivanmorgillo.corsoandroid.teama.extension.showAlertDialog
 import com.ivanmorgillo.corsoandroid.teama.extension.themeColor
 import com.ivanmorgillo.corsoandroid.teama.extension.visible
-import kotlinx.android.synthetic.main.detail_ingredient_instruction.*
-import kotlinx.android.synthetic.main.fragment_detail.*
+import com.ivanmorgillo.corsoandroid.teama.utils.viewBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class DetailFragment : Fragment() {
-
+class DetailFragment : Fragment(R.layout.fragment_detail) {
     private val viewModel: DetailViewModel by viewModel()
+    private val binding by viewBinding(FragmentDetailBinding::bind)
     private val args: DetailFragmentArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,11 +35,7 @@ class DetailFragment : Fragment() {
             scrimColor = Color.TRANSPARENT
             setAllContainerColors(requireContext().themeColor(R.attr.colorSurface))
         }
-    }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         setHasOptionsMenu(true) // necessario per consentire al fragment di avere un menu
-        return inflater.inflate(R.layout.fragment_detail, container, false)
     }
 
     // Equivalente alla onCreate di un activity
@@ -52,7 +46,7 @@ class DetailFragment : Fragment() {
             { viewModel.send(DetailScreenEvent.OnIngredientsClick) },
             { viewModel.send(DetailScreenEvent.OnInstructionsClick) }
         )
-        detail_screen_recyclerview.adapter = adapter
+        binding.detailScreenRecyclerview.adapter = adapter
         val recipeId = args.recipeId
         if (recipeId == 0L) {
             // Torna indietro nella schermata da cui provieni.
@@ -61,7 +55,7 @@ class DetailFragment : Fragment() {
             viewModel.states.observe(viewLifecycleOwner, { state ->
                 when (state) {
                     is DetailScreenStates.Content -> {
-                        details_list_progressBar.gone()
+                        binding.detailsListProgressBar.gone()
                         // Timber.d("RecipeId= $recipeId")
                         adapter.items = listOf(
                             DetailScreenItems.Video(state.recipes.video, state.recipes.image),
@@ -69,34 +63,22 @@ class DetailFragment : Fragment() {
                             DetailScreenItems.TabLayout,
                             DetailScreenItems.IngredientsInstructionsList(
                                 state.recipes.ingredients,
-                                state.recipes.instructions
+                                state.recipes.instructions,
+                                state.recipes.isIngredientsSelected
                             )
                         )
-                    }
-                    DetailScreenStates.Error -> {
-                        // non trova le ricette in fase di Loading ad esempio
-                        details_list_progressBar.gone()
-                    }
-                    DetailScreenStates.Loading -> {
-                        details_list_progressBar.visible()
-                    }
+                    } // non trova le ricette in fase di Loading ad esempio
+                    DetailScreenStates.Error -> binding.detailsListProgressBar.gone()
+                    DetailScreenStates.Loading -> binding.detailsListProgressBar.visible()
                 }.exhaustive
             })
             viewModel.actions.observe(viewLifecycleOwner, { action ->
                 when (action) {
-                    DetailScreenAction.ShowIngredients -> {
-                        detail_screen_ingredient_list.visible()
-                        detail_screen_instruction.gone()
-                    }
-                    DetailScreenAction.ShowInstructions -> {
-                        detail_screen_instruction.visible()
-                        detail_screen_ingredient_list.gone()
-                    }
-                    DetailScreenAction.ShowNoInternetMessage -> showNoInternetMessage(view, recipeId)
-                    DetailScreenAction.ShowInterruptedRequestMessage -> showInterruptedRequestMessage(view, recipeId)
-                    DetailScreenAction.ShowSlowInternetMessage -> showNoInternetMessage(view, recipeId)
-                    DetailScreenAction.ShowServerErrorMessage -> showServerErrorMessage(view, recipeId)
-                    DetailScreenAction.ShowNoRecipeDetailFoundMessage -> showNoRecipeDetailFoundMessage(view, recipeId)
+                    DetailScreenAction.ShowNoInternetMessage -> showNoInternetMessage(recipeId)
+                    DetailScreenAction.ShowInterruptedRequestMessage -> showInterruptedRequestMessage(recipeId)
+                    DetailScreenAction.ShowSlowInternetMessage -> showNoInternetMessage(recipeId)
+                    DetailScreenAction.ShowServerErrorMessage -> showServerErrorMessage(recipeId)
+                    DetailScreenAction.ShowNoRecipeDetailFoundMessage -> showNoRecipeDetailFoundMessage(recipeId)
                 }.exhaustive
             }
             )
@@ -104,9 +86,9 @@ class DetailFragment : Fragment() {
         }
     }
 
-    private fun showServerErrorMessage(view: View, recipeId: Long) {
-        details_list_progressBar.gone()
-        view.showAlertDialog(resources.getString(R.string.server_error_title),
+    private fun showServerErrorMessage(recipeId: Long) {
+        binding.detailsListProgressBar.gone()
+        binding.root.showAlertDialog(resources.getString(R.string.server_error_title),
             resources.getString(R.string.server_error_message),
             R.drawable.ic_error,
             resources.getString(R.string.retry),
@@ -116,9 +98,9 @@ class DetailFragment : Fragment() {
         )
     }
 
-    private fun showInterruptedRequestMessage(view: View, recipeId: Long) {
-        details_list_progressBar.gone()
-        view.showAlertDialog(resources.getString(R.string.connection_lost_error_title),
+    private fun showInterruptedRequestMessage(recipeId: Long) {
+        binding.detailsListProgressBar.gone()
+        binding.root.showAlertDialog(resources.getString(R.string.connection_lost_error_title),
             resources.getString(R.string.connection_lost_error_message),
             R.drawable.ic_wifi_off,
             resources.getString(R.string.network_settings),
@@ -128,9 +110,9 @@ class DetailFragment : Fragment() {
         )
     }
 
-    private fun showNoInternetMessage(view: View, recipeId: Long) {
-        details_list_progressBar.gone()
-        view.showAlertDialog(resources.getString(R.string.no_internet_error_title),
+    private fun showNoInternetMessage(recipeId: Long) {
+        binding.detailsListProgressBar.gone()
+        binding.root.showAlertDialog(resources.getString(R.string.no_internet_error_title),
             resources.getString(R.string.no_internet_error_message),
             R.drawable.ic_wifi_off,
             resources.getString(R.string.network_settings),
@@ -140,9 +122,9 @@ class DetailFragment : Fragment() {
         )
     }
 
-    private fun showNoRecipeDetailFoundMessage(view: View, recipeId: Long) {
-        details_list_progressBar.gone()
-        view.showAlertDialog(resources.getString(R.string.no_recipe_detail_found_error_title),
+    private fun showNoRecipeDetailFoundMessage(recipeId: Long) {
+        binding.detailsListProgressBar.gone()
+        binding.root.showAlertDialog(resources.getString(R.string.no_recipe_detail_found_error_title),
             resources.getString(R.string.no_recipe_detail_found_error_message),
             R.drawable.ic_sad_face,
             resources.getString(R.string.retry),

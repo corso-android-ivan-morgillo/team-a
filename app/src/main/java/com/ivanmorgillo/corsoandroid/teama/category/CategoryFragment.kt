@@ -60,11 +60,11 @@ class CategoryFragment : Fragment(R.layout.fragment_category) {
                             CategoryFragmentDirections.actionCategoryFragmentToRecipeFragment(action.category.title)
                         findNavController().navigate(directions)
                     }
-                    ShowNoInternetMessage -> showNoInternetMessage(binding)
-                    ShowInterruptedRequestMessage -> showInterruptedRequestMessage(binding)
-                    ShowSlowInternetMessage -> showNoInternetMessage(binding)
-                    ShowServerErrorMessage -> showServerErrorMessage(binding)
-                    ShowNoCategoryFoundMessage -> showNoCategoryFoundMessage(binding)
+                    ShowNoInternetMessage -> showNoInternetMessage()
+                    ShowInterruptedRequestMessage -> showInterruptedRequestMessage()
+                    ShowSlowInternetMessage -> showNoInternetMessage()
+                    ShowServerErrorMessage -> showServerErrorMessage()
+                    ShowNoCategoryFoundMessage -> showNoCategoryFoundMessage()
                 }.exhaustive
             })
 
@@ -78,19 +78,19 @@ class CategoryFragment : Fragment(R.layout.fragment_category) {
         }
     }
 
-    private fun showServerErrorMessage(binding: FragmentCategoryBinding) {
+    private fun showServerErrorMessage() {
         binding.categoryRefresh.isRefreshing = false
         binding.root.showAlertDialog(resources.getString(R.string.server_error_title),
             resources.getString(R.string.server_error_message),
             R.drawable.ic_error,
             resources.getString(R.string.retry),
-            { viewModel.send(CategoryScreenEvent.OnReady) },
+            { viewModel.send(CategoryScreenEvent.OnRefresh) },
             "",
             {}
         )
     }
 
-    private fun showInterruptedRequestMessage(binding: FragmentCategoryBinding) {
+    private fun showInterruptedRequestMessage() {
         binding.categoryRefresh.isRefreshing = false
         binding.root.showAlertDialog(resources.getString(R.string.connection_lost_error_title),
             resources.getString(R.string.connection_lost_error_message),
@@ -98,11 +98,11 @@ class CategoryFragment : Fragment(R.layout.fragment_category) {
             resources.getString(R.string.network_settings),
             { startActivity(Intent(Settings.ACTION_WIRELESS_SETTINGS)) },
             resources.getString(R.string.retry),
-            { viewModel.send(CategoryScreenEvent.OnReady) }
+            { viewModel.send(CategoryScreenEvent.OnRefresh) }
         )
     }
 
-    private fun showNoInternetMessage(binding: FragmentCategoryBinding) {
+    private fun showNoInternetMessage() {
         binding.categoryRefresh.isRefreshing = false
         binding.root.showAlertDialog(resources.getString(R.string.no_internet_error_title),
             resources.getString(R.string.no_internet_error_message),
@@ -110,17 +110,17 @@ class CategoryFragment : Fragment(R.layout.fragment_category) {
             resources.getString(R.string.network_settings),
             { startActivity(Intent(Settings.ACTION_WIRELESS_SETTINGS)) },
             resources.getString(R.string.retry),
-            { viewModel.send(CategoryScreenEvent.OnReady) }
+            { viewModel.send(CategoryScreenEvent.OnRefresh) }
         )
     }
 
-    private fun showNoCategoryFoundMessage(binding: FragmentCategoryBinding) {
+    private fun showNoCategoryFoundMessage() {
         binding.categoryRefresh.isRefreshing = false
         binding.root.showAlertDialog(resources.getString(R.string.no_category_found_error_title),
             resources.getString(R.string.no_category_found_error_message),
             R.drawable.ic_sad_face,
             resources.getString(R.string.retry),
-            { viewModel.send(CategoryScreenEvent.OnReady) },
+            { viewModel.send(CategoryScreenEvent.OnRefresh) },
             "",
             {}
         )

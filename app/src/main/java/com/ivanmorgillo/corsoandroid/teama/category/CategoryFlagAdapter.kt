@@ -1,20 +1,17 @@
 package com.ivanmorgillo.corsoandroid.teama.category
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import com.ivanmorgillo.corsoandroid.teama.R
+import com.ivanmorgillo.corsoandroid.teama.databinding.CategoryFlagCountryBinding
 
-class CategoryFlagAdapter :
-    RecyclerView.Adapter<CategoryFlagViewHolder>() {
+class CategoryFlagAdapter : RecyclerView.Adapter<CategoryFlagViewHolder>() {
     private var flagcategories = emptyList<FlagUI>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryFlagViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.category_flag_country, parent, false)
-        return CategoryFlagViewHolder(view)
+        val binding = CategoryFlagCountryBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return CategoryFlagViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: CategoryFlagViewHolder, position: Int) {
@@ -35,15 +32,10 @@ class CategoryFlagAdapter :
  *
  *
  * */
-class CategoryFlagViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-    private val image = itemView.findViewById<ImageView>(R.id.flag_country)
-    private var flagUrl = ""
+class CategoryFlagViewHolder(private val binding: CategoryFlagCountryBinding) : RecyclerView.ViewHolder(binding.root) {
     fun bind(item: FlagUI) {
-        flagUrl = "https://www.themealdb.com/images/icons/flags/big/64/${item.flag}.png"
-        image.load(flagUrl)
-        image.contentDescription = item.flag
-
+        binding.flagCountry.load(item.flag)
+        binding.flagCountry.contentDescription = item.flag
         // categoryCardView.transitionName = "category_transition_item${item.id}"
     }
 }
