@@ -13,6 +13,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.ivanmorgillo.corsoandroid.teama.R
 import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
 import com.ivanmorgillo.corsoandroid.teama.extension.gone
@@ -38,9 +39,13 @@ class FavouriteFragment : Fragment(), SearchView.OnQueryTextListener {
             viewModel.send(FavouriteScreenEvent.OnFavouriteClick(item))
         }, favourite_list)
         favourite_list.adapter = adapter
-
-        val view = favourites_list_root
-        val itemTouchHelper = ItemTouchHelper(SwipeToDeleteCallback(adapter, context, view))
+        val itemTouchHelper = ItemTouchHelper(SwipeToDeleteCallback(context,
+            object : SwipeToDeleteCallback.ItemTouchHelperListener {
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder?, direction: Int, position: Int) {
+                    //lifecycleScope.launch { viewModel.send(FavouriteScreenEvents.OnItemSwiped(position)) }
+                    viewModel.send(FavouriteScreenEvent.OnFavouriteSwiped(position))
+                }
+            }))
         itemTouchHelper.attachToRecyclerView(favourite_list)
 
         viewModel.states.observe(viewLifecycleOwner, { state ->
@@ -66,7 +71,11 @@ class FavouriteFragment : Fragment(), SearchView.OnQueryTextListener {
                     Timber.d("Invio al details il preferito con id = ${action.favourite.id}")
                     findNavController().navigate(directions)
                 }
-                FavouriteScreenAction.ShowNoFavouriteFoundMessage -> TODO()
+                is FavouriteScreenAction.Delete -> {
+                    val position = action.position
+                    adapter.deleteItem(position, favourites_list_root)
+                }
+                FavouriteScreenAction.ShowNoFavouriteFoundMessage -> TODO() // nessun preferito salvato
             }.exhaustive
         })
         viewModel.send(FavouriteScreenEvent.OnReady)

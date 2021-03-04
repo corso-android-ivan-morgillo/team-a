@@ -8,23 +8,17 @@ import com.ivanmorgillo.corsoandroid.teama.crashlytics.SingleLiveEvent
 import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
 import kotlinx.coroutines.launch
 
-class FavouriteViewModel(
-    private val repository: FavouriteRepository,
-    private val tracking: Tracking,
-) : ViewModel() {
+class FavouriteViewModel(private val repository: FavouriteRepository, private val tracking: Tracking) : ViewModel() {
     val states = MutableLiveData<FavouriteScreenStates>() // potremmo passarci direttamente loading
     val actions = SingleLiveEvent<FavouriteScreenAction>()
 
     fun send(event: FavouriteScreenEvent) {
         when (event) {
             // deve ricevere la lista delle ricette. La view deve ricevere eventi e reagire a stati.
-            is FavouriteScreenEvent.OnReady -> {
-                loadContent() //  carica i preferiti
-            }
-            is FavouriteScreenEvent.OnFavouriteClick -> {
-                onFavouriteClick(event)
-            }
-        }
+            is FavouriteScreenEvent.OnReady -> loadContent() //  carica i preferiti
+            is FavouriteScreenEvent.OnFavouriteClick -> onFavouriteClick(event) // apri dettaglio ricetta
+            is FavouriteScreenEvent.OnFavouriteSwiped -> onFavouriteSwiped(event) // elimina preferito
+        }.exhaustive
     }
 
     private fun loadContent() {
@@ -42,6 +36,12 @@ class FavouriteViewModel(
         // Log.d("RECIPE", event.recipe.toString())
         tracking.logEvent("favourite_clicked")
         actions.postValue(FavouriteScreenAction.NavigateToDetail(event.favourite))
+    }
+
+    private fun onFavouriteSwiped(event: FavouriteScreenEvent.OnFavouriteSwiped) {
+        // Log.d("RECIPE", event.recipe.toString())
+        tracking.logEvent("favourite_deleted")
+        actions.postValue(FavouriteScreenAction.Delete(event.position))
     }
 
     private fun onFailure(result: LoadFavouriteResult.Failure) {
@@ -69,6 +69,7 @@ class FavouriteViewModel(
 
 sealed class FavouriteScreenAction {
     data class NavigateToDetail(val favourite: FavouriteUI) : FavouriteScreenAction()
+    data class Delete(val position: Int) : FavouriteScreenAction()
     object ShowNoFavouriteFoundMessage : FavouriteScreenAction()
 }
 
@@ -84,6 +85,7 @@ sealed class FavouriteScreenStates {
 sealed class FavouriteScreenEvent {
     /** Usiamo la dataclass perchè abbiamo bisogno di passare un parametro */
     data class OnFavouriteClick(val favourite: FavouriteUI) : FavouriteScreenEvent()
+    data class OnFavouriteSwiped(val position: Int) : FavouriteScreenEvent()
 
     object OnReady : FavouriteScreenEvent()
 }

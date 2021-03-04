@@ -5,7 +5,6 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
-import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
@@ -14,15 +13,16 @@ import com.ivanmorgillo.corsoandroid.teama.R
 private const val BACKGROUND_CORNER_OFFSET = 20
 private const val ICON_MARGIN = 5
 
-class SwipeToDeleteCallback(private val mAdapter: FavouriteAdapter, context: Context?, val view: View) :
-    ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+class SwipeToDeleteCallback(
+    context: Context?,
+    private val listener: ItemTouchHelperListener,
+) : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
 
     private val icon: Drawable?
     private val background: ColorDrawable
 
     init {
-        icon = ContextCompat.getDrawable(context!!,
-            R.drawable.ic_swipe_delete)
+        icon = ContextCompat.getDrawable(context!!, R.drawable.ic_swipe_delete)
         background = ColorDrawable(Color.RED)
     }
 
@@ -36,7 +36,7 @@ class SwipeToDeleteCallback(private val mAdapter: FavouriteAdapter, context: Con
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         val position = viewHolder.adapterPosition
-        mAdapter.deleteItem(position, view)
+        listener.onSwiped(viewHolder, direction, position)
     }
 
     override fun onChildDraw(
@@ -72,5 +72,9 @@ class SwipeToDeleteCallback(private val mAdapter: FavouriteAdapter, context: Con
         }
         background.draw(c)
         icon.draw(c)
+    }
+
+    interface ItemTouchHelperListener { // necessaria per gestire nel fragment lo swipe
+        fun onSwiped(viewHolder: RecyclerView.ViewHolder?, direction: Int, position: Int)
     }
 }
