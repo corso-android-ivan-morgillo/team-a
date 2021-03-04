@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ivanmorgillo.corsoandroid.teama.Tracking
 import com.ivanmorgillo.corsoandroid.teama.crashlytics.SingleLiveEvent
-import com.ivanmorgillo.corsoandroid.teama.exhaustive
+import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
 import kotlinx.coroutines.launch
 
 class FavouriteViewModel(

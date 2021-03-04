@@ -10,8 +10,8 @@ import androidx.transition.TransitionManager
 import coil.load
 import com.ivanmorgillo.corsoandroid.teama.R
 import com.ivanmorgillo.corsoandroid.teama.databinding.CategoryItemBinding
-import com.ivanmorgillo.corsoandroid.teama.gone
-import com.ivanmorgillo.corsoandroid.teama.visible
+import com.ivanmorgillo.corsoandroid.teama.extension.gone
+import com.ivanmorgillo.corsoandroid.teama.extension.visible
 
 class CategoryAdapter(private val onclick: (CategoryUI, View) -> Unit) : RecyclerView.Adapter<CategoryViewHolder>() {
     private var categories = emptyList<CategoryUI>()

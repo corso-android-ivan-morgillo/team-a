@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.ivanmorgillo.corsoandroid.teama
+package com.ivanmorgillo.corsoandroid.teama.extension
 
 import android.annotation.SuppressLint
 import android.content.Context

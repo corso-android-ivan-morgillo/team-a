@@ -13,7 +13,7 @@ import com.ivanmorgillo.corsoandroid.teama.detail.DetailScreenAction.ShowSlowInt
 import com.ivanmorgillo.corsoandroid.teama.detail.DetailScreenStates.Content
 import com.ivanmorgillo.corsoandroid.teama.detail.DetailScreenStates.Error
 import com.ivanmorgillo.corsoandroid.teama.detail.DetailScreenStates.Loading
-import com.ivanmorgillo.corsoandroid.teama.exhaustive
+import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
 import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeDetailError.InterruptedRequest
 import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeDetailError.NoDetailFound
 import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeDetailError.NoInternet

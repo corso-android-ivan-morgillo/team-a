@@ -1,4 +1,4 @@
-package com.ivanmorgillo.corsoandroid.teama
+package com.ivanmorgillo.corsoandroid.teama.extension
 
 import android.content.DialogInterface
 import android.view.View

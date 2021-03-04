@@ -13,7 +13,7 @@ import com.ivanmorgillo.corsoandroid.teama.category.CategoryScreenStates.Content
 import com.ivanmorgillo.corsoandroid.teama.category.CategoryScreenStates.Error
 import com.ivanmorgillo.corsoandroid.teama.category.CategoryScreenStates.Loading
 import com.ivanmorgillo.corsoandroid.teama.crashlytics.SingleLiveEvent
-import com.ivanmorgillo.corsoandroid.teama.exhaustive
+import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
 import com.ivanmorgillo.corsoandroid.teama.network.LoadCategoryError.InterruptedRequest
 import com.ivanmorgillo.corsoandroid.teama.network.LoadCategoryError.NoCategoryFound
 import com.ivanmorgillo.corsoandroid.teama.network.LoadCategoryError.NoInternet
