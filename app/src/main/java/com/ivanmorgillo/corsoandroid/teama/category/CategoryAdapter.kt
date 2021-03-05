@@ -48,25 +48,18 @@ class CategoryViewHolder(private val binding: CategoryItemBinding) : RecyclerVie
         binding.recipeCounter.text = recipesCounterText
         binding.categoryTitle.text = item.title
         binding.categoryDescription.text = item.description
-        // binding.categoryImage.load(item.image)
         binding.categoryImageCollapsed.load(item.image)
-        //  binding.categoryImage.contentDescription = item.title
         binding.categoryRoot.setOnClickListener { // per aprire il dettaglio della ricetta
             onclick(item, it)
         }
         binding.categoryInfo.setOnClickListener { // per espandere o collassare la card
             expandOrCollapse()
         }
-        /*     binding.arrowButton.setOnClickListener { // per espandere o collassare la card
-             expandOrCollapse()
-         } */
-        // categoryCardView.transitionName = "category_transition_item${item.id}"
     }
 
     private fun expandOrCollapse() {
         if (binding.actionsCategoryExpanded.isVisible) {
             binding.actionsCategoryExpanded.gone()
-            // binding.actionsCategoryCollapsed.visible()
             TransitionManager.beginDelayedTransition(
                 binding.categoryRoot,
                 AutoTransition()
