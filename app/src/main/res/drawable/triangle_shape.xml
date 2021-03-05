@@ -7,7 +7,7 @@
 
     <path
         android:name="dark_triangle"
-        android:fillColor="#F17E5A"
+        android:fillColor="#ED770C"
         android:pathData="M 0,0 L 100,0 0,60 z" />
 
 </vector>
