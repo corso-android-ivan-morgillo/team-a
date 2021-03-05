@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/recipe_root"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/recipe_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    app:cardElevation="8dp"
-    app:cardCornerRadius="12dp">
+    app:cardBackgroundColor="#FBFBFB"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="12dp"
+    app:checkedIconTint="#FFFFFF">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -18,14 +20,13 @@
             android:id="@+id/recipe_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            style="@style/TextAppearance.MaterialComponents.Headline4"
-            android:fontFamily="@font/lora_variable"
-            android:textStyle="italic"
+            android:fontFamily="@font/akaya"
             android:gravity="center"
-            android:textColor="#000000"
+            android:textColor="#552803"
+            android:textSize="32sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="Lorem Ipsum....babababababbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbabababab" />
 
         <ImageView
@@ -39,29 +40,6 @@
             tools:ignore="ContentDescription"
             tools:src="@mipmap/ic_launcher" />
         <!-- tools:src serve per mettere dentro l'immagine un'anteprima da vedere solamente nella preview -->
-        <TextView
-            android:id="@+id/recipe_tag"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/recipe_image"
-            app:layout_constraintStart_toStartOf="parent"
-            android:text="Pollo Caseruola"
-            style="@style/TextAppearance.MaterialComponents.Headline5"
-            android:textSize="12sp"
-            android:layout_marginTop="8dp"
-            android:padding="8dp"
-            android:textColor="#6b4323" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/go_to_detail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/recipe_image"
-            style="?attr/materialButtonOutlinedStyle"
-            android:layout_marginTop="8dp"
-            android:text="Recipe" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -51,6 +51,7 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe), SearchView.OnQueryTex
     // Equivalente alla onCreate di un activity
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setHasOptionsMenu(true)
         postponeEnterTransition()
         view.doOnPreDraw { startPostponedEnterTransition() }
         binding.recipesRefresh.setOnRefreshListener { viewModel.send(OnReady(categoryName)) }
