@@ -80,17 +80,6 @@
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="Titolo Categoria..." />
 
-                <!--  <androidx.constraintlayout.widget.ConstraintLayout
-                      android:id="@+id/category_image_container"
-                      android:layout_width="178dp"
-                      android:layout_height="170dp"
-                      app:layout_constraintBottom_toBottomOf="parent"
-                      app:layout_constraintEnd_toEndOf="parent"
-                      app:layout_constraintStart_toEndOf="@id/trapezoid"
-                      app:layout_constraintTop_toTopOf="parent"> -->
-
-                <!--    </androidx.constraintlayout.widget.ConstraintLayout> -->
-
                 <TextView
                     android:id="@+id/recipe_counter"
                     android:layout_width="wrap_content"
@@ -99,7 +88,7 @@
                     android:paddingTop="5dp"
                     android:paddingBottom="5dp"
                     android:textColor="#000000"
-                    android:textSize="18sp"
+                    android:textSize="14sp"
                     android:layout_marginTop="4dp"
                     android:layout_marginStart="8dp"
                     app:layout_constraintStart_toStartOf="parent"
@@ -107,52 +96,36 @@
                     tools:text="15 Recipes" />
 
 
-                <!--        <ImageButton
-                            android:id="@+id/arrow_button"
-                            style="?attr/materialButtonOutlinedStyle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:contentDescription="expand arrow"
-                            android:src="@drawable/arrow_down"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/recipe_counter" /> -->
             </androidx.constraintlayout.widget.ConstraintLayout>
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <!--
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/category_item_expanded"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="visible">
-
-                    <ImageView
-                        android:id="@+id/category_image"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:scaleType="centerCrop"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        tools:src="@mipmap/ic_launcher"
-                        android:contentDescription="categoryImage" />
-        -->
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/flag_container_category"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-
-            app:layout_constraintBottom_toTopOf="@id/actions_category"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/actions_category_collapsed">
+
+            <TextView
+                android:id="@+id/country_category_text"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#9F9E9C"
+                android:gravity="center"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:text="Countries in this Category" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/flag_list"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/country_category_text"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -167,10 +140,9 @@
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/actions_category"
+            android:id="@+id/actions_category_collapsed"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@id/flag_container_category"
             app:layout_constraintStart_toStartOf="parent"
@@ -178,22 +150,11 @@
             android:background="#979592">
 
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/category_to_recipes"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                style="?attr/materialButtonOutlinedStyle"
-                android:layout_marginStart="8dp"
-                android:text="Open" />
-
-            <com.google.android.material.button.MaterialButton
                 android:id="@+id/category_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 style="?attr/materialButtonOutlinedStyle"
@@ -202,8 +163,33 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/actions_category_expanded"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/actions_category_collapsed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:background="#979592"
+            android:visibility="gone">
 
-        <!-- </androidx.constraintlayout.widget.ConstraintLayout> -->
+            <TextView
+                android:id="@+id/category_description"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:padding="8dp"
+                tools:text="Dessert is a course that concludes a meal. The course usually consists of sweet foods, such as confections dishes or fruit, and possibly a beverage such as dessert wine or liqueur, however in the United States it may include coffee, cheeses, nuts, or other savory items regarded as a separate course elsewhere. In some parts of the world, such as much of central and western Africa, and most parts of China, there is no tradition of a dessert course to conclude a meal.\r\n\r\nThe term dessert can apply to many confections, such as biscuits, cakes, cookies, custards, gelatins, ice creams, pastries, pies, puddings, and sweet soups, and tarts. Fruit is also commonly found in dessert courses because of its naturally occurring sweetness. Some cultures sweeten foods that are more commonly savory to create desserts.">
+
+            </TextView>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
     </LinearLayout>
 
 

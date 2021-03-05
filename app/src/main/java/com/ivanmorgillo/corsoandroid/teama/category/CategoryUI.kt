@@ -6,6 +6,7 @@ data class CategoryUI(
     val image: String,
     val recipesCount: String,
     val flags: List<FlagUI>,
+    val description: String
 )
 
 data class FlagUI(

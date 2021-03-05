@@ -3,10 +3,15 @@ package com.ivanmorgillo.corsoandroid.teama.category
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
+import androidx.transition.AutoTransition
+import androidx.transition.TransitionManager
 import coil.load
 import com.ivanmorgillo.corsoandroid.teama.R
 import com.ivanmorgillo.corsoandroid.teama.databinding.CategoryItemBinding
+import com.ivanmorgillo.corsoandroid.teama.extension.gone
+import com.ivanmorgillo.corsoandroid.teama.extension.visible
 
 class CategoryAdapter(private val onclick: (CategoryUI, View) -> Unit) : RecyclerView.Adapter<CategoryViewHolder>() {
     private var categories = emptyList<CategoryUI>()
@@ -42,38 +47,36 @@ class CategoryViewHolder(private val binding: CategoryItemBinding) : RecyclerVie
         val recipesCounterText = item.recipesCount + " " + binding.root.resources.getString(R.string.recipes)
         binding.recipeCounter.text = recipesCounterText
         binding.categoryTitle.text = item.title
+        binding.categoryDescription.text = item.description
         // binding.categoryImage.load(item.image)
         binding.categoryImageCollapsed.load(item.image)
         //  binding.categoryImage.contentDescription = item.title
-        binding.categoryToRecipes.setOnClickListener { // per aprire il dettaglio della ricetta
+        binding.categoryRoot.setOnClickListener { // per aprire il dettaglio della ricetta
             onclick(item, it)
         }
-        /*   binding.categoryRoot.setOnClickListener { // per espandere o collassare la card
-               expandOrCollapse()
-           }
-           binding.arrowButton.setOnClickListener { // per espandere o collassare la card
-               expandOrCollapse()
-           } */
+        binding.categoryInfo.setOnClickListener { // per espandere o collassare la card
+            expandOrCollapse()
+        }
+        /*     binding.arrowButton.setOnClickListener { // per espandere o collassare la card
+             expandOrCollapse()
+         } */
         // categoryCardView.transitionName = "category_transition_item${item.id}"
     }
 
-    /* private fun expandOrCollapse() {
-        if (binding.categoryItemExpanded.isVisible) {
-            binding.arrowButton.setImageResource(R.drawable.arrow_down)
-            binding.categoryItemExpanded.gone()
-            binding.categoryImageCollapsed.visible()
+    private fun expandOrCollapse() {
+        if (binding.actionsCategoryExpanded.isVisible) {
+            binding.actionsCategoryExpanded.gone()
+            // binding.actionsCategoryCollapsed.visible()
             TransitionManager.beginDelayedTransition(
                 binding.categoryRoot,
                 AutoTransition()
             )
         } else {
-            binding.arrowButton.setImageResource(R.drawable.arrow_up)
-            binding.categoryImageCollapsed.gone()
-            binding.categoryItemExpanded.visible()
+            binding.actionsCategoryExpanded.visible()
             TransitionManager.beginDelayedTransition(
                 binding.categoryRoot,
                 AutoTransition()
             )
         }
-    } */
+    }
 }

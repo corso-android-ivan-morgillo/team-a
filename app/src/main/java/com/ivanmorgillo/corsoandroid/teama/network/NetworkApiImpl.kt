@@ -125,13 +125,17 @@ class NetworkApiImpl(cacheDir: File) : NetworkAPI {
     private fun getIngredient(strIngredient: String?, strMeasure: String?): Ingredient? {
         return if (!strIngredient.isNullOrBlank()) {
             if (strMeasure.isNullOrBlank()) {
-                Ingredient(strIngredient,
+                Ingredient(
+                    strIngredient,
                     "qb",
-                    "https://www.themealdb.com/images/ingredients/$strIngredient-Small.png") // ad esempio il sale
+                    "https://www.themealdb.com/images/ingredients/$strIngredient-Small.png"
+                ) // ad esempio il sale
             } else {
-                Ingredient(strIngredient,
+                Ingredient(
+                    strIngredient,
                     strMeasure,
-                    "https://www.themealdb.com/images/ingredients/$strIngredient-Small.png")
+                    "https://www.themealdb.com/images/ingredients/$strIngredient-Small.png"
+                )
             }
         } else {
             null
@@ -333,6 +337,7 @@ class NetworkApiImpl(cacheDir: File) : NetworkAPI {
                 name = strCategory,
                 image = strCategoryThumb,
                 id = idCategory,
+                categoryDescription = strCategoryDescription,
                 recipeAmount = categoryInfo.recipesAmount,
                 categoryArea = categoryInfo.areaNames.map {
                     "https://www.themealdb.com/images/icons/flags/big/64/$it.png"

@@ -77,7 +77,8 @@ class CategoryViewModel(private val repository: CategoryRepository, private val 
                 flags = it.categoryArea.map {
                     FlagUI(it)
                 },
-                recipesCount = it.recipeAmount
+                recipesCount = it.recipeAmount,
+                description = it.categoryDescription
             )
         }
         states.postValue(Content(categories))
