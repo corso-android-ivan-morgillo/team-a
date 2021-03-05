@@ -47,34 +47,25 @@ class CategoryViewHolder(private val binding: CategoryItemBinding) : RecyclerVie
         val recipesCounterText = item.recipesCount + " " + binding.root.resources.getString(R.string.recipes)
         binding.recipeCounter.text = recipesCounterText
         binding.categoryTitle.text = item.title
-        binding.categoryImage.load(item.image)
+        binding.categoryDescription.text = item.description
         binding.categoryImageCollapsed.load(item.image)
-        binding.categoryImage.contentDescription = item.title
-        binding.categoryToRecipes.setOnClickListener { // per aprire il dettaglio della ricetta
+        binding.categoryRoot.setOnClickListener { // per aprire il dettaglio della ricetta
             onclick(item, it)
         }
-        binding.categoryRoot.setOnClickListener { // per espandere o collassare la card
+        binding.categoryInfo.setOnClickListener { // per espandere o collassare la card
             expandOrCollapse()
         }
-        binding.arrowButton.setOnClickListener { // per espandere o collassare la card
-            expandOrCollapse()
-        }
-        // categoryCardView.transitionName = "category_transition_item${item.id}"
     }
 
     private fun expandOrCollapse() {
-        if (binding.categoryItemExpanded.isVisible) {
-            binding.arrowButton.setImageResource(R.drawable.arrow_down)
-            binding.categoryItemExpanded.gone()
-            binding.categoryImageCollapsed.visible()
+        if (binding.actionsCategoryExpanded.isVisible) {
+            binding.actionsCategoryExpanded.gone()
             TransitionManager.beginDelayedTransition(
                 binding.categoryRoot,
                 AutoTransition()
             )
         } else {
-            binding.arrowButton.setImageResource(R.drawable.arrow_up)
-            binding.categoryImageCollapsed.gone()
-            binding.categoryItemExpanded.visible()
+            binding.actionsCategoryExpanded.visible()
             TransitionManager.beginDelayedTransition(
                 binding.categoryRoot,
                 AutoTransition()
