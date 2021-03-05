@@ -83,11 +83,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-
-                    android:textColor="#40444a"
+                    android:textColor="#25282C"
                     android:fontFamily="@font/akaya"
                     android:textStyle="normal"
-                    android:textColorHighlight="@color/grey"
                     android:textSize="18sp"
                     android:layout_margin="8dp"
                     app:layout_constraintStart_toStartOf="parent"
