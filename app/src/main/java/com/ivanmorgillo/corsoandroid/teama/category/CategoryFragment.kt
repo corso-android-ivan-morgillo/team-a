@@ -38,9 +38,7 @@ class CategoryFragment : Fragment(R.layout.fragment_category) {
 
         val fab: FloatingActionButton = binding.fab
         fab.setOnClickListener { view ->
-            Toast.makeText(context, getString(R.string.loading_random_recipe), Toast.LENGTH_SHORT).show()
-            val directions = CategoryFragmentDirections.actionCategoryFragmentToDetailFragment(-1L)
-            findNavController().navigate(directions)
+            viewModel.send(CategoryScreenEvent.OnRandomRecipeClick)
         }
         viewModel.states.observe(viewLifecycleOwner, { state ->
             when (state) {
@@ -58,6 +56,11 @@ class CategoryFragment : Fragment(R.layout.fragment_category) {
                     is NavigateToRecipes -> {
                         val directions =
                             CategoryFragmentDirections.actionCategoryFragmentToRecipeFragment(action.category.title)
+                        findNavController().navigate(directions)
+                    }
+                    CategoryScreenAction.NavigateToRandomRecipe -> {
+                        Toast.makeText(context, getString(R.string.loading_random_recipe), Toast.LENGTH_SHORT).show()
+                        val directions = CategoryFragmentDirections.actionCategoryFragmentToDetailFragment(-1L)
                         findNavController().navigate(directions)
                     }
                     ShowNoInternetMessage -> showNoInternetMessage()
