@@ -39,6 +39,10 @@ class CategoryViewModel(private val repository: CategoryRepository, private val 
                 tracking.logEvent("category_refresh_clicked")
                 loadContent(true)
             }
+            CategoryScreenEvent.OnRandomRecipeClick -> {
+                tracking.logEvent("random_recipe_clicked")
+                onRandomRecipeClick()
+            }
         }.exhaustive
     }
 
@@ -55,6 +59,10 @@ class CategoryViewModel(private val repository: CategoryRepository, private val 
 
     private fun onCategoryClick(event: CategoryScreenEvent.OnCategoryClick) {
         actions.postValue(CategoryScreenAction.NavigateToRecipes(event.category))
+    }
+
+    private fun onRandomRecipeClick() {
+        actions.postValue(CategoryScreenAction.NavigateToRandomRecipe)
     }
 
     private fun onFailure(result: LoadCategoryResult.Failure) {
@@ -86,6 +94,7 @@ class CategoryViewModel(private val repository: CategoryRepository, private val 
 
 sealed class CategoryScreenAction {
     data class NavigateToRecipes(val category: CategoryUI) : CategoryScreenAction()
+    object NavigateToRandomRecipe : CategoryScreenAction()
     object ShowNoInternetMessage : CategoryScreenAction()
     object ShowSlowInternetMessage : CategoryScreenAction()
     object ShowServerErrorMessage : CategoryScreenAction()
@@ -105,7 +114,7 @@ sealed class CategoryScreenStates {
 sealed class CategoryScreenEvent {
     /** Usiamo la dataclass perchè abbiamo bisogno di passare un parametro */
     data class OnCategoryClick(val category: CategoryUI) : CategoryScreenEvent()
-
+    object OnRandomRecipeClick : CategoryScreenEvent()
     object OnReady : CategoryScreenEvent()
     object OnRefresh : CategoryScreenEvent()
 }
