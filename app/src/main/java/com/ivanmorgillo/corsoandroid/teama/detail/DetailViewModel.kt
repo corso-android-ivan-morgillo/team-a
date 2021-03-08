@@ -3,6 +3,7 @@ package com.ivanmorgillo.corsoandroid.teama.detail
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ivanmorgillo.corsoandroid.teama.Screens
 import com.ivanmorgillo.corsoandroid.teama.Tracking
 import com.ivanmorgillo.corsoandroid.teama.crashlytics.SingleLiveEvent
 import com.ivanmorgillo.corsoandroid.teama.detail.DetailScreenAction.ShowInterruptedRequestMessage
@@ -25,8 +26,11 @@ import kotlinx.coroutines.launch
 class DetailViewModel(private val repository: RecipeDetailsRepository, private val tracking: Tracking) : ViewModel() {
 
     val states = MutableLiveData<DetailScreenStates>()
-    val actions =
-        SingleLiveEvent<DetailScreenAction>()
+    val actions = SingleLiveEvent<DetailScreenAction>()
+
+    init {
+        tracking.logScreen(Screens.Details)
+    }
 
     fun send(event: DetailScreenEvent) {
         when (event) {
