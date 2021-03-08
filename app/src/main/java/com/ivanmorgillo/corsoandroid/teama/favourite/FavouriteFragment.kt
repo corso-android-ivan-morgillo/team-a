@@ -66,10 +66,11 @@ class FavouriteFragment : Fragment(R.layout.fragment_favourite), SearchView.OnQu
                     findNavController().navigate(directions)
                 }
                 is FavouriteScreenAction.Delete -> {
-                    val position = action.position
-                    adapter.deleteItem(position, binding.favouritesListRoot)
+                    Timber.d("delete)")
                 }
-                FavouriteScreenAction.ShowNoFavouriteFoundMessage -> TODO() // nessun preferito salvato
+                FavouriteScreenAction.ShowNoFavouriteFoundMessage -> {
+                    Timber.d("nessun preferito") // nessun preferito salvato
+                }
             }.exhaustive
         })
         viewModel.send(FavouriteScreenEvent.OnReady)

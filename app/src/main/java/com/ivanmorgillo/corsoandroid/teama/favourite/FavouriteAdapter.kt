@@ -3,6 +3,7 @@ package com.ivanmorgillo.corsoandroid.teama.favourite
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.google.android.material.snackbar.Snackbar
@@ -31,8 +32,10 @@ class FavouriteAdapter(
     }
 
     fun setFavourites(items: List<FavouriteUI>) {
+        val diffCallback = FavouritesDiffUtils(favourites, items)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
         favourites = items.toMutableList()
-        notifyDataSetChanged()
+        diffResult.dispatchUpdatesTo(this)
     }
 
     fun filter(mList: List<FavouriteUI>, query: String): List<FavouriteUI> {
@@ -89,5 +92,28 @@ class RecipeViewHolder(private val binding: FavouriteItemBinding) : RecyclerView
         binding.favouriteRoot.setOnClickListener {
             onclick(item, it)
         }
+    }
+}
+
+class FavouritesDiffUtils(private val oldList: List<FavouriteUI>, private val newList: List<FavouriteUI>) :
+    DiffUtil.Callback() {
+    override fun getOldListSize(): Int {
+        return oldList.size
+    }
+
+    override fun getNewListSize(): Int {
+        return newList.size
+    }
+
+    override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        val oldItem = oldList[oldItemPosition]
+        val newItem = newList[newItemPosition]
+        return oldItem.id == newItem.id
+    }
+
+    override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+        val oldItem = oldList[oldItemPosition]
+        val newItem = newList[newItemPosition]
+        return oldItem.id == newItem.id && oldItem.title == newItem.title
     }
 }

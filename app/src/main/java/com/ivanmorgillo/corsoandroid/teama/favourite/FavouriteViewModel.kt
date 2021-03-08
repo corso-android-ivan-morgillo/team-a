@@ -18,51 +18,35 @@ class FavouriteViewModel(private val repository: FavouriteRepository, private va
         tracking.logScreen(Screens.Favourites)
     }
 
+    @Suppress("IMPLICIT_CAST_TO_ANY")
     fun send(event: FavouriteScreenEvent) {
         when (event) {
             // deve ricevere la lista delle ricette. La view deve ricevere eventi e reagire a stati.
-            is FavouriteScreenEvent.OnReady -> loadContent() //  carica i preferiti
+            is FavouriteScreenEvent.OnReady -> viewModelScope.launch { loadContent() } //  carica i preferiti
             is FavouriteScreenEvent.OnFavouriteClick -> onFavouriteClick(event) // apri dettaglio ricetta
-            is FavouriteScreenEvent.OnFavouriteSwiped -> onFavouriteSwiped(event) // elimina preferito
+            is FavouriteScreenEvent.OnFavouriteSwiped -> onFavouriteSwiped(event.position) // elimina preferito
         }.exhaustive
     }
 
-    private fun loadContent() {
+    private suspend fun loadContent() {
         states.postValue(FavouriteScreenStates.Loading)
         viewModelScope.launch {
-            val result = repository.loadFavourites()
+            val result = repository.loadAll()
             when (result) {
                 is LoadFavouriteResult.Failure -> onFailure(result)
-                is LoadFavouriteResult.Success -> onSuccess(result)
+                is LoadFavouriteResult.Success -> onSuccess(result.favourites)
             }.exhaustive
         }
     }
 
-    private fun onFavouriteClick(event: FavouriteScreenEvent.OnFavouriteClick) {
-        // Log.d("RECIPE", event.recipe.toString())
-        tracking.logEvent("favourite_clicked")
-        actions.postValue(FavouriteScreenAction.NavigateToDetail(event.favourite))
-    }
-
-    private fun onFavouriteSwiped(event: FavouriteScreenEvent.OnFavouriteSwiped) {
-        // Log.d("RECIPE", event.recipe.toString())
-        tracking.logEvent("favourite_deleted")
-        actions.postValue(FavouriteScreenAction.Delete(event.position))
-    }
-
-    private fun onFailure(result: LoadFavouriteResult.Failure) {
-        states.postValue(FavouriteScreenStates.Error)
-        when (result.error) {
-            LoadFavouriteError.NoFavouriteFound -> actions.postValue(FavouriteScreenAction.ShowNoFavouriteFoundMessage)
-        }.exhaustive
-    }
-
-    private fun onSuccess(result: LoadFavouriteResult.Success) {
-        val favourites = result.favourites.map {
+    private var favourites: List<RecipeDetails>? = null
+    private fun onSuccess(details: List<RecipeDetails>) {
+        this.favourites = details
+        val favourites = details.map {
             FavouriteUI(
                 title = it.name,
                 image = it.image,
-                id = it.idMeal.toLong(),
+                id = it.idMeal,
                 notes = it.notes,
                 video = it.video,
                 ingredients = it.ingredients,
@@ -71,11 +55,41 @@ class FavouriteViewModel(private val repository: FavouriteRepository, private va
         }
         states.postValue(FavouriteScreenStates.Content(favourites))
     }
+
+    private fun onFavouriteClick(event: FavouriteScreenEvent.OnFavouriteClick) {
+        // Log.d("RECIPE", event.recipe.toString())
+        tracking.logEvent("favourite_clicked")
+        actions.postValue(FavouriteScreenAction.NavigateToDetail(event.favourite))
+    }
+
+    private fun onFavouriteSwiped(position: Int) {
+        // Log.d("RECIPE", event.recipe.toString())
+        val recipeToDelete = favourites?.get(position) ?: return
+        tracking.logEvent("favourite_deleted")
+        viewModelScope.launch {
+            repository.delete(recipeToDelete)
+            val currentState = states.value
+            if (currentState != null && currentState is FavouriteScreenStates.Content) {
+                val recipes = currentState.favourites
+                val updatedRecipes = recipes.filterNot {
+                    it.id == recipeToDelete.idMeal
+                }
+                states.postValue(FavouriteScreenStates.Content(updatedRecipes))
+            }
+        }
+    }
+
+    private fun onFailure(result: LoadFavouriteResult.Failure) {
+        states.postValue(FavouriteScreenStates.Error)
+        when (result.error) {
+            LoadFavouriteError.NoFavouriteFound -> actions.postValue(FavouriteScreenAction.ShowNoFavouriteFoundMessage)
+        }.exhaustive
+    }
 }
 
 sealed class FavouriteScreenAction {
     data class NavigateToDetail(val favourite: FavouriteUI) : FavouriteScreenAction()
-    data class Delete(val position: Int) : FavouriteScreenAction()
+    data class Delete(val id: Long) : FavouriteScreenAction()
     object ShowNoFavouriteFoundMessage : FavouriteScreenAction()
 }
 
