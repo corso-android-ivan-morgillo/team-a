@@ -3,6 +3,7 @@ package com.ivanmorgillo.corsoandroid.teama.favourite
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ivanmorgillo.corsoandroid.teama.Screens
 import com.ivanmorgillo.corsoandroid.teama.Tracking
 import com.ivanmorgillo.corsoandroid.teama.crashlytics.SingleLiveEvent
 import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
@@ -11,6 +12,10 @@ import kotlinx.coroutines.launch
 class FavouriteViewModel(private val repository: FavouriteRepository, private val tracking: Tracking) : ViewModel() {
     val states = MutableLiveData<FavouriteScreenStates>() // potremmo passarci direttamente loading
     val actions = SingleLiveEvent<FavouriteScreenAction>()
+
+    init {
+        tracking.logScreen(Screens.Favourites)
+    }
 
     fun send(event: FavouriteScreenEvent) {
         when (event) {

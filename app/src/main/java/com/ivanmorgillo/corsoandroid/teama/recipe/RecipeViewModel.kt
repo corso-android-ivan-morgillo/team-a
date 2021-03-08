@@ -24,6 +24,10 @@ class RecipeViewModel(
     val states = MutableLiveData<RecipeScreenStates>() // potremmo passarci direttamente loading
     val actions = SingleLiveEvent<RecipeScreenAction>()
 
+    init {
+        tracking.logScreen(Screens.Recipes)
+    }
+
     fun send(event: RecipeScreenEvent) {
         when (event) {
             // deve ricevere la lista delle ricette. La view deve ricevere eventi e reagire a stati.
