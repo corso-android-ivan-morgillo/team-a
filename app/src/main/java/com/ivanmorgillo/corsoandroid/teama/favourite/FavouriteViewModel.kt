@@ -25,6 +25,7 @@ class FavouriteViewModel(private val repository: FavouriteRepository, private va
             is FavouriteScreenEvent.OnReady -> viewModelScope.launch { loadContent() } //  carica i preferiti
             is FavouriteScreenEvent.OnFavouriteClick -> onFavouriteClick(event) // apri dettaglio ricetta
             is FavouriteScreenEvent.OnFavouriteSwiped -> onFavouriteSwiped(event.position) // elimina preferito
+            is FavouriteScreenEvent.OnUndoDeleteFavourite -> onUndoDeleteFavourite(event.deletedFavourite)
         }.exhaustive
     }
 
@@ -53,7 +54,7 @@ class FavouriteViewModel(private val repository: FavouriteRepository, private va
                 instructions = it.instructions
             )
         }
-        states.postValue(FavouriteScreenStates.Content(favourites))
+        states.postValue(FavouriteScreenStates.Content(favourites, null))
     }
 
     private fun onFavouriteClick(event: FavouriteScreenEvent.OnFavouriteClick) {
@@ -72,7 +73,36 @@ class FavouriteViewModel(private val repository: FavouriteRepository, private va
                 val updatedRecipes = recipes.filterNot {
                     it.id == recipeToDelete.idMeal
                 }
-                states.postValue(FavouriteScreenStates.Content(updatedRecipes))
+                states.postValue(FavouriteScreenStates.Content(updatedRecipes, recipeToDelete))
+            }
+        }
+    }
+
+    private fun onUndoDeleteFavourite(removedFavourite: RecipeDetails) {
+        viewModelScope.launch {
+            repository.add(removedFavourite)
+            val currentState = states.value
+            if (currentState != null && currentState is FavouriteScreenStates.Content) {
+                val updatedRecipes: MutableList<FavouriteUI> = currentState.favourites.toMutableList()
+                updatedRecipes.add(FavouriteUI(
+                    id = removedFavourite.idMeal,
+                    title = removedFavourite.name,
+                    image = removedFavourite.image,
+                    notes = removedFavourite.notes,
+                    video = removedFavourite.video,
+                    ingredients = removedFavourite.ingredients,
+                    instructions = removedFavourite.instructions))
+                favourites = updatedRecipes.map {
+                    RecipeDetails(name = it.title,
+                        image = it.image,
+                        video = it.video,
+                        idMeal = it.id,
+                        ingredients = it.ingredients,
+                        instructions = it.instructions,
+                        area = "",
+                        notes = it.notes)
+                }
+                states.postValue(FavouriteScreenStates.Content(updatedRecipes, null))
             }
         }
     }
@@ -96,13 +126,15 @@ sealed class FavouriteScreenStates {
     object Error : FavouriteScreenStates()
 
     // se la lista cambia dobbiamo usare una 'data class' quindi non usiamo 'object'
-    data class Content(val favourites: List<FavouriteUI>) : FavouriteScreenStates()
+    data class Content(val favourites: List<FavouriteUI>, val deletedFavourite: RecipeDetails? = null) :
+        FavouriteScreenStates()
 }
 
 sealed class FavouriteScreenEvent {
     /** Usiamo la dataclass perchè abbiamo bisogno di passare un parametro */
     data class OnFavouriteClick(val favourite: FavouriteUI) : FavouriteScreenEvent()
     data class OnFavouriteSwiped(val position: Int) : FavouriteScreenEvent()
+    data class OnUndoDeleteFavourite(val deletedFavourite: RecipeDetails) : FavouriteScreenEvent()
 
     object OnReady : FavouriteScreenEvent()
 }
