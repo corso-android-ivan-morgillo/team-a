@@ -21,6 +21,7 @@ import com.ivanmorgillo.corsoandroid.teama.extension.themeColor
 import com.ivanmorgillo.corsoandroid.teama.extension.visible
 import com.ivanmorgillo.corsoandroid.teama.utils.viewBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 class DetailFragment : Fragment(R.layout.fragment_detail) {
     private val viewModel: DetailViewModel by viewModel()
@@ -55,16 +56,22 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
             viewModel.states.observe(viewLifecycleOwner, { state ->
                 when (state) {
                     is DetailScreenStates.Content -> {
+                        val isFavourite = state.details.isFavourite
+                        /*if (isFavourite) {
+
+                        } else {
+
+                        }*/
                         binding.detailsListProgressBar.gone()
                         // Timber.d("RecipeId= $recipeId")
                         adapter.items = listOf(
-                            DetailScreenItems.Video(state.recipes.video, state.recipes.image),
-                            DetailScreenItems.Title(state.recipes.title),
+                            DetailScreenItems.Video(state.details.video, state.details.image),
+                            DetailScreenItems.Title(state.details.title),
                             DetailScreenItems.TabLayout,
                             DetailScreenItems.IngredientsInstructionsList(
-                                state.recipes.ingredients,
-                                state.recipes.instructions,
-                                state.recipes.isIngredientsSelected
+                                state.details.ingredients,
+                                state.details.instructions,
+                                state.details.isIngredientsSelected
                             )
                         )
                     } // non trova le ricette in fase di Loading ad esempio
@@ -80,8 +87,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                     DetailScreenAction.ShowServerErrorMessage -> showServerErrorMessage(recipeId)
                     DetailScreenAction.ShowNoRecipeDetailFoundMessage -> showNoRecipeDetailFoundMessage(recipeId)
                 }.exhaustive
-            }
-            )
+            })
             viewModel.send(DetailScreenEvent.OnReady(recipeId))
         }
     }
@@ -141,6 +147,8 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
         return if (id == R.id.add_favourite_button) { // quando si clicca il pulsante per aggiungere ai preferiti
+            viewModel.send(DetailScreenEvent.OnAddFavouriteClick)
+            Timber.d("cliccato")
             false
         } else super.onOptionsItemSelected(item)
     }

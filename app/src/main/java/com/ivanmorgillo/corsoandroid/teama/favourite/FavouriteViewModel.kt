@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.ivanmorgillo.corsoandroid.teama.Screens
 import com.ivanmorgillo.corsoandroid.teama.Tracking
 import com.ivanmorgillo.corsoandroid.teama.crashlytics.SingleLiveEvent
+import com.ivanmorgillo.corsoandroid.teama.detail.RecipeDetails
 import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
 import kotlinx.coroutines.launch
 
@@ -61,7 +62,7 @@ class FavouriteViewModel(private val repository: FavouriteRepository, private va
             FavouriteUI(
                 title = it.name,
                 image = it.image,
-                id = it.idMeal,
+                id = it.idMeal.toLong(),
                 notes = it.notes,
                 video = it.video,
                 ingredients = it.ingredients,
@@ -96,7 +97,7 @@ sealed class FavouriteScreenEvent {
 }
 
 sealed class LoadFavouriteResult {
-    data class Success(val favourites: List<Favourite>) : LoadFavouriteResult()
+    data class Success(val favourites: List<RecipeDetails>) : LoadFavouriteResult()
     data class Failure(val error: LoadFavouriteError) : LoadFavouriteResult()
 }
 

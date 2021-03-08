@@ -10,10 +10,15 @@ import com.ivanmorgillo.corsoandroid.teama.detail.DetailScreenAction.ShowInterru
 import com.ivanmorgillo.corsoandroid.teama.detail.DetailScreenAction.ShowNoInternetMessage
 import com.ivanmorgillo.corsoandroid.teama.detail.DetailScreenAction.ShowServerErrorMessage
 import com.ivanmorgillo.corsoandroid.teama.detail.DetailScreenAction.ShowSlowInternetMessage
+import com.ivanmorgillo.corsoandroid.teama.detail.DetailScreenEvent.OnAddFavouriteClick
+import com.ivanmorgillo.corsoandroid.teama.detail.DetailScreenEvent.OnIngredientsClick
+import com.ivanmorgillo.corsoandroid.teama.detail.DetailScreenEvent.OnInstructionsClick
+import com.ivanmorgillo.corsoandroid.teama.detail.DetailScreenEvent.OnReady
 import com.ivanmorgillo.corsoandroid.teama.detail.DetailScreenStates.Content
 import com.ivanmorgillo.corsoandroid.teama.detail.DetailScreenStates.Error
 import com.ivanmorgillo.corsoandroid.teama.detail.DetailScreenStates.Loading
 import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
+import com.ivanmorgillo.corsoandroid.teama.favourite.FavouriteRepository
 import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeDetailError.InterruptedRequest
 import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeDetailError.NoDetailFound
 import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeDetailError.NoInternet
@@ -23,22 +28,44 @@ import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeDetailsResult.Failu
 import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeDetailsResult.Success
 import kotlinx.coroutines.launch
 
-class DetailViewModel(private val repository: RecipeDetailsRepository, private val tracking: Tracking) : ViewModel() {
+class DetailViewModel(
+    private val repository: RecipeDetailsRepository,
+    private val tracking: Tracking,
+    private val favouritesRepository: FavouriteRepository,
+) : ViewModel() {
 
     val states = MutableLiveData<DetailScreenStates>()
     val actions = SingleLiveEvent<DetailScreenAction>()
+    private var details: RecipeDetails? = null
 
     init {
         tracking.logScreen(Screens.Details)
     }
 
+    @Suppress("IMPLICIT_CAST_TO_ANY")
     fun send(event: DetailScreenEvent) {
         when (event) {
-            is DetailScreenEvent.OnReady -> {
-                loadContent(event.idMeal)
+            is OnReady -> loadContent(event.idMeal)
+            OnIngredientsClick -> onIngredientsClick()
+            OnInstructionsClick -> onInstructionsClick()
+            is OnAddFavouriteClick -> viewModelScope.launch { toggleFavourite() }
+        }.exhaustive
+    }
+
+    private suspend fun toggleFavourite() {
+        val currentState = states.value
+        if (currentState != null && details != null && currentState is Content) {
+            if (currentState.details.isFavourite) {
+                favouritesRepository.deleteFavourite(details!!)
+                val details = currentState.details.copy(isFavourite = false)
+                val content = Content(details)
+                states.postValue(content)
+            } else {
+                favouritesRepository.addFavourite(details!!)
+                val details = currentState.details.copy(isFavourite = true)
+                val content = Content(details)
+                states.postValue(content)
             }
-            DetailScreenEvent.OnIngredientsClick -> onIngredientsClick()
-            DetailScreenEvent.OnInstructionsClick -> onInstructionsClick()
         }
     }
 
@@ -48,13 +75,16 @@ class DetailViewModel(private val repository: RecipeDetailsRepository, private v
             val result = repository.loadRecipeDetails(idMeal)
             when (result) {
                 is Failure -> onFailure(result)
-                is Success -> onSuccess(result)
+                is Success -> {
+                    val isFavourite: Boolean = favouritesRepository.isFavourite(idMeal)
+                    details = result.details
+                    onSuccess(result.details, isFavourite)
+                }
             }.exhaustive
         }
     }
 
-    private fun onSuccess(result: Success) {
-        val details: RecipeDetails = result.details
+    private fun onSuccess(details: RecipeDetails, isFavourite: Boolean) {
         val detailUI = RecipeDetailsUI(
             details.idMeal,
             details.name,
@@ -62,7 +92,8 @@ class DetailViewModel(private val repository: RecipeDetailsRepository, private v
             details.video,
             details.ingredients.map { IngredientUI(it.ingredientName, it.ingredientQuantity, it.ingredientImage) },
             details.instructions,
-            isIngredientsSelected = true
+            isIngredientsSelected = true,
+            isFavourite
         )
         states.postValue(Content(detailUI))
     }
@@ -82,7 +113,7 @@ class DetailViewModel(private val repository: RecipeDetailsRepository, private v
         tracking.logEvent("detail_ingredients_clicked")
         val currentState = states.value
         if (currentState != null && currentState is Content) {
-            val updatedDetails = currentState.recipes.copy(isIngredientsSelected = true)
+            val updatedDetails = currentState.details.copy(isIngredientsSelected = true)
             val content = Content(updatedDetails)
             states.postValue(content)
         }
@@ -92,7 +123,7 @@ class DetailViewModel(private val repository: RecipeDetailsRepository, private v
         tracking.logEvent("detail_instructions_clicked")
         val currentState = states.value
         if (currentState != null && currentState is Content) {
-            val updatedDetails = currentState.recipes.copy(isIngredientsSelected = false)
+            val updatedDetails = currentState.details.copy(isIngredientsSelected = false)
             val content = Content(updatedDetails)
             states.postValue(content)
         }
@@ -105,7 +136,7 @@ sealed class DetailScreenStates {
     object Error : DetailScreenStates()
 
     // se la lista cambia dobbiamo usare una 'data class' quindi non usiamo 'object'
-    data class Content(val recipes: RecipeDetailsUI) : DetailScreenStates()
+    data class Content(val details: RecipeDetailsUI) : DetailScreenStates()
 }
 
 sealed class DetailScreenAction {
@@ -120,4 +151,5 @@ sealed class DetailScreenEvent {
     data class OnReady(val idMeal: Long) : DetailScreenEvent()
     object OnIngredientsClick : DetailScreenEvent()
     object OnInstructionsClick : DetailScreenEvent()
+    object OnAddFavouriteClick : DetailScreenEvent()
 }
