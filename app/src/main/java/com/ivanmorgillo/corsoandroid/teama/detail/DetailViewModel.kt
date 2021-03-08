@@ -55,15 +55,15 @@ class DetailViewModel(
     private suspend fun toggleFavourite() {
         val currentState = states.value
         if (currentState != null && details != null && currentState is Content) {
-            if (currentState.details.isFavourite) {
+            if (currentState.isFavourite) {
                 favouritesRepository.deleteFavourite(details!!)
-                val details = currentState.details.copy(isFavourite = false)
-                val content = Content(details)
+                val details = currentState.details
+                val content = Content(details, false)
                 states.postValue(content)
             } else {
                 favouritesRepository.addFavourite(details!!)
-                val details = currentState.details.copy(isFavourite = true)
-                val content = Content(details)
+                val details = currentState.details
+                val content = Content(details, true)
                 states.postValue(content)
             }
         }
@@ -85,17 +85,19 @@ class DetailViewModel(
     }
 
     private fun onSuccess(details: RecipeDetails, isFavourite: Boolean) {
-        val detailUI = RecipeDetailsUI(
-            details.idMeal,
-            details.name,
-            details.image,
-            details.video,
-            details.ingredients.map { IngredientUI(it.ingredientName, it.ingredientQuantity, it.ingredientImage) },
-            details.instructions,
-            isIngredientsSelected = true,
-            isFavourite
+        val detailScreenItems = listOf(
+            DetailScreenItems.Video(details.video, details.image),
+            DetailScreenItems.Title(details.name),
+            DetailScreenItems.TabLayout,
+            DetailScreenItems.IngredientsInstructionsList(
+                details.ingredients.map {
+                    IngredientUI(it.ingredientName, it.ingredientQuantity, it.ingredientImage)
+                },
+                details.instructions,
+                isIngredientsVisible = true
+            )
         )
-        states.postValue(Content(detailUI))
+        states.postValue(Content(detailScreenItems, isFavourite))
     }
 
     private fun onFailure(result: Failure) {
@@ -113,8 +115,8 @@ class DetailViewModel(
         tracking.logEvent("detail_ingredients_clicked")
         val currentState = states.value
         if (currentState != null && currentState is Content) {
-            val updatedDetails = currentState.details.copy(isIngredientsSelected = true)
-            val content = Content(updatedDetails)
+            val updatedDetails = currentState.details
+            val content = Content(updatedDetails, currentState.isFavourite)
             states.postValue(content)
         }
     }
@@ -123,8 +125,8 @@ class DetailViewModel(
         tracking.logEvent("detail_instructions_clicked")
         val currentState = states.value
         if (currentState != null && currentState is Content) {
-            val updatedDetails = currentState.details.copy(isIngredientsSelected = false)
-            val content = Content(updatedDetails)
+            val updatedDetails = currentState.details
+            val content = Content(updatedDetails, currentState.isFavourite)
             states.postValue(content)
         }
     }
@@ -136,7 +138,7 @@ sealed class DetailScreenStates {
     object Error : DetailScreenStates()
 
     // se la lista cambia dobbiamo usare una 'data class' quindi non usiamo 'object'
-    data class Content(val details: RecipeDetailsUI) : DetailScreenStates()
+    data class Content(val details: List<DetailScreenItems>, val isFavourite: Boolean) : DetailScreenStates()
 }
 
 sealed class DetailScreenAction {

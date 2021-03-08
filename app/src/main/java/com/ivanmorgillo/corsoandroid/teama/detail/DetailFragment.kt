@@ -56,24 +56,15 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
             viewModel.states.observe(viewLifecycleOwner, { state ->
                 when (state) {
                     is DetailScreenStates.Content -> {
-                        val isFavourite = state.details.isFavourite
+                        val isFavourite = state.isFavourite
                         /*if (isFavourite) {
 
                         } else {
 
                         }*/
-                        binding.detailsListProgressBar.gone()
                         // Timber.d("RecipeId= $recipeId")
-                        adapter.items = listOf(
-                            DetailScreenItems.Video(state.details.video, state.details.image),
-                            DetailScreenItems.Title(state.details.title),
-                            DetailScreenItems.TabLayout,
-                            DetailScreenItems.IngredientsInstructionsList(
-                                state.details.ingredients,
-                                state.details.instructions,
-                                state.details.isIngredientsSelected
-                            )
-                        )
+                        adapter.items = state.details
+                        binding.detailsListProgressBar.gone()
                     } // non trova le ricette in fase di Loading ad esempio
                     DetailScreenStates.Error -> binding.detailsListProgressBar.gone()
                     DetailScreenStates.Loading -> binding.detailsListProgressBar.visible()
