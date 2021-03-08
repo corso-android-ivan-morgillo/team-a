@@ -57,13 +57,11 @@ class FavouriteViewModel(private val repository: FavouriteRepository, private va
     }
 
     private fun onFavouriteClick(event: FavouriteScreenEvent.OnFavouriteClick) {
-        // Log.d("RECIPE", event.recipe.toString())
         tracking.logEvent("favourite_clicked")
         actions.postValue(FavouriteScreenAction.NavigateToDetail(event.favourite))
     }
 
     private fun onFavouriteSwiped(position: Int) {
-        // Log.d("RECIPE", event.recipe.toString())
         val recipeToDelete = favourites?.get(position) ?: return
         tracking.logEvent("favourite_deleted")
         viewModelScope.launch {
@@ -89,7 +87,6 @@ class FavouriteViewModel(private val repository: FavouriteRepository, private va
 
 sealed class FavouriteScreenAction {
     data class NavigateToDetail(val favourite: FavouriteUI) : FavouriteScreenAction()
-    data class Delete(val id: Long) : FavouriteScreenAction()
     object ShowNoFavouriteFoundMessage : FavouriteScreenAction()
 }
 
