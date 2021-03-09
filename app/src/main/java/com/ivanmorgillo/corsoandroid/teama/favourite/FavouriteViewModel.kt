@@ -51,7 +51,8 @@ class FavouriteViewModel(private val repository: FavouriteRepository, private va
                 notes = it.notes,
                 video = it.video,
                 ingredients = it.ingredients,
-                instructions = it.instructions
+                instructions = it.instructions,
+                area = it.area
             )
         }
         this.favourites = favourites
@@ -59,22 +60,16 @@ class FavouriteViewModel(private val repository: FavouriteRepository, private va
     }
 
     private fun onFavouriteSwiped(position: Int) {
-        val recipeToDelete = favourites?.get(position)
-        if (recipeToDelete == null) {
-            Timber.d("recipe null")
-            return
-        }
-        else {
-            tracking.logEvent("favourite_deleted")
-            viewModelScope.launch {
-                repository.delete(recipeToDelete.id)
-                val updatedFavourites = favourites?.minus(recipeToDelete)
-                if (updatedFavourites != null) {
-                    favourites = updatedFavourites
-                    states.postValue(FavouriteScreenStates.Content(updatedFavourites, recipeToDelete))
-                } else {
-                    Timber.e("updatedFavourites was null")
-                }
+        val favouriteToDelete = favourites?.get(position)?: return
+        tracking.logEvent("favourite_deleted")
+        viewModelScope.launch {
+            repository.delete(favouriteToDelete.id)
+            val updatedFavourites = favourites?.minus(favouriteToDelete)
+            if (updatedFavourites != null) {
+                favourites = updatedFavourites
+                states.postValue(FavouriteScreenStates.Content(updatedFavourites, favouriteToDelete))
+            } else {
+                Timber.e("updatedFavourites was null")
             }
         }
     }
