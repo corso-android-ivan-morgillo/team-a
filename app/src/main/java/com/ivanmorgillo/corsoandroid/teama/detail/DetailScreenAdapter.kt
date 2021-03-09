@@ -109,11 +109,10 @@ sealed class DetailScreenViewHolder(itemView: View) : RecyclerView.ViewHolder(it
 
     class VideoViewHolder(private val binding: DetailScreenVideoBinding) : DetailScreenViewHolder(binding.root) {
         private var startSeconds = 0f // secondi a cui far iniziare il video (0 = dall'inizio)
+        private var videoNotWorking = false
         fun bind(video: DetailScreenItems.Video) {
-            if (video.video.isEmpty()) { // se il video è vuoto (non esiste) mostra l'immagine
-                binding.detailScreenImage.load(video.image)
-                binding.detailScreenImage.visible()
-                binding.detailScreenVideo.gone()
+            if (video.video.isEmpty() || videoNotWorking) { // se il video è vuoto (non esiste) mostra l'immagine
+               showImage(video.image)
             } else { // altrimenti nasconde l'immagine e mostra il video
                 binding.detailScreenVideo.visible()
                 binding.detailScreenImage.gone()
@@ -129,12 +128,17 @@ sealed class DetailScreenViewHolder(itemView: View) : RecyclerView.ViewHolder(it
 
                     override fun onError(youTubePlayer: YouTubePlayer, error: PlayerConstants.PlayerError) {
                         super.onError(youTubePlayer, error)
-                        binding.detailScreenImage.load(video.image)
-                        binding.detailScreenImage.visible()
-                        binding.detailScreenVideo.gone()
+                        showImage(video.image)
+                        videoNotWorking = true
                     }
                 })
             }
+        }
+
+        private fun showImage(image: String) {
+            binding.detailScreenImage.load(image)
+            binding.detailScreenImage.visible()
+            binding.detailScreenVideo.gone()
         }
     }
 
