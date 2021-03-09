@@ -17,8 +17,8 @@
     <string name="no_internet_error_message">No connection available</string>
     <string name="retry">Retry</string>
     <string name="network_settings">Network settings</string>
-    <string name="search_recipe_hint">Search by title…</string>
-    <string name="search_favourite_hint">Search by title…</string>
+    <string name="search">Search</string>
+    <string name="search_hint">Search by title…</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

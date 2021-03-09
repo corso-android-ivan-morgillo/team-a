@@ -18,6 +18,7 @@ import com.ivanmorgillo.corsoandroid.teama.databinding.FragmentFavouriteBinding
 import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
 import com.ivanmorgillo.corsoandroid.teama.extension.gone
 import com.ivanmorgillo.corsoandroid.teama.extension.visible
+import com.ivanmorgillo.corsoandroid.teama.utils.Util
 import com.ivanmorgillo.corsoandroid.teama.utils.viewBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
@@ -95,12 +96,8 @@ class FavouriteFragment : Fragment(R.layout.fragment_favourite), SearchView.OnQu
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.favourites_menu, menu)
-        val searchManager = activity?.getSystemService(Context.SEARCH_SERVICE) as SearchManager
         val searchMenuItem = menu.findItem(R.id.favourites_search)
-        val searchView = searchMenuItem.actionView as SearchView
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(activity?.componentName))
-        searchView.queryHint = resources.getString(R.string.search_favourite_hint)
-        searchView.setOnQueryTextListener(this)
+        Util().createSearchManager(activity, searchMenuItem, this)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

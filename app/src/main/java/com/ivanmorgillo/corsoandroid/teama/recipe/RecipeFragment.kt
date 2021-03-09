@@ -33,6 +33,7 @@ import com.ivanmorgillo.corsoandroid.teama.databinding.FragmentRecipeBinding
 import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
 import com.ivanmorgillo.corsoandroid.teama.extension.showAlertDialog
 import com.ivanmorgillo.corsoandroid.teama.recipe.RecipeFragmentDirections.Companion.actionRecipeFragmentToDetailFragment
+import com.ivanmorgillo.corsoandroid.teama.utils.Util
 import com.ivanmorgillo.corsoandroid.teama.utils.viewBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
@@ -111,12 +112,8 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe), SearchView.OnQueryTex
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.recipes_menu, menu)
-        val searchManager = activity?.getSystemService(Context.SEARCH_SERVICE) as SearchManager
         val searchMenuItem = menu.findItem(R.id.recipes_search)
-        val searchView = searchMenuItem.actionView as SearchView
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(activity?.componentName))
-        searchView.queryHint = resources.getString(R.string.search_recipe_hint)
-        searchView.setOnQueryTextListener(this)
+        Util().createSearchManager(activity, searchMenuItem, this)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
