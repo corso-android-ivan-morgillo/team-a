@@ -103,10 +103,11 @@ class NetworkApiImpl(cacheDir: File) : NetworkAPI {
                     name = recipeDetail.strMeal,
                     image = recipeDetail.strMealThumb,
                     video = video,
-                    idMeal = recipeDetail.idMeal,
+                    idMeal = recipeDetail.idMeal.toLong(),
                     ingredients = ingredients,
                     instructions = recipeDetail.strInstructions,
-                    area = recipeDetail.strArea
+                    area = recipeDetail.strArea,
+                    notes = ""
                 )
                 LoadRecipeDetailsResult.Success(recipeDetails)
             }
@@ -297,10 +298,11 @@ class NetworkApiImpl(cacheDir: File) : NetworkAPI {
                     name = recipeDetail.strMeal,
                     image = recipeDetail.strMealThumb,
                     video = video,
-                    idMeal = recipeDetail.idMeal,
+                    idMeal = recipeDetail.idMeal.toLong(),
                     ingredients = ingredients,
                     instructions = recipeDetail.strInstructions,
-                    area = recipeDetail.strArea
+                    area = recipeDetail.strArea,
+                    notes = ""
                 )
                 LoadRecipeDetailsResult.Success(recipeDetails)
             }

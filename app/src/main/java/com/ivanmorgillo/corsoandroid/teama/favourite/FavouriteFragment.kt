@@ -65,11 +65,9 @@ class FavouriteFragment : Fragment(R.layout.fragment_favourite), SearchView.OnQu
                     Timber.d("Invio al details il preferito con id = ${action.favourite.id}")
                     findNavController().navigate(directions)
                 }
-                is FavouriteScreenAction.Delete -> {
-                    val position = action.position
-                    adapter.deleteItem(position, binding.favouritesListRoot)
+                FavouriteScreenAction.ShowNoFavouriteFoundMessage -> {
+                    Timber.d("nessun preferito") // nessun preferito salvato
                 }
-                FavouriteScreenAction.ShowNoFavouriteFoundMessage -> TODO() // nessun preferito salvato
             }.exhaustive
         })
         viewModel.send(FavouriteScreenEvent.OnReady)
