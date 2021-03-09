@@ -6,15 +6,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import com.google.android.material.snackbar.Snackbar
-import com.ivanmorgillo.corsoandroid.teama.R
 import com.ivanmorgillo.corsoandroid.teama.databinding.FavouriteItemBinding
 import java.util.*
 import kotlin.collections.ArrayList
 
 class FavouriteAdapter(
     private val onclick: (FavouriteUI, View) -> Unit,
-    private val recyclerView: RecyclerView,
 ) : RecyclerView.Adapter<RecipeViewHolder>() {
     private var favourites = mutableListOf<FavouriteUI>()
 
@@ -38,6 +35,7 @@ class FavouriteAdapter(
         diffResult.dispatchUpdatesTo(this)
     }
 
+    // per la ricerca
     fun filter(mList: List<FavouriteUI>, query: String): List<FavouriteUI> {
         val filteredList: MutableList<FavouriteUI> = ArrayList<FavouriteUI>()
         for (item in mList) {
@@ -49,24 +47,6 @@ class FavouriteAdapter(
             }
         }
         return filteredList
-    }
-
-    fun deleteItem(position: Int, view: View) {
-        val deletedItem: FavouriteUI = favourites[position]
-        favourites.removeAt(position)
-        notifyItemRemoved(position)
-        val snackbar: Snackbar =
-            Snackbar.make(view,
-                recyclerView.context.resources.getString(R.string.favourite_deleted),
-                Snackbar.LENGTH_LONG)
-        snackbar.setAction(recyclerView.context.resources.getString(R.string.undo)) { v ->
-            favourites.add(position, deletedItem)
-            notifyItemInserted(position)
-            if (position == 0 || position == favourites.size - 1) { // per fare l'animazione corretta
-                recyclerView.scrollToPosition(position)
-            }
-        }
-        snackbar.show()
     }
 }
 

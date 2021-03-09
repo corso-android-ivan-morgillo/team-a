@@ -14,7 +14,7 @@ import timber.log.Timber
 interface FavouriteRepository {
     suspend fun loadAll(): LoadFavouriteResult
     suspend fun add(favourite: RecipeDetails): Boolean
-    suspend fun delete(favourite: RecipeDetails): Boolean
+    suspend fun delete(idMeal: Long): Boolean
     suspend fun isFavourite(idMeal: Long): Boolean
 }
 
@@ -68,8 +68,8 @@ class FavouriteRepositoryImpl(private val context: Context, private val gson: Gs
     }
 
     @SuppressLint("ApplySharedPref")
-    override suspend fun delete(favourite: RecipeDetails): Boolean = withContext(Dispatchers.IO) {
-        val success = storage.edit().remove(favourite.idMeal.toString()).commit()
+    override suspend fun delete(idMeal: Long): Boolean = withContext(Dispatchers.IO) {
+        val success = storage.edit().remove(idMeal.toString()).commit()
         if (success) {
             Timber.d("deleted favourite successfully")
         } else {
