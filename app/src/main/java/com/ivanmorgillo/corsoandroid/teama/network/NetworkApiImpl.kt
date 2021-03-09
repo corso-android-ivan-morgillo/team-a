@@ -221,15 +221,13 @@ class NetworkApiImpl(cacheDir: File) : NetworkAPI {
 
     private suspend fun loadCategoryInfo(categoryName: String): CategoryInfo {
         val recipesList: LoadRecipeResult = loadRecipes(categoryName)
-        val categoryInfo: CategoryInfo
+        var categoryInfo = CategoryInfo("", emptyList())
         if (recipesList is Success) {
             val recipesAmount = recipesList.recipes.size.toString()
             val areaNames = loadCategoriesFlags(recipesList.recipes)
             categoryInfo = CategoryInfo(recipesAmount, areaNames)
-            return categoryInfo
-        } else {
-            TODO()
         }
+        return categoryInfo
     }
 
     data class CategoryInfo(
@@ -238,7 +236,6 @@ class NetworkApiImpl(cacheDir: File) : NetworkAPI {
     )
 
     private suspend fun loadCategoriesFlags(recipes: List<Recipe>): List<String> = coroutineScope {
-
         recipes
             .map {
                 async { loadRecipeDetails(it.idMeal) }
