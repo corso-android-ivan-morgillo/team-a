@@ -18,19 +18,17 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.transition.MaterialElevationScale
 import com.ivanmorgillo.corsoandroid.teama.R
-import com.ivanmorgillo.corsoandroid.teama.RecipeScreenAction
-import com.ivanmorgillo.corsoandroid.teama.RecipeScreenAction.NavigateToDetail
-import com.ivanmorgillo.corsoandroid.teama.RecipeScreenAction.ShowInterruptedRequestMessage
-import com.ivanmorgillo.corsoandroid.teama.RecipeScreenAction.ShowNoInternetMessage
-import com.ivanmorgillo.corsoandroid.teama.RecipeScreenAction.ShowServerErrorMessage
-import com.ivanmorgillo.corsoandroid.teama.RecipeScreenAction.ShowSlowInternetMessage
-import com.ivanmorgillo.corsoandroid.teama.RecipeScreenEvent.OnReady
-import com.ivanmorgillo.corsoandroid.teama.RecipeScreenEvent.OnRecipeClick
-import com.ivanmorgillo.corsoandroid.teama.RecipeScreenEvent.OnRefresh
-import com.ivanmorgillo.corsoandroid.teama.RecipeScreenStates.Content
-import com.ivanmorgillo.corsoandroid.teama.RecipeScreenStates.Error
-import com.ivanmorgillo.corsoandroid.teama.RecipeScreenStates.Loading
-import com.ivanmorgillo.corsoandroid.teama.RecipeViewModel
+import com.ivanmorgillo.corsoandroid.teama.recipe.RecipeScreenAction.NavigateToDetail
+import com.ivanmorgillo.corsoandroid.teama.recipe.RecipeScreenAction.ShowInterruptedRequestMessage
+import com.ivanmorgillo.corsoandroid.teama.recipe.RecipeScreenAction.ShowNoInternetMessage
+import com.ivanmorgillo.corsoandroid.teama.recipe.RecipeScreenAction.ShowServerErrorMessage
+import com.ivanmorgillo.corsoandroid.teama.recipe.RecipeScreenAction.ShowSlowInternetMessage
+import com.ivanmorgillo.corsoandroid.teama.recipe.RecipeScreenEvent.OnReady
+import com.ivanmorgillo.corsoandroid.teama.recipe.RecipeScreenEvent.OnRecipeClick
+import com.ivanmorgillo.corsoandroid.teama.recipe.RecipeScreenEvent.OnRefresh
+import com.ivanmorgillo.corsoandroid.teama.recipe.RecipeScreenStates.Content
+import com.ivanmorgillo.corsoandroid.teama.recipe.RecipeScreenStates.Error
+import com.ivanmorgillo.corsoandroid.teama.recipe.RecipeScreenStates.Loading
 import com.ivanmorgillo.corsoandroid.teama.databinding.FragmentRecipeBinding
 import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
 import com.ivanmorgillo.corsoandroid.teama.extension.showAlertDialog
@@ -45,8 +43,6 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe), SearchView.OnQueryTex
     private val args: RecipeFragmentArgs by navArgs()
     private var lastClickedItem: View? = null
     private var categoryName = ""
-
-    private var recipes: List<RecipeUI> = emptyList<RecipeUI>()
 
     // Equivalente alla onCreate di un activity
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -75,8 +71,7 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe), SearchView.OnQueryTex
                 // riceve l'aggiornamento del nuovo valore
                 when (state) {
                     is Content -> {
-                        recipes = state.recipes
-                        adapter.setRecipes(recipes)
+                        adapter.setRecipes(state.recipes)
                         binding.recipesRefresh.isRefreshing = false
                     }
                     Error -> binding.recipesRefresh.isRefreshing = false
@@ -110,9 +105,7 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe), SearchView.OnQueryTex
     }
 
     override fun onQueryTextChange(query: String): Boolean {
-        val adapter: RecipesAdapter = binding.recipeList.adapter as RecipesAdapter
-        val filteredRecipesList: List<RecipeUI> = adapter.filter(recipes, query)
-        adapter.setRecipes(filteredRecipesList)
+        viewModel.send(RecipeScreenEvent.OnRecipeSearch(query))
         return true
     }
 

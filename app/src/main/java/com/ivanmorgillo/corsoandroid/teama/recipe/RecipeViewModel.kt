@@ -1,26 +1,25 @@
-package com.ivanmorgillo.corsoandroid.teama
+package com.ivanmorgillo.corsoandroid.teama.recipe
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ivanmorgillo.corsoandroid.teama.RecipeScreenAction.NavigateToDetail
-import com.ivanmorgillo.corsoandroid.teama.RecipeScreenAction.ShowNoInternetMessage
-import com.ivanmorgillo.corsoandroid.teama.RecipeScreenStates.Content
-import com.ivanmorgillo.corsoandroid.teama.RecipeScreenStates.Error
-import com.ivanmorgillo.corsoandroid.teama.RecipeScreenStates.Loading
+import com.ivanmorgillo.corsoandroid.teama.Screens
+import com.ivanmorgillo.corsoandroid.teama.Tracking
+import com.ivanmorgillo.corsoandroid.teama.recipe.RecipeScreenAction.NavigateToDetail
+import com.ivanmorgillo.corsoandroid.teama.recipe.RecipeScreenAction.ShowNoInternetMessage
+import com.ivanmorgillo.corsoandroid.teama.recipe.RecipeScreenStates.Content
+import com.ivanmorgillo.corsoandroid.teama.recipe.RecipeScreenStates.Error
+import com.ivanmorgillo.corsoandroid.teama.recipe.RecipeScreenStates.Loading
 import com.ivanmorgillo.corsoandroid.teama.crashlytics.SingleLiveEvent
 import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
 import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeError
 import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeResult.Failure
 import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeResult.Success
-import com.ivanmorgillo.corsoandroid.teama.recipe.RecipeUI
-import com.ivanmorgillo.corsoandroid.teama.recipe.RecipesRepository
 import kotlinx.coroutines.launch
+import java.util.*
 
-class RecipeViewModel(
-    private val repository: RecipesRepository,
-    private val tracking: Tracking,
-) : ViewModel() {
+class RecipeViewModel(private val repository: RecipesRepository, private val tracking: Tracking) : ViewModel() {
+    private var recipes: List<RecipeUI>? = null
     val states = MutableLiveData<RecipeScreenStates>() // potremmo passarci direttamente loading
     val actions = SingleLiveEvent<RecipeScreenAction>()
 
@@ -34,6 +33,7 @@ class RecipeViewModel(
             is RecipeScreenEvent.OnReady -> loadContent(event.categoryName)
             is RecipeScreenEvent.OnRecipeClick -> onRecipeClick(event)
             is RecipeScreenEvent.OnRefresh -> loadContent(event.categoryName)
+            is RecipeScreenEvent.OnRecipeSearch -> onRecipeSearch(event.query)
         }.exhaustive
     }
 
@@ -48,9 +48,33 @@ class RecipeViewModel(
         }
     }
 
+    private fun onSuccess(result: Success) {
+        val recipes = result.recipes.map {
+            RecipeUI(
+                title = it.name,
+                image = it.image,
+                id = it.idMeal
+            )
+        }
+        this.recipes = recipes
+        states.postValue(Content(recipes))
+    }
+
     private fun onRecipeClick(event: RecipeScreenEvent.OnRecipeClick) {
         tracking.logEvent("recipe_clicked")
         actions.postValue(NavigateToDetail(event.recipe))
+    }
+
+    private fun onRecipeSearch(query: String) {
+        val filteredRecipes = filter(recipes, query)
+        states.postValue(Content(filteredRecipes))
+    }
+
+    private fun filter(originalList: List<RecipeUI>?, query: String): List<RecipeUI> {
+        return originalList?.filter {
+            it.title.toLowerCase(Locale.getDefault())
+                .contains(query.toLowerCase(Locale.getDefault()).trim()) || query.isBlank()
+        } ?: emptyList()
     }
 
     private fun onFailure(result: Failure) {
@@ -62,17 +86,6 @@ class RecipeViewModel(
             LoadRecipeError.SlowInternet -> actions.postValue(RecipeScreenAction.ShowSlowInternetMessage)
             LoadRecipeError.InterruptedRequest -> actions.postValue(RecipeScreenAction.ShowInterruptedRequestMessage)
         }.exhaustive
-    }
-
-    private fun onSuccess(result: Success) {
-        val recipes = result.recipes.map {
-            RecipeUI(
-                title = it.name,
-                image = it.image,
-                id = it.idMeal
-            )
-        }
-        states.postValue(Content(recipes))
     }
 }
 
@@ -99,4 +112,5 @@ sealed class RecipeScreenEvent {
     data class OnRecipeClick(val recipe: RecipeUI) : RecipeScreenEvent()
     data class OnReady(val categoryName: String) : RecipeScreenEvent()
     data class OnRefresh(val categoryName: String) : RecipeScreenEvent()
+    data class OnRecipeSearch(val query: String) : RecipeScreenEvent()
 }

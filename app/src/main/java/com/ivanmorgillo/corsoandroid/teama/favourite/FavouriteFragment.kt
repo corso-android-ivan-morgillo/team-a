@@ -26,8 +26,6 @@ class FavouriteFragment : Fragment(R.layout.fragment_favourite), SearchView.OnQu
     private val viewModel: FavouriteViewModel by viewModel()
     private val binding by viewBinding(FragmentFavouriteBinding::bind)
 
-    private var favourites: List<FavouriteUI> = emptyList<FavouriteUI>() // necessario salvare qui per la ricerca
-
     // Equivalente alla onCreate di un activity
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -49,8 +47,7 @@ class FavouriteFragment : Fragment(R.layout.fragment_favourite), SearchView.OnQu
             when (state) {
                 is FavouriteScreenStates.Content -> {
                     binding.favouriteListProgressBar.gone()
-                    favourites = state.favourites
-                    adapter.setFavourites(favourites)
+                    adapter.setFavourites(state.favourites)
                     showUndoDeleteSnackbar(state.deletedFavourite) // per rimettere un preferito eliminato
                 }
                 FavouriteScreenStates.Error -> binding.favouriteListProgressBar.gone()
@@ -92,9 +89,7 @@ class FavouriteFragment : Fragment(R.layout.fragment_favourite), SearchView.OnQu
     }
 
     override fun onQueryTextChange(query: String): Boolean {
-        val adapter: FavouriteAdapter = binding.favouriteList.adapter as FavouriteAdapter
-        val filteredFavouritesList: List<FavouriteUI> = adapter.filter(favourites, query)
-        adapter.setFavourites(filteredFavouritesList)
+        viewModel.send(FavouriteScreenEvent.OnFavouriteSearch(query))
         return true
     }
 
