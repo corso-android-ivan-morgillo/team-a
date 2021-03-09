@@ -39,7 +39,9 @@ class MainActivity : AppCompatActivity() {
             when (it.itemId) {
                 R.id.categoryFragment -> navController.navigate(R.id.categoryFragment)
                 R.id.favouriteFragment -> navController.navigate(R.id.favouriteFragment)
-                R.id.nav_feedback -> openUrl("https://forms.gle/FkGguZCfNtba29BM6")
+                R.id.nav_feedback -> {
+                    openUrl("https://docs.google.com/forms/d/18XbesMIbS39Ncha0jea0bA-W-xI2cArISNijit9wieo/viewform")
+                }
                 R.id.nav_settings -> navController.navigate(R.id.nav_settings)
             }
             binding.drawerLayout.closeDrawer(GravityCompat.START)
