@@ -34,20 +34,6 @@ class FavouriteAdapter(
         favourites = items.toMutableList()
         diffResult.dispatchUpdatesTo(this)
     }
-
-    // per la ricerca
-    fun filter(mList: List<FavouriteUI>, query: String): List<FavouriteUI> {
-        val filteredList: MutableList<FavouriteUI> = ArrayList<FavouriteUI>()
-        for (item in mList) {
-            // condizione = titolo della ricetta
-            if (item.title.toLowerCase(Locale.getDefault())
-                    .contains(query.toLowerCase(Locale.getDefault()).trim()) || query.isBlank()
-            ) {
-                filteredList.add(item)
-            }
-        }
-        return filteredList
-    }
 }
 
 /** Qui è dove tocchiamo veramente l'xml della card, item view identifica la vera e propria view della card.

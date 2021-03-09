@@ -17,8 +17,8 @@
     <string name="no_internet_error_message">Nessuna connessione disponibile</string>
     <string name="retry">Riprova</string>
     <string name="network_settings">Impostazioni di rete</string>
-    <string name="search_recipe_hint">Cerca per titolo…</string>
-    <string name="search_favourite_hint">Cerca per titolo…</string>
+    <string name="search">Cerca</string>
+    <string name="search_hint">Cerca per titolo…</string>
 
     <string name="navigation_drawer_open">Apri menu laterale</string>
     <string name="navigation_drawer_close">Chiudi menu laterale</string>
@@ -38,4 +38,5 @@
     <string name="loading_random_recipe">Sto caricando una ricetta random…</string>
     <string name="recipes">Ricette</string>
     <string name="feedback">Feedback</string>
+    <string name="no_items">Nessun elemento!</string>
 </resources>

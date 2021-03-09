@@ -1,6 +1,8 @@
-package com.ivanmorgillo.corsoandroid.teama
+package com.ivanmorgillo.corsoandroid.teama.koin
 
 import com.google.gson.Gson
+import com.ivanmorgillo.corsoandroid.teama.Tracking
+import com.ivanmorgillo.corsoandroid.teama.TrackingImpl
 import com.ivanmorgillo.corsoandroid.teama.category.CategoryRepository
 import com.ivanmorgillo.corsoandroid.teama.category.CategoryRepositoryImpl
 import com.ivanmorgillo.corsoandroid.teama.category.CategoryViewModel
@@ -13,6 +15,7 @@ import com.ivanmorgillo.corsoandroid.teama.favourite.FavouriteViewModel
 import com.ivanmorgillo.corsoandroid.teama.network.NetworkAPI
 import com.ivanmorgillo.corsoandroid.teama.network.NetworkApiImpl
 import com.ivanmorgillo.corsoandroid.teama.recipe.RecipeRepositoryImpl
+import com.ivanmorgillo.corsoandroid.teama.recipe.RecipeViewModel
 import com.ivanmorgillo.corsoandroid.teama.recipe.RecipesRepository
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext

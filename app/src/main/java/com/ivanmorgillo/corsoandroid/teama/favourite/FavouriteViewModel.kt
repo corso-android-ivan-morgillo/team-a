@@ -10,10 +10,11 @@ import com.ivanmorgillo.corsoandroid.teama.detail.RecipeDetails
 import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
 import kotlinx.coroutines.launch
 import timber.log.Timber
+import java.util.*
 
 class FavouriteViewModel(private val repository: FavouriteRepository, private val tracking: Tracking) : ViewModel() {
     private var favourites: List<FavouriteUI>? = null
-    val states = MutableLiveData<FavouriteScreenStates>() // potremmo passarci direttamente loading
+    val states = MutableLiveData<FavouriteScreenStates>()
     val actions = SingleLiveEvent<FavouriteScreenAction>()
 
     init {
@@ -28,6 +29,11 @@ class FavouriteViewModel(private val repository: FavouriteRepository, private va
             is FavouriteScreenEvent.OnFavouriteClick -> onFavouriteClick(event) // apri dettaglio ricetta
             is FavouriteScreenEvent.OnFavouriteSwiped -> onFavouriteSwiped(event.position) // elimina preferito
             is FavouriteScreenEvent.OnUndoDeleteFavourite -> onUndoDeleteFavourite(event.deletedFavourite)
+            is FavouriteScreenEvent.OnFavouriteSearch -> onFavouriteSearch(event.query)
+            FavouriteScreenEvent.OnRefresh -> {
+                tracking.logEvent("favourite_refresh_clicked")
+                loadContent()
+            } // ricarica i preferiti
         }.exhaustive
     }
 
@@ -59,6 +65,11 @@ class FavouriteViewModel(private val repository: FavouriteRepository, private va
         states.postValue(FavouriteScreenStates.Content(favourites, null))
     }
 
+    private fun onFavouriteClick(event: FavouriteScreenEvent.OnFavouriteClick) {
+        tracking.logEvent("favourite_clicked")
+        actions.postValue(FavouriteScreenAction.NavigateToDetail(event.favourite))
+    }
+
     private fun onFavouriteSwiped(position: Int) {
         val favouriteToDelete = favourites?.get(position)?: return
         tracking.logEvent("favourite_deleted")
@@ -75,6 +86,7 @@ class FavouriteViewModel(private val repository: FavouriteRepository, private va
     }
 
     private fun onUndoDeleteFavourite(removedFavourite: FavouriteUI) {
+        tracking.logEvent("favourite_undo_delete")
         viewModelScope.launch {
             val newFavourite = RecipeDetails(
                 name = removedFavourite.title,
@@ -100,9 +112,17 @@ class FavouriteViewModel(private val repository: FavouriteRepository, private va
         }
     }
 
-    private fun onFavouriteClick(event: FavouriteScreenEvent.OnFavouriteClick) {
-        tracking.logEvent("favourite_clicked")
-        actions.postValue(FavouriteScreenAction.NavigateToDetail(event.favourite))
+    private fun onFavouriteSearch(query: String) {
+        tracking.logEvent("favourite_search_clicked")
+        val filteredFavourites = filter(favourites, query)
+        states.postValue(FavouriteScreenStates.Content(filteredFavourites, null))
+    }
+
+    private fun filter(originalList: List<FavouriteUI>?, query: String): List<FavouriteUI> {
+        return originalList?.filter {
+            it.title.toLowerCase(Locale.getDefault())
+                .contains(query.toLowerCase(Locale.getDefault()).trim()) || query.isBlank()
+        } ?: emptyList()
     }
 
     private fun onFailure(result: LoadFavouriteResult.Failure) {
@@ -133,8 +153,10 @@ sealed class FavouriteScreenEvent {
     data class OnFavouriteClick(val favourite: FavouriteUI) : FavouriteScreenEvent()
     data class OnFavouriteSwiped(val position: Int) : FavouriteScreenEvent()
     data class OnUndoDeleteFavourite(val deletedFavourite: FavouriteUI) : FavouriteScreenEvent()
+    data class OnFavouriteSearch(val query: String) : FavouriteScreenEvent()
 
     object OnReady : FavouriteScreenEvent()
+    object OnRefresh : FavouriteScreenEvent()
 }
 
 sealed class LoadFavouriteResult {
