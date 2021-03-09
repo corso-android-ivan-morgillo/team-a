@@ -17,7 +17,9 @@ import com.ivanmorgillo.corsoandroid.teama.category.CategoryScreenAction.ShowSer
 import com.ivanmorgillo.corsoandroid.teama.category.CategoryScreenAction.ShowSlowInternetMessage
 import com.ivanmorgillo.corsoandroid.teama.databinding.FragmentCategoryBinding
 import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
+import com.ivanmorgillo.corsoandroid.teama.extension.gone
 import com.ivanmorgillo.corsoandroid.teama.extension.showAlertDialog
+import com.ivanmorgillo.corsoandroid.teama.extension.visible
 import com.ivanmorgillo.corsoandroid.teama.utils.viewBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -43,7 +45,16 @@ class CategoryFragment : Fragment(R.layout.fragment_category) {
         viewModel.states.observe(viewLifecycleOwner, { state ->
             when (state) {
                 is CategoryScreenStates.Content -> {
-                    categoryCardAdapter.setCategories(state.categories)
+                    val categories = state.categories
+                    categoryCardAdapter.setCategories(categories)
+                    binding.categoryRefresh.isRefreshing = false
+                    if (categories.isEmpty()) {
+                        binding.categoryTextView.visible()
+                        binding.categoryList.gone()
+                    } else {
+                        binding.categoryList.visible()
+                        binding.categoryTextView.gone()
+                    }
                     binding.categoryRefresh.isRefreshing = false
                 }
                 CategoryScreenStates.Error -> binding.categoryRefresh.isRefreshing = false

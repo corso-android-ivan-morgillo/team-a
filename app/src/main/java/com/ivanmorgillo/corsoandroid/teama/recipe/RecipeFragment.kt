@@ -31,7 +31,9 @@ import com.ivanmorgillo.corsoandroid.teama.recipe.RecipeScreenStates.Error
 import com.ivanmorgillo.corsoandroid.teama.recipe.RecipeScreenStates.Loading
 import com.ivanmorgillo.corsoandroid.teama.databinding.FragmentRecipeBinding
 import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
+import com.ivanmorgillo.corsoandroid.teama.extension.gone
 import com.ivanmorgillo.corsoandroid.teama.extension.showAlertDialog
+import com.ivanmorgillo.corsoandroid.teama.extension.visible
 import com.ivanmorgillo.corsoandroid.teama.recipe.RecipeFragmentDirections.Companion.actionRecipeFragmentToDetailFragment
 import com.ivanmorgillo.corsoandroid.teama.utils.Util
 import com.ivanmorgillo.corsoandroid.teama.utils.viewBinding
@@ -72,8 +74,16 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe), SearchView.OnQueryTex
                 // riceve l'aggiornamento del nuovo valore
                 when (state) {
                     is Content -> {
-                        adapter.setRecipes(state.recipes)
+                        val recipes = state.recipes
+                        adapter.setRecipes(recipes)
                         binding.recipesRefresh.isRefreshing = false
+                        if (recipes.isEmpty()) {
+                            binding.recipeTextView.visible()
+                            binding.recipeList.gone()
+                        } else {
+                            binding.recipeList.visible()
+                            binding.recipeTextView.gone()
+                        }
                     }
                     Error -> binding.recipesRefresh.isRefreshing = false
                     Loading -> binding.recipesRefresh.isRefreshing = true

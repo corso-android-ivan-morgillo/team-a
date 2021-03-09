@@ -30,6 +30,10 @@ class FavouriteViewModel(private val repository: FavouriteRepository, private va
             is FavouriteScreenEvent.OnFavouriteSwiped -> onFavouriteSwiped(event.position) // elimina preferito
             is FavouriteScreenEvent.OnUndoDeleteFavourite -> onUndoDeleteFavourite(event.deletedFavourite)
             is FavouriteScreenEvent.OnFavouriteSearch -> onFavouriteSearch(event.query)
+            FavouriteScreenEvent.OnRefresh -> {
+                tracking.logEvent("favourite_refresh_clicked")
+                loadContent()
+            } // ricarica i preferiti
         }.exhaustive
     }
 
@@ -82,6 +86,7 @@ class FavouriteViewModel(private val repository: FavouriteRepository, private va
     }
 
     private fun onUndoDeleteFavourite(removedFavourite: FavouriteUI) {
+        tracking.logEvent("favourite_undo_delete")
         viewModelScope.launch {
             val newFavourite = RecipeDetails(
                 name = removedFavourite.title,
@@ -108,6 +113,7 @@ class FavouriteViewModel(private val repository: FavouriteRepository, private va
     }
 
     private fun onFavouriteSearch(query: String) {
+        tracking.logEvent("favourite_search_clicked")
         val filteredFavourites = filter(favourites, query)
         states.postValue(FavouriteScreenStates.Content(filteredFavourites, null))
     }
@@ -150,6 +156,7 @@ sealed class FavouriteScreenEvent {
     data class OnFavouriteSearch(val query: String) : FavouriteScreenEvent()
 
     object OnReady : FavouriteScreenEvent()
+    object OnRefresh : FavouriteScreenEvent()
 }
 
 sealed class LoadFavouriteResult {

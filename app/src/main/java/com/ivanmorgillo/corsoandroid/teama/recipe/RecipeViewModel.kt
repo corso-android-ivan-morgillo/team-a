@@ -66,6 +66,7 @@ class RecipeViewModel(private val repository: RecipesRepository, private val tra
     }
 
     private fun onRecipeSearch(query: String) {
+        tracking.logEvent("recipe_search")
         val filteredRecipes = filter(recipes, query)
         states.postValue(Content(filteredRecipes))
     }

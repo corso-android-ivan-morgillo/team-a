@@ -18,6 +18,7 @@ import com.ivanmorgillo.corsoandroid.teama.databinding.FragmentFavouriteBinding
 import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
 import com.ivanmorgillo.corsoandroid.teama.extension.gone
 import com.ivanmorgillo.corsoandroid.teama.extension.visible
+import com.ivanmorgillo.corsoandroid.teama.recipe.RecipeScreenEvent
 import com.ivanmorgillo.corsoandroid.teama.utils.Util
 import com.ivanmorgillo.corsoandroid.teama.utils.viewBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -31,6 +32,7 @@ class FavouriteFragment : Fragment(R.layout.fragment_favourite), SearchView.OnQu
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true) // necessario per consentire al fragment di avere un menu
+        binding.favouriteRefresh.setOnRefreshListener { viewModel.send(FavouriteScreenEvent.OnRefresh) }
         val adapter = FavouriteAdapter { item, view ->
             viewModel.send(FavouriteScreenEvent.OnFavouriteClick(item))
         }
@@ -47,12 +49,20 @@ class FavouriteFragment : Fragment(R.layout.fragment_favourite), SearchView.OnQu
             // riceve l'aggiornamento del nuovo valore
             when (state) {
                 is FavouriteScreenStates.Content -> {
-                    binding.favouriteListProgressBar.gone()
-                    adapter.setFavourites(state.favourites)
+                    binding.favouriteRefresh.isRefreshing = false
+                    val favourites = state.favourites
+                    adapter.setFavourites(favourites)
                     showUndoDeleteSnackbar(state.deletedFavourite) // per rimettere un preferito eliminato
+                    if (favourites.isEmpty()) {
+                        binding.favouriteTextView.visible()
+                        binding.favouriteList.gone()
+                    } else {
+                        binding.favouriteList.visible()
+                        binding.favouriteTextView.gone()
+                    }
                 }
-                FavouriteScreenStates.Error -> binding.favouriteListProgressBar.gone()
-                FavouriteScreenStates.Loading -> binding.favouriteListProgressBar.visible()
+                FavouriteScreenStates.Error -> binding.favouriteRefresh.isRefreshing = false
+                FavouriteScreenStates.Loading -> binding.favouriteRefresh.isRefreshing = true
             }.exhaustive
         })
         // Questo blocco serve a specificare che per le istruzioni interne il this è "view"
