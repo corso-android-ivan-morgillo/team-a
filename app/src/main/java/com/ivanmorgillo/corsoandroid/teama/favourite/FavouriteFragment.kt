@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
 import com.ivanmorgillo.corsoandroid.teama.R
 import com.ivanmorgillo.corsoandroid.teama.databinding.FragmentFavouriteBinding
 import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
@@ -31,14 +32,13 @@ class FavouriteFragment : Fragment(R.layout.fragment_favourite), SearchView.OnQu
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true) // necessario per consentire al fragment di avere un menu
-        val adapter = FavouriteAdapter({ item, view ->
+        val adapter = FavouriteAdapter { item, view ->
             viewModel.send(FavouriteScreenEvent.OnFavouriteClick(item))
-        }, binding.favouriteList)
+        }
         binding.favouriteList.adapter = adapter
         val itemTouchHelper = ItemTouchHelper(SwipeToDeleteCallback(context,
             object : SwipeToDeleteCallback.ItemTouchHelperListener {
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder?, direction: Int, position: Int) {
-                    // lifecycleScope.launch { viewModel.send(FavouriteScreenEvents.OnItemSwiped(position)) }
                     viewModel.send(FavouriteScreenEvent.OnFavouriteSwiped(position))
                 }
             }))
@@ -51,6 +51,7 @@ class FavouriteFragment : Fragment(R.layout.fragment_favourite), SearchView.OnQu
                     binding.favouriteListProgressBar.gone()
                     favourites = state.favourites
                     adapter.setFavourites(favourites)
+                    showUndoDeleteSnackbar(state.deletedFavourite) // per rimettere un preferito eliminato
                 }
                 FavouriteScreenStates.Error -> binding.favouriteListProgressBar.gone()
                 FavouriteScreenStates.Loading -> binding.favouriteListProgressBar.visible()
@@ -71,6 +72,19 @@ class FavouriteFragment : Fragment(R.layout.fragment_favourite), SearchView.OnQu
             }.exhaustive
         })
         viewModel.send(FavouriteScreenEvent.OnReady)
+    }
+
+    private fun showUndoDeleteSnackbar(deletedFavourite: FavouriteUI?) {
+        if (deletedFavourite != null) {
+            val snackbar: Snackbar =
+                Snackbar.make(binding.root,
+                    resources.getString(R.string.favourite_deleted),
+                    Snackbar.LENGTH_LONG)
+            snackbar.setAction(resources.getString(R.string.undo)) { v ->
+                viewModel.send(FavouriteScreenEvent.OnUndoDeleteFavourite(deletedFavourite))
+            }
+            snackbar.show()
+        }
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {

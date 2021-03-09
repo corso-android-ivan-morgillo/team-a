@@ -56,7 +56,7 @@ class DetailViewModel(
         val currentState = states.value
         if (currentState != null && details != null && currentState is Content) {
             if (currentState.isFavourite) {
-                favouritesRepository.delete(details!!)
+                favouritesRepository.delete(details!!.idMeal)
                 val details = currentState.details
                 val content = Content(details, false)
                 states.postValue(content)

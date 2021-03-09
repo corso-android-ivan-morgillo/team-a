@@ -9,8 +9,10 @@ import com.ivanmorgillo.corsoandroid.teama.crashlytics.SingleLiveEvent
 import com.ivanmorgillo.corsoandroid.teama.detail.RecipeDetails
 import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class FavouriteViewModel(private val repository: FavouriteRepository, private val tracking: Tracking) : ViewModel() {
+    private var favourites: List<FavouriteUI>? = null
     val states = MutableLiveData<FavouriteScreenStates>() // potremmo passarci direttamente loading
     val actions = SingleLiveEvent<FavouriteScreenAction>()
 
@@ -22,13 +24,14 @@ class FavouriteViewModel(private val repository: FavouriteRepository, private va
     fun send(event: FavouriteScreenEvent) {
         when (event) {
             // deve ricevere la lista delle ricette. La view deve ricevere eventi e reagire a stati.
-            is FavouriteScreenEvent.OnReady -> viewModelScope.launch { loadContent() } //  carica i preferiti
+            is FavouriteScreenEvent.OnReady -> loadContent() // carica i preferiti
             is FavouriteScreenEvent.OnFavouriteClick -> onFavouriteClick(event) // apri dettaglio ricetta
             is FavouriteScreenEvent.OnFavouriteSwiped -> onFavouriteSwiped(event.position) // elimina preferito
+            is FavouriteScreenEvent.OnUndoDeleteFavourite -> onUndoDeleteFavourite(event.deletedFavourite)
         }.exhaustive
     }
 
-    private suspend fun loadContent() {
+    private fun loadContent() {
         states.postValue(FavouriteScreenStates.Loading)
         viewModelScope.launch {
             val result = repository.loadAll()
@@ -39,9 +42,7 @@ class FavouriteViewModel(private val repository: FavouriteRepository, private va
         }
     }
 
-    private var favourites: List<RecipeDetails>? = null
     private fun onSuccess(details: List<RecipeDetails>) {
-        this.favourites = details
         val favourites = details.map {
             FavouriteUI(
                 title = it.name,
@@ -50,31 +51,58 @@ class FavouriteViewModel(private val repository: FavouriteRepository, private va
                 notes = it.notes,
                 video = it.video,
                 ingredients = it.ingredients,
-                instructions = it.instructions
+                instructions = it.instructions,
+                area = it.area
             )
         }
-        states.postValue(FavouriteScreenStates.Content(favourites))
+        this.favourites = favourites
+        states.postValue(FavouriteScreenStates.Content(favourites, null))
+    }
+
+    private fun onFavouriteSwiped(position: Int) {
+        val favouriteToDelete = favourites?.get(position)?: return
+        tracking.logEvent("favourite_deleted")
+        viewModelScope.launch {
+            repository.delete(favouriteToDelete.id)
+            val updatedFavourites = favourites?.minus(favouriteToDelete)
+            if (updatedFavourites != null) {
+                favourites = updatedFavourites
+                states.postValue(FavouriteScreenStates.Content(updatedFavourites, favouriteToDelete))
+            } else {
+                Timber.e("updatedFavourites was null")
+            }
+        }
+    }
+
+    private fun onUndoDeleteFavourite(removedFavourite: FavouriteUI) {
+        viewModelScope.launch {
+            val newFavourite = RecipeDetails(
+                name = removedFavourite.title,
+                image = removedFavourite.image,
+                video = removedFavourite.video,
+                idMeal = removedFavourite.id,
+                ingredients = removedFavourite.ingredients,
+                instructions = removedFavourite.instructions,
+                area = "",
+                notes = removedFavourite.notes
+            )
+            repository.add(newFavourite)
+            val currentState = states.value
+            if (currentState != null && currentState is FavouriteScreenStates.Content) {
+                val updatedFavourites = favourites?.plus(removedFavourite)
+                if (updatedFavourites != null) {
+                    favourites = updatedFavourites
+                    states.postValue(FavouriteScreenStates.Content(updatedFavourites, null))
+                } else {
+                    Timber.e("updatedFavourites was null")
+                }
+            }
+        }
     }
 
     private fun onFavouriteClick(event: FavouriteScreenEvent.OnFavouriteClick) {
         tracking.logEvent("favourite_clicked")
         actions.postValue(FavouriteScreenAction.NavigateToDetail(event.favourite))
-    }
-
-    private fun onFavouriteSwiped(position: Int) {
-        val recipeToDelete = favourites?.get(position) ?: return
-        tracking.logEvent("favourite_deleted")
-        viewModelScope.launch {
-            repository.delete(recipeToDelete)
-            val currentState = states.value
-            if (currentState != null && currentState is FavouriteScreenStates.Content) {
-                val recipes = currentState.favourites
-                val updatedRecipes = recipes.filterNot {
-                    it.id == recipeToDelete.idMeal
-                }
-                states.postValue(FavouriteScreenStates.Content(updatedRecipes))
-            }
-        }
     }
 
     private fun onFailure(result: LoadFavouriteResult.Failure) {
@@ -96,13 +124,15 @@ sealed class FavouriteScreenStates {
     object Error : FavouriteScreenStates()
 
     // se la lista cambia dobbiamo usare una 'data class' quindi non usiamo 'object'
-    data class Content(val favourites: List<FavouriteUI>) : FavouriteScreenStates()
+    data class Content(val favourites: List<FavouriteUI>, val deletedFavourite: FavouriteUI? = null) :
+        FavouriteScreenStates()
 }
 
 sealed class FavouriteScreenEvent {
     /** Usiamo la dataclass perchè abbiamo bisogno di passare un parametro */
     data class OnFavouriteClick(val favourite: FavouriteUI) : FavouriteScreenEvent()
     data class OnFavouriteSwiped(val position: Int) : FavouriteScreenEvent()
+    data class OnUndoDeleteFavourite(val deletedFavourite: FavouriteUI) : FavouriteScreenEvent()
 
     object OnReady : FavouriteScreenEvent()
 }
