@@ -85,6 +85,11 @@ class DetailViewModel(
     }
 
     private fun onSuccess(details: RecipeDetails, isFavourite: Boolean) {
+        val content = createContent(details, true, isFavourite)
+        states.postValue(content)
+    }
+
+    private fun createContent(details: RecipeDetails, isIngredientsVisible: Boolean, isFavourite: Boolean): Content {
         val detailScreenItems = listOf(
             DetailScreenItems.Video(details.video, details.image),
             DetailScreenItems.Title(details.name),
@@ -94,10 +99,10 @@ class DetailViewModel(
                     IngredientUI(it.ingredientName, it.ingredientQuantity, it.ingredientImage)
                 },
                 details.instructions,
-                isIngredientsVisible = true
+                isIngredientsVisible = isIngredientsVisible
             )
         )
-        states.postValue(Content(detailScreenItems, isFavourite))
+        return Content(detailScreenItems, isFavourite)
     }
 
     private fun onFailure(result: Failure) {
@@ -113,20 +118,26 @@ class DetailViewModel(
 
     private fun onIngredientsClick() {
         tracking.logEvent("detail_ingredients_clicked")
-        val currentState = states.value
-        if (currentState != null && currentState is Content) {
-            val updatedDetails = currentState.details
-            val content = Content(updatedDetails, currentState.isFavourite)
-            states.postValue(content)
-        }
+        updateIngredientsVisibility(true)
     }
 
     private fun onInstructionsClick() {
         tracking.logEvent("detail_instructions_clicked")
+        updateIngredientsVisibility(false)
+    }
+
+    private fun updateIngredientsVisibility(isIngredientsVisible: Boolean) {
         val currentState = states.value
         if (currentState != null && currentState is Content) {
-            val updatedDetails = currentState.details
-            val content = Content(updatedDetails, currentState.isFavourite)
+            val updatedItems = currentState.details
+                .map {
+                    if (it is DetailScreenItems.IngredientsInstructionsList) {
+                        it.copy(isIngredientsVisible = isIngredientsVisible)
+                    } else {
+                        it
+                    }
+                }
+            val content = Content(updatedItems, currentState.isFavourite)
             states.postValue(content)
         }
     }
