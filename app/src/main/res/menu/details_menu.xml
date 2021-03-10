@@ -9,7 +9,7 @@
         android:title="@string/share" />
 
     <item
-        android:id="@+id/add_favourite_button"
+        android:id="@+id/favourite_button"
         android:icon="@drawable/ic_favourite"
         app:showAsAction="ifRoom"
         android:title="@string/add_to_favourites" />
