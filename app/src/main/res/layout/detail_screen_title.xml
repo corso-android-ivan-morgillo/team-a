@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     tools:text="Musty beef pie delicious"
-    android:textSize="32sp"
+    android:textSize="28sp"
     android:gravity="center"
-    android:textColor="#F29D2B"
-    android:fontFamily="@font/akaya" />
+    android:textColor="@color/black"
+    android:fontFamily="sans-serif-medium" />
