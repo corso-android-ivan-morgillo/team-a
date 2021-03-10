@@ -70,9 +70,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="4dp"
-                    android:fontFamily="@font/akaya"
+                    android:fontFamily="sans-serif-condensed-medium"
                     android:gravity="center"
-                    android:textColor="#000000"
+                    android:textColor="@color/black"
                     android:textSize="28sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -83,10 +83,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:textColor="#25282C"
-                    android:fontFamily="@font/akaya"
+                    android:fontFamily="sans-serif-medium"
                     android:textStyle="normal"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:layout_margin="8dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/category_title"
@@ -111,11 +110,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/design_default_color_on_primary"
-                android:fontFamily="@font/akaya"
+                android:fontFamily="sans-serif-medium"
                 android:gravity="center"
                 android:text="Countries in this Category"
                 android:textColor="@color/black"
-                android:textSize="16sp"
+                android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -170,7 +169,6 @@
             app:layout_constraintTop_toBottomOf="@id/actions_category_collapsed"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:background="#14F7A356"
             android:visibility="gone">
 
             <TextView
@@ -184,7 +182,7 @@
                 android:padding="8dp"
                 android:textColor="@color/black"
                 android:textSize="18sp"
-                android:fontFamily="@font/akaya"
+                android:fontFamily="sans-serif-medium"
                 tools:text="Dessert is a course that concludes a meal. The course usually consists of sweet foods, such as confections dishes or fruit, and possibly a beverage such as dessert wine or liqueur, however in the United States it may include coffee, cheeses, nuts, or other savory items regarded as a separate course elsewhere. In some parts of the world, such as much of central and western Africa, and most parts of China, there is no tradition of a dessert course to conclude a meal.\r\n\r\nThe term dessert can apply to many confections, such as biscuits, cakes, cookies, custards, gelatins, ice creams, pastries, pies, puddings, and sweet soups, and tarts. Fruit is also commonly found in dessert courses because of its naturally occurring sweetness. Some cultures sweeten foods that are more commonly savory to create desserts.">
 
             </TextView>

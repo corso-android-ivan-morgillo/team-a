@@ -28,13 +28,13 @@
 
         <TextView
             android:id="@+id/favourite_title"
-            android:textSize="32sp"
+            android:textSize="28sp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@id/favourite_image"
             app:layout_constraintStart_toStartOf="parent"
-            android:fontFamily="@font/akaya"
-            android:textColor="#F29D2B"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="@color/black"
             android:gravity="center"
             tools:text="Lorem Ipsum....babababababbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbabababab" />
 
