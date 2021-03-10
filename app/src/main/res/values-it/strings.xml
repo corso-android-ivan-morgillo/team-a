@@ -39,4 +39,6 @@
     <string name="recipes">Ricette</string>
     <string name="feedback">Feedback</string>
     <string name="no_items">Nessun elemento!</string>
+    <string name="random_fragment">Ricetta random</string>
+    <string name="feedback_url">https://docs.google.com/forms/d/18XbesMIbS39Ncha0jea0bA-W-xI2cArISNijit9wieo/viewform</string>
 </resources>
