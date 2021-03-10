@@ -106,7 +106,7 @@ class NetworkApiImpl(cacheDir: File) : NetworkAPI {
                     idMeal = recipeDetail.idMeal.toLong(),
                     ingredients = ingredients,
                     instructions = recipeDetail.strInstructions,
-                    area = recipeDetail.strArea,
+//                    area = recipeDetail.strArea,
                     notes = ""
                 )
                 LoadRecipeDetailsResult.Success(recipeDetails)
@@ -221,62 +221,62 @@ class NetworkApiImpl(cacheDir: File) : NetworkAPI {
 
     private suspend fun loadCategoryInfo(categoryName: String): CategoryInfo {
         val recipesList: LoadRecipeResult = loadRecipes(categoryName)
-        var categoryInfo = CategoryInfo("", emptyList())
+        var categoryInfo = CategoryInfo("")
         if (recipesList is Success) {
             val recipesAmount = recipesList.recipes.size.toString()
-            val areaNames = loadCategoriesFlags(recipesList.recipes)
-            categoryInfo = CategoryInfo(recipesAmount, areaNames)
+//            val areaNames = loadCategoriesFlags(recipesList.recipes)
+            categoryInfo = CategoryInfo(recipesAmount)
         }
         return categoryInfo
     }
 
     data class CategoryInfo(
         var recipesAmount: String,
-        var areaNames: List<String>,
+//        var areaNames: List<String>,
     )
 
-    private suspend fun loadCategoriesFlags(recipes: List<Recipe>): List<String> = coroutineScope {
-        recipes
-            .map {
-                async { loadRecipeDetails(it.idMeal) }
-            }.awaitAll()
-            .filterIsInstance(LoadRecipeDetailsResult.Success::class.java)
-            .map {
-                reformatFlagName(it.details.area)
-            }
-            .distinct()
-            .sortedDescending()
-    }
+    /* private suspend fun loadCategoriesFlags(recipes: List<Recipe>): List<String> = coroutineScope {
+         recipes
+             .map {
+                 async { loadRecipeDetails(it.idMeal) }
+             }.awaitAll()
+             .filterIsInstance(LoadRecipeDetailsResult.Success::class.java)
+             .map {
+                 reformatFlagName(it.details.area)
+             }
+             .distinct()
+             .sortedDescending()
+     }
 
-    private fun reformatFlagName(areaName: String): String {
-        return when (areaName) {
-            "American" -> "us"
-            "British" -> "gb"
-            "Canadian" -> "ca"
-            "Chinese" -> "cn"
-            "Dutch" -> "nl"
-            "Egyptian" -> "eg"
-            "French" -> "fr"
-            "Greek" -> "gr"
-            "Indian" -> "in"
-            "Irish" -> "ie"
-            "Italian" -> "it"
-            "Jamaican" -> "jm"
-            "Japanese" -> "jp"
-            "Kenyan" -> "ke"
-            "Malaysian" -> "my"
-            "Mexican" -> "mx"
-            "Moroccan" -> "ma"
-            "Polish" -> "pl"
-            "Russian" -> "ru"
-            "Spanish" -> "es"
-            "Thai" -> "th"
-            "Tunisian" -> "tm"
-            "Turkish" -> "tr"
-            "Vietnamese" -> "vn"
-            else -> ""
-        }
-    }
+     private fun reformatFlagName(areaName: String): String {
+         return when (areaName) {
+             "American" -> "us"
+             "British" -> "gb"
+             "Canadian" -> "ca"
+             "Chinese" -> "cn"
+             "Dutch" -> "nl"
+             "Egyptian" -> "eg"
+             "French" -> "fr"
+             "Greek" -> "gr"
+             "Indian" -> "in"
+             "Irish" -> "ie"
+             "Italian" -> "it"
+             "Jamaican" -> "jm"
+             "Japanese" -> "jp"
+             "Kenyan" -> "ke"
+             "Malaysian" -> "my"
+             "Mexican" -> "mx"
+             "Moroccan" -> "ma"
+             "Polish" -> "pl"
+             "Russian" -> "ru"
+             "Spanish" -> "es"
+             "Thai" -> "th"
+             "Tunisian" -> "tm"
+             "Turkish" -> "tr"
+             "Vietnamese" -> "vn"
+             else -> ""
+         }
+     }*/
 
     @Suppress("TooGenericExceptionCaught")
     override suspend fun loadRandomRecipe(): LoadRecipeDetailsResult {
@@ -298,7 +298,6 @@ class NetworkApiImpl(cacheDir: File) : NetworkAPI {
                     idMeal = recipeDetail.idMeal.toLong(),
                     ingredients = ingredients,
                     instructions = recipeDetail.strInstructions,
-                    area = recipeDetail.strArea,
                     notes = ""
                 )
                 LoadRecipeDetailsResult.Success(recipeDetails)
@@ -338,9 +337,9 @@ class NetworkApiImpl(cacheDir: File) : NetworkAPI {
                 id = idCategory,
                 categoryDescription = strCategoryDescription,
                 recipeAmount = categoryInfo.recipesAmount,
-                categoryArea = categoryInfo.areaNames.map {
-                    "https://www.themealdb.com/images/icons/flags/big/64/$it.png"
-                }
+                /*       categoryArea = categoryInfo.areaNames.map {
+                           "https://www.themealdb.com/images/icons/flags/big/64/$it.png"
+                       }*/
             )
             // possibilità di implementare la descrizione
         } else {

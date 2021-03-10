@@ -32,14 +32,15 @@ class FavouriteRepositoryImpl(private val context: Context, private val gson: Gs
                 gson.fromJson(it, RecipeDetailEntity::class.java)
             }
             .map {
-                RecipeDetails(name = it.name,
+                RecipeDetails(
+                    name = it.name,
                     image = it.image,
                     video = it.video,
                     idMeal = it.id,
                     ingredients = it.ingredients,
                     instructions = it.instructions,
-                    area = it.area,
-                    notes = it.notes)
+                    notes = it.notes
+                )
             }
         LoadFavouriteResult.Success(all)
     }
@@ -60,7 +61,7 @@ class FavouriteRepositoryImpl(private val context: Context, private val gson: Gs
             id = favourite.idMeal,
             ingredients = favourite.ingredients,
             instructions = favourite.instructions,
-            area = favourite.area,
+//            area = favourite.area,
             notes = favourite.notes
         )
         val serializedRecipeDetail = gson.toJson(recipeDetailEntity)
@@ -92,8 +93,6 @@ data class RecipeDetailEntity(
     val ingredients: List<Ingredient>,
     @SerializedName("instructions")
     val instructions: String,
-    @SerializedName("area")
-    val area: String,
     @SerializedName("notes")
     val notes: String,
 )

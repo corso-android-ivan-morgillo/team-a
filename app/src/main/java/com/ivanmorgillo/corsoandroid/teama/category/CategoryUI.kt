@@ -5,10 +5,10 @@ data class CategoryUI(
     val title: String,
     val image: String,
     val recipesCount: String,
-    val flags: List<FlagUI>,
+//    val flags: List<FlagUI>,
     val description: String
 )
 
-data class FlagUI(
+/*data class FlagUI(
     val flag: String,
-)
+)*/

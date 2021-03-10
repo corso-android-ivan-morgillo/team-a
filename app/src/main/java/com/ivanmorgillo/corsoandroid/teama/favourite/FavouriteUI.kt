@@ -9,6 +9,5 @@ data class FavouriteUI(
     val notes: String,
     val video: String,
     val ingredients: List<Ingredient>,
-    val instructions: String,
-    val area: String
+    val instructions: String
 )

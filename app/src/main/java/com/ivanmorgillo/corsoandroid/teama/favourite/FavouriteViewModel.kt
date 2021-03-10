@@ -58,7 +58,7 @@ class FavouriteViewModel(private val repository: FavouriteRepository, private va
                 video = it.video,
                 ingredients = it.ingredients,
                 instructions = it.instructions,
-                area = it.area
+//                area = it.area
             )
         }
         this.favourites = favourites
@@ -71,7 +71,7 @@ class FavouriteViewModel(private val repository: FavouriteRepository, private va
     }
 
     private fun onFavouriteSwiped(position: Int) {
-        val favouriteToDelete = favourites?.get(position)?: return
+        val favouriteToDelete = favourites?.get(position) ?: return
         tracking.logEvent("favourite_deleted")
         viewModelScope.launch {
             repository.delete(favouriteToDelete.id)
@@ -95,7 +95,6 @@ class FavouriteViewModel(private val repository: FavouriteRepository, private va
                 idMeal = removedFavourite.id,
                 ingredients = removedFavourite.ingredients,
                 instructions = removedFavourite.instructions,
-                area = "",
                 notes = removedFavourite.notes
             )
             repository.add(newFavourite)

@@ -1,3 +1,4 @@
+/*
 package com.ivanmorgillo.corsoandroid.teama.category
 
 import android.view.LayoutInflater
@@ -28,10 +29,6 @@ class CategoryFlagAdapter : RecyclerView.Adapter<CategoryFlagViewHolder>() {
     }
 }
 
-/** Qui è dove tocchiamo veramente l'xml della card, item view identifica la vera e propria view della card.
- *
- *
- * */
 class CategoryFlagViewHolder(private val binding: CategoryFlagCountryBinding) : RecyclerView.ViewHolder(binding.root) {
     fun bind(item: FlagUI) {
         binding.flagCountry.load(item.flag)
@@ -39,3 +36,4 @@ class CategoryFlagViewHolder(private val binding: CategoryFlagCountryBinding) : 
         // categoryCardView.transitionName = "category_transition_item${item.id}"
     }
 }
+*/
