@@ -4,14 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <item
-        android:id="@+id/share_recipe_button"
-        android:icon="@drawable/ic_share"
-        app:showAsAction="ifRoom"
-        android:title="@string/share"
-        android:visible="false"
-        tools:visible="true" />
-
-    <item
         android:id="@+id/favourite_button"
         android:icon="@drawable/ic_favourite"
         app:showAsAction="ifRoom"
