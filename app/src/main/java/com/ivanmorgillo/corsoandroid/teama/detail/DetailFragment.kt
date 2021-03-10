@@ -21,12 +21,12 @@ import com.ivanmorgillo.corsoandroid.teama.extension.themeColor
 import com.ivanmorgillo.corsoandroid.teama.extension.visible
 import com.ivanmorgillo.corsoandroid.teama.utils.viewBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import timber.log.Timber
 
 class DetailFragment : Fragment(R.layout.fragment_detail) {
     private val viewModel: DetailViewModel by viewModel()
     private val binding by viewBinding(FragmentDetailBinding::bind)
     private val args: DetailFragmentArgs by navArgs()
+    private var favouriteButton: MenuItem? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,12 +57,11 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                 when (state) {
                     is DetailScreenStates.Content -> {
                         val isFavourite = state.isFavourite
-                        /*if (isFavourite) {
-
+                        if (isFavourite) {
+                            favouriteButton?.setIcon(R.drawable.ic_favourite_filled)
                         } else {
-
-                        }*/
-                        // Timber.d("RecipeId= $recipeId")
+                            favouriteButton?.setIcon(R.drawable.ic_favourite)
+                        }
                         adapter.items = state.details
                         binding.detailsListProgressBar.gone()
                     } // non trova le ricette in fase di Loading ad esempio
@@ -81,6 +80,19 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
             })
             viewModel.send(DetailScreenEvent.OnReady(recipeId))
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.details_menu, menu)
+        favouriteButton = menu.findItem(R.id.favourite_button)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val id = item.itemId
+        return if (id == R.id.favourite_button) { // quando si clicca il pulsante per aggiungere ai preferiti
+            viewModel.send(DetailScreenEvent.OnAddFavouriteClick)
+            false
+        } else super.onOptionsItemSelected(item)
     }
 
     private fun showServerErrorMessage(recipeId: Long) {
@@ -129,18 +141,5 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
             "",
             {}
         )
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.details_menu, menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        val id = item.itemId
-        return if (id == R.id.add_favourite_button) { // quando si clicca il pulsante per aggiungere ai preferiti
-            viewModel.send(DetailScreenEvent.OnAddFavouriteClick)
-            Timber.d("cliccato")
-            false
-        } else super.onOptionsItemSelected(item)
     }
 }
