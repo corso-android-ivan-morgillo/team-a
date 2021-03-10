@@ -1,6 +1,7 @@
 package com.ivanmorgillo.corsoandroid.teama.koin
 
 import com.google.gson.Gson
+import com.ivanmorgillo.corsoandroid.teama.MainViewModel
 import com.ivanmorgillo.corsoandroid.teama.Tracking
 import com.ivanmorgillo.corsoandroid.teama.TrackingImpl
 import com.ivanmorgillo.corsoandroid.teama.category.CategoryRepository
@@ -41,6 +42,7 @@ val appModule = module {
     single<Tracking> {
         TrackingImpl()
     }
+    viewModel { MainViewModel(tracking = get()) }
     viewModel { CategoryViewModel(repository = get(), tracking = get()) }
     viewModel { RecipeViewModel(repository = get(), tracking = get()) }
     viewModel { DetailViewModel(repository = get(), tracking = get(), favouritesRepository = get()) }

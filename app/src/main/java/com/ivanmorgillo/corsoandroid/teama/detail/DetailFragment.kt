@@ -26,7 +26,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
     private val viewModel: DetailViewModel by viewModel()
     private val binding by viewBinding(FragmentDetailBinding::bind)
     private val args: DetailFragmentArgs by navArgs()
-    private var favouriteButton: MenuItem? = null
+    private var toolbarMenu: Menu? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +48,10 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
             { viewModel.send(DetailScreenEvent.OnInstructionsClick) }
         )
         binding.detailScreenRecyclerview.adapter = adapter
-        val recipeId = args.recipeId
+        var recipeId = args.recipeId // ID ottenuto dalla direction da un'altro fragment (es: recipeFragment)
+        if (arguments != null) { // ID ottenuto dal bundle, cioè dalla MainActivity (menu laterale)
+            recipeId = arguments!!.getLong("recipe_id")
+        }
         if (recipeId == 0L) {
             // Torna indietro nella schermata da cui provieni.
             findNavController().popBackStack()
@@ -57,11 +60,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                 when (state) {
                     is DetailScreenStates.Content -> {
                         val isFavourite = state.isFavourite
-                        if (isFavourite) {
-                            favouriteButton?.setIcon(R.drawable.ic_favourite_filled)
-                        } else {
-                            favouriteButton?.setIcon(R.drawable.ic_favourite)
-                        }
+                        renderToolbarMenu(isFavourite)
                         adapter.items = state.details
                         binding.detailsListProgressBar.gone()
                     } // non trova le ricette in fase di Loading ad esempio
@@ -82,9 +81,23 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
         }
     }
 
+    private fun renderToolbarMenu(isFavourite: Boolean) {
+        if (toolbarMenu != null) { // mostra il menu ora che il Content è arrivato
+            val favouriteMenuButton = toolbarMenu!!.findItem(R.id.favourite_button)
+            val shareMenuButton = toolbarMenu!!.findItem(R.id.share_recipe_button)
+            if (isFavourite) {
+                favouriteMenuButton?.setIcon(R.drawable.ic_favourite_filled)
+            } else {
+                favouriteMenuButton?.setIcon(R.drawable.ic_favourite)
+            }
+            favouriteMenuButton.visible()
+            shareMenuButton.visible()
+        }
+    }
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.details_menu, menu)
-        favouriteButton = menu.findItem(R.id.favourite_button)
+        toolbarMenu = menu // settato in XML la visibilità a false, per non mostrare il menu subito
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
