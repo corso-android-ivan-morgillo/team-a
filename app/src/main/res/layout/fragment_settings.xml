@@ -1,0 +1,58 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.ivanmorgillo.corsoandroid.teama.settings.SettingsFragment"
+    android:padding="8dp">
+
+    <TextView
+        android:id="@+id/languages_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/radio_languages"
+        android:text="@string/language"
+        android:textStyle="bold" />
+
+    <RadioGroup
+        android:id="@+id/radio_languages"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/languages_text_view"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" >
+
+        <com.google.android.material.radiobutton.MaterialRadioButton
+            android:id="@+id/radio_ita_language"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/ita_lang" />
+
+        <com.google.android.material.radiobutton.MaterialRadioButton
+            android:id="@+id/radio_eng_language"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/eng_lang" />
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/theme_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/radio_languages"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/theme"
+        android:textStyle="bold" />
+
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/theme_switch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/dark_theme_enabled"
+        app:layout_constraintTop_toBottomOf="@+id/theme_text_view"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

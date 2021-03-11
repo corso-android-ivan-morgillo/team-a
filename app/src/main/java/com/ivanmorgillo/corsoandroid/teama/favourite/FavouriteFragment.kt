@@ -88,7 +88,7 @@ class FavouriteFragment : Fragment(R.layout.fragment_favourite), SearchView.OnQu
                 Snackbar.make(binding.root,
                     resources.getString(R.string.favourite_deleted),
                     Snackbar.LENGTH_LONG)
-            snackbar.setAction(resources.getString(R.string.undo)) { v ->
+            snackbar.setAction(resources.getString(R.string.restore)) { v ->
                 viewModel.send(FavouriteScreenEvent.OnUndoDeleteFavourite(deletedFavourite))
             }
             snackbar.show()

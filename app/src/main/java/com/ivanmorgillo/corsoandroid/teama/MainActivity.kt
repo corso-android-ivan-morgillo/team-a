@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import androidx.core.os.bundleOf
 import androidx.core.view.GravityCompat
@@ -23,6 +24,17 @@ import com.ivanmorgillo.corsoandroid.teama.databinding.ActivityMainBinding
 import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
+import android.app.Activity
+import android.content.Context
+import android.content.res.Configuration
+import android.content.res.Resources
+import android.os.LocaleList
+import com.google.android.material.internal.ContextUtils
+import java.util.*
+import android.os.Build
+
+import android.util.DisplayMetrics
+import androidx.appcompat.view.ContextThemeWrapper
 
 class MainActivity : AppCompatActivity() {
     private val viewModel: MainViewModel by viewModel()
@@ -41,8 +53,11 @@ class MainActivity : AppCompatActivity() {
         val navController = findNavController(R.id.nav_host_fragment)
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
-        appBarConfiguration = AppBarConfiguration(setOf(
-            R.id.categoryFragment, R.id.favouriteFragment, R.id.nav_settings, R.id.nav_feedback), drawerLayout)
+        appBarConfiguration = AppBarConfiguration(
+            setOf(
+                R.id.categoryFragment, R.id.favouriteFragment, R.id.settingsFragment, R.id.nav_feedback
+            ), drawerLayout
+        )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
         navView.setNavigationItemSelectedListener {
@@ -51,7 +66,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.detailFragment -> viewModel.send(MainScreenEvent.OnRandomRecipeClick)
                 R.id.favouriteFragment -> viewModel.send(MainScreenEvent.OnFavouritesClick)
                 R.id.nav_feedback -> viewModel.send(MainScreenEvent.OnFeedbackClick)
-                R.id.nav_settings -> viewModel.send(MainScreenEvent.OnSettingsClick)
+                R.id.settingsFragment -> viewModel.send(MainScreenEvent.OnSettingsClick)
             }
             binding.drawerLayout.closeDrawer(GravityCompat.START)
             true
@@ -66,9 +81,18 @@ class MainActivity : AppCompatActivity() {
                     val bundle = bundleOf("recipe_id" to -1L)
                     navController.navigate(R.id.detailFragment, bundle)
                 }
-                MainScreenAction.NavigateToSettings -> navController.navigate(R.id.nav_settings)
+                MainScreenAction.NavigateToSettings -> navController.navigate(R.id.settingsFragment)
+                is MainScreenAction.ChangeTheme -> {
+                    val darkEnabled = action.darkEnabled
+                    if (darkEnabled) {
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                    } else {
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                    }
+                }
             }.exhaustive
         })
+        viewModel.send(MainScreenEvent.OnInitTheme)
     }
 
     override fun onSupportNavigateUp(): Boolean {
@@ -81,5 +105,22 @@ class MainActivity : AppCompatActivity() {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         intent.data = Uri.parse(url)
         startActivity(intent)
+    }
+
+
+    override fun attachBaseContext(newBase: Context) {
+        // abbiamo dovuto usare le shared preferences direttamente qui perchè non c'è altro modo di farlo in un
+        // punto diverso da questa override fun, per cambiare lingua all'apertura dell'app.
+        val currentDeviceLang = newBase.resources.configuration.locales.get(0).language
+        val lang = newBase.getSharedPreferences(
+            "settings",
+            Context.MODE_PRIVATE
+        ).getString("language", currentDeviceLang) ?: "it"
+        val locale = Locale(lang)
+        Locale.setDefault(locale)
+        val configuration: Configuration = newBase.resources.configuration
+        configuration.setLocale(locale)
+        super.attachBaseContext(newBase.createConfigurationContext(configuration))
+
     }
 }

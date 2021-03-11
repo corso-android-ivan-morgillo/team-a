@@ -26,7 +26,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
     private val viewModel: DetailViewModel by viewModel()
     private val binding by viewBinding(FragmentDetailBinding::bind)
     private val args: DetailFragmentArgs by navArgs()
-    private var toolbarMenu: Menu? = null
+    private var favouriteToolbarButton: MenuItem? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,22 +82,20 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
     }
 
     private fun renderToolbarMenu(isFavourite: Boolean) {
-        if (toolbarMenu != null) { // mostra il menu ora che il Content è arrivato
-            val favouriteMenuButton = toolbarMenu!!.findItem(R.id.favourite_button)
-            val shareMenuButton = toolbarMenu!!.findItem(R.id.share_recipe_button)
+        if (favouriteToolbarButton != null) { // mostra il menu ora che il Content è arrivato
             if (isFavourite) {
-                favouriteMenuButton?.setIcon(R.drawable.ic_favourite_filled)
+                favouriteToolbarButton?.setIcon(R.drawable.ic_favourite_filled)
             } else {
-                favouriteMenuButton?.setIcon(R.drawable.ic_favourite)
+                favouriteToolbarButton?.setIcon(R.drawable.ic_favourite)
             }
-            favouriteMenuButton.visible()
-            shareMenuButton.visible()
+            favouriteToolbarButton!!.visible()
         }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.details_menu, menu)
-        toolbarMenu = menu // settato in XML la visibilità a false, per non mostrare il menu subito
+        // settato in XML la visibilità a false, per non mostrare il menu subito
+        favouriteToolbarButton = menu.findItem(R.id.favourite_button)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

@@ -25,7 +25,7 @@
     <string name="nav_header_title">@string/app_name</string>
     <string name="nav_header_subtitle">Team A</string>
     <string name="nav_header_desc">Navigation header</string>
-    <string name="undo">Annulla</string>
+    <string name="restore">Ripristina</string>
     <string name="favourite_deleted">Preferito eliminato!</string>
     <string name="add_to_favourites">Aggiungi ai preferiti</string>
     <string name="share">Condividi</string>
@@ -41,4 +41,13 @@
     <string name="no_items">Nessun elemento!</string>
     <string name="random_fragment">Ricetta random</string>
     <string name="feedback_url">https://docs.google.com/forms/d/18XbesMIbS39Ncha0jea0bA-W-xI2cArISNijit9wieo/viewform</string>
+    <string name="dark_theme_enabled">Tema scuro abilitato</string>
+    <string name="ita_lang">Italiano</string>
+    <string name="eng_lang">English</string>
+    <string name="language">Lingua</string>
+    <string name="theme">Tema</string>
+    <string name="language_changed">Lingua cambiata</string>
+    <string name="restart_required">E\' necessario un riavvio dell\'app per applicare le modifiche</string>
+    <string name="restart">Riavvia</string>
+    <string name="not_now">Non ora</string>
 </resources>
