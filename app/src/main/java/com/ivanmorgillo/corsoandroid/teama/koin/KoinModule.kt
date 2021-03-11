@@ -18,6 +18,9 @@ import com.ivanmorgillo.corsoandroid.teama.network.NetworkApiImpl
 import com.ivanmorgillo.corsoandroid.teama.recipe.RecipeRepositoryImpl
 import com.ivanmorgillo.corsoandroid.teama.recipe.RecipeViewModel
 import com.ivanmorgillo.corsoandroid.teama.recipe.RecipesRepository
+import com.ivanmorgillo.corsoandroid.teama.settings.SettingsRepository
+import com.ivanmorgillo.corsoandroid.teama.settings.SettingsRepositoryImpl
+import com.ivanmorgillo.corsoandroid.teama.settings.SettingsViewModel
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -39,12 +42,16 @@ val appModule = module {
     single<FavouriteRepository> {
         FavouriteRepositoryImpl(context = androidContext(), Gson())
     }
+    single<SettingsRepository> {
+        SettingsRepositoryImpl(context = androidContext())
+    }
     single<Tracking> {
         TrackingImpl()
     }
-    viewModel { MainViewModel(tracking = get()) }
+    viewModel { MainViewModel(repository = get(), tracking = get()) }
     viewModel { CategoryViewModel(repository = get(), tracking = get()) }
     viewModel { RecipeViewModel(repository = get(), tracking = get()) }
     viewModel { DetailViewModel(repository = get(), tracking = get(), favouritesRepository = get()) }
     viewModel { FavouriteViewModel(repository = get(), tracking = get()) }
+    viewModel { SettingsViewModel(repository = get(), tracking = get()) }
 }
