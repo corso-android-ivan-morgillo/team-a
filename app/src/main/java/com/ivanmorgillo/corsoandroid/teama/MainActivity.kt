@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(setOf(
-            R.id.categoryFragment, R.id.favouriteFragment, R.id.nav_settings, R.id.nav_feedback), drawerLayout)
+            R.id.categoryFragment, R.id.favouriteFragment, R.id.settingsFragment, R.id.nav_feedback), drawerLayout)
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
         navView.setNavigationItemSelectedListener {
@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.detailFragment -> viewModel.send(MainScreenEvent.OnRandomRecipeClick)
                 R.id.favouriteFragment -> viewModel.send(MainScreenEvent.OnFavouritesClick)
                 R.id.nav_feedback -> viewModel.send(MainScreenEvent.OnFeedbackClick)
-                R.id.nav_settings -> viewModel.send(MainScreenEvent.OnSettingsClick)
+                R.id.settingsFragment -> viewModel.send(MainScreenEvent.OnSettingsClick)
             }
             binding.drawerLayout.closeDrawer(GravityCompat.START)
             true
@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity() {
                     val bundle = bundleOf("recipe_id" to -1L)
                     navController.navigate(R.id.detailFragment, bundle)
                 }
-                MainScreenAction.NavigateToSettings -> navController.navigate(R.id.nav_settings)
+                MainScreenAction.NavigateToSettings -> navController.navigate(R.id.settingsFragment)
             }.exhaustive
         })
     }

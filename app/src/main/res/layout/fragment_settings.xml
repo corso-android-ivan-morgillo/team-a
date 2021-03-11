@@ -1,0 +1,38 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.ivanmorgillo.corsoandroid.teama.settings.SettingsFragment">
+
+    <com.google.android.material.switchmaterial.SwitchMaterial
+        android:id="@+id/theme_switch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tema chiaro/Scuro"
+        android:padding="4dp"
+        app:layout_constraintTop_toBottomOf="@+id/radio_languages"/>
+    <RadioGroup
+        android:id="@+id/radio_languages"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/theme_switch"
+        app:layout_constraintStart_toStartOf="parent">
+
+    <com.google.android.material.radiobutton.MaterialRadioButton
+        android:id="@+id/radio_ita_language"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ITA" />
+
+        <com.google.android.material.radiobutton.MaterialRadioButton
+        android:id="@+id/radio_en_language"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="EN" />
+
+
+    </RadioGroup>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
