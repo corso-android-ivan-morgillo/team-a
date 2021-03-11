@@ -41,9 +41,9 @@ class CategoryAdapter(private val onclick: (CategoryUI, View) -> Unit) : Recycle
 class CategoryViewHolder(private val binding: CategoryItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(item: CategoryUI, onclick: (CategoryUI, View) -> Unit) {
-        val categoryFlagAdapter = CategoryFlagAdapter()
+        /*val categoryFlagAdapter = CategoryFlagAdapter()
         binding.flagList.adapter = categoryFlagAdapter
-        categoryFlagAdapter.setFlagCategories(item.flags)
+        categoryFlagAdapter.setFlagCategories(item.flags)*/
         val recipesCounterText = item.recipesCount + " " + binding.root.resources.getString(R.string.recipes)
         binding.recipeCounter.text = recipesCounterText
         binding.categoryTitle.text = item.title
