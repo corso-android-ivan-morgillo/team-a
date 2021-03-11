@@ -18,7 +18,6 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initTheme()
         initializeListeners()
         viewModel.states.observe(viewLifecycleOwner, {state ->
             when(state) {
@@ -72,15 +71,6 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
             neutralButtonText = getString(R.string.not_now),
             onNeutralButtonClick = {}
         )
-    }
-
-    private fun initTheme() {
-        when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
-            Configuration.UI_MODE_NIGHT_YES, Configuration.UI_MODE_NIGHT_UNDEFINED -> { // tema notte abilitato o null
-                binding.themeSwitch.isChecked = true
-            }
-            Configuration.UI_MODE_NIGHT_NO -> binding.themeSwitch.isChecked = false
-        }
     }
 
     private fun onDarkThemeSwitch(enabled: Boolean) {
