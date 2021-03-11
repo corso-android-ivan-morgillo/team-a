@@ -94,7 +94,8 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.details_menu, menu)
-        favouriteToolbarButton = menu.findItem(R.id.favourite_button) // settato in XML la visibilità a false, per non mostrare il menu subito
+        // settato in XML la visibilità a false, per non mostrare il menu subito
+        favouriteToolbarButton = menu.findItem(R.id.favourite_button)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
