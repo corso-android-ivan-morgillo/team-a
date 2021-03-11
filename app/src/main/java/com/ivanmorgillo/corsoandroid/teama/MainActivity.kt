@@ -81,7 +81,7 @@ class MainActivity : AppCompatActivity() {
                     val bundle = bundleOf("recipe_id" to -1L)
                     navController.navigate(R.id.detailFragment, bundle)
                 }
-                MainScreenAction.NavigateToSettings -> navController.navigate(R.id.settingsFragment)
+                 MainScreenAction.NavigateToSettings -> navController.navigate(R.id.settingsFragment)
                 is MainScreenAction.ChangeTheme -> {
                     val darkEnabled = action.darkEnabled
                     if (darkEnabled) {
@@ -107,18 +107,4 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    override fun attachBaseContext(newBase: Context) {
-        // abbiamo dovuto usare le shared preferences direttamente qui perchè non c'è altro modo di farlo in un
-        // punto diverso da questa override fun, per cambiare lingua all'apertura dell'app.
-        val currentDeviceLang = newBase.resources.configuration.locales.get(0).language
-        val lang = newBase.getSharedPreferences(
-            "settings",
-            Context.MODE_PRIVATE
-        ).getString("language", currentDeviceLang) ?: "it"
-        val locale = Locale(lang)
-        Locale.setDefault(locale)
-        val configuration: Configuration = newBase.resources.configuration
-        configuration.setLocale(locale)
-        super.attachBaseContext(newBase.createConfigurationContext(configuration))
-    }
 }

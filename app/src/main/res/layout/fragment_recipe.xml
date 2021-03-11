@@ -5,7 +5,7 @@
     android:id="@+id/recipes_list_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FB8C8C8C">
+   >
 
     <!-- 0dp su width ci aiuta perchè se abbiamo bisogno di margini, è possibile
             far autoadattare alla grandezza il widget.

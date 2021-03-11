@@ -8,5 +8,4 @@
     tools:text="Musty beef pie delicious"
     android:textSize="28sp"
     android:gravity="center"
-    android:textColor="@color/black"
     android:fontFamily="sans-serif-medium" />

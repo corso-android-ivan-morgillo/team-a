@@ -6,10 +6,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    app:cardBackgroundColor="#FBFBFB"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="12dp"
-    app:checkedIconTint="#FFFFFF">
+    app:cardCornerRadius="8dp"
+    app:cardElevation="16dp"
+    >
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -21,9 +20,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-medium"
+            android:textStyle="bold"
             android:gravity="center"
-            android:textColor="@color/black"
-            android:textSize="28sp"
+            android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
