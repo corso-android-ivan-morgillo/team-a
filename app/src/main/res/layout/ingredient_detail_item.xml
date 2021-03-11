@@ -24,6 +24,7 @@
         app:layout_constraintStart_toEndOf="@+id/icon_ingredients"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:text="kkjgjgjgfhjfjhdhgfsdhgfhnfhfyh" />
+        tools:text="kkjgjgjgfhjfjhdhgfsdhgfhnfhfyh"
+        android:textSize="16sp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

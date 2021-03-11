@@ -30,7 +30,7 @@
     <string name="add_to_favourites">Aggiungi ai preferiti</string>
     <string name="share">Condividi</string>
 
-    <string name="category_fragment">Ricette</string>
+    <string name="category_fragment">Categorie</string>
     <string name="recipe_fragment">Ricette</string>
     <string name="detail_fragment">Ricetta</string>
     <string name="menu_gallery">Preferiti</string>
@@ -50,4 +50,6 @@
     <string name="restart_required">E\' necessario un riavvio dell\'app per applicare le modifiche</string>
     <string name="restart">Riavvia</string>
     <string name="not_now">Non ora</string>
+    <string name="info_button_description">Info Button</string>
+    <string name="category_image_description">categoryImage</string>
 </resources>
