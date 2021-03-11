@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#C62828</color>
-    <color name="colorPrimaryDark">#B71C1C</color>
+    <color name="colorPrimary">#d32f2f</color>
+    <color name="colorPrimaryDark">#aa2e25</color>
     <color name="colorAccent">#03DAC5</color>
     <!--<color name="colorPrimary">#ff3d00</color>
     <color name="colorPrimaryDark">#B22A00</color>
@@ -18,4 +18,5 @@
     <color name="lightBrown">#795548</color>
     <color name="darkBrown">#5D4037</color>
     <color name="lightBlue">#03DAC5</color>
+    <color name="lightGrey">#BDC1C6</color>
 </resources>
