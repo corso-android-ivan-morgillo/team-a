@@ -107,7 +107,6 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-
     override fun attachBaseContext(newBase: Context) {
         // abbiamo dovuto usare le shared preferences direttamente qui perchè non c'è altro modo di farlo in un
         // punto diverso da questa override fun, per cambiare lingua all'apertura dell'app.
@@ -121,6 +120,5 @@ class MainActivity : AppCompatActivity() {
         val configuration: Configuration = newBase.resources.configuration
         configuration.setLocale(locale)
         super.attachBaseContext(newBase.createConfigurationContext(configuration))
-
     }
 }
