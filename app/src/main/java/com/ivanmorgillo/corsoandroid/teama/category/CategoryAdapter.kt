@@ -22,6 +22,7 @@ class CategoryAdapter(private val onclick: (CategoryUI, View) -> Unit) : Recycle
 
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
         holder.bind(categories[position], onclick)
+        holder.setIsRecyclable(false)
     }
 
     override fun getItemCount(): Int {
