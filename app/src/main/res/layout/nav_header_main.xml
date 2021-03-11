@@ -7,13 +7,13 @@
     android:background="@drawable/side_nav_bar"
     android:gravity="bottom"
     android:orientation="vertical"
-    android:layout_marginTop="16dp"
+    android:paddingLeft="8dp"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="88dp"
+        android:layout_height="88dp"
         android:contentDescription="@string/nav_header_desc"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -21,15 +21,15 @@
         app:srcCompat="@drawable/ic_logo_delicious" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Delicious"
-        app:layout_constraintEnd_toEndOf="@+id/imageView"
+        android:text="Delicious - Team A"
+        android:layout_marginLeft="8dp"
         app:layout_constraintStart_toStartOf="@+id/imageView"
         app:layout_constraintTop_toBottomOf="@+id/imageView"
-        android:textColor="@color/black"
-        android:fontFamily="sans-serif-condensed-medium"
-        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:textColor="@color/white"
+        style="@style/TextAppearance.AppCompat.Body1"
         tools:ignore="HardcodedText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
