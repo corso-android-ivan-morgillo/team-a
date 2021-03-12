@@ -1,6 +1,6 @@
 package com.ivanmorgillo.corsoandroid.teama.detail
 
-data class RecipeDetailsUI(
+data class RecipeDetailsU(
     val id: Long,
     val title: String,
     val image: String,
@@ -9,4 +9,5 @@ data class RecipeDetailsUI(
     val instructions: String,
     val isIngredientsSelected: Boolean,
     val isFavourite: Boolean,
+    val areaFlag: String
 )

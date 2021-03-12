@@ -6,7 +6,6 @@ data class FavouriteUI(
     val id: Long,
     val title: String,
     val image: String,
-    val notes: String,
     val video: String,
     val ingredients: List<Ingredient>,
     val instructions: String,

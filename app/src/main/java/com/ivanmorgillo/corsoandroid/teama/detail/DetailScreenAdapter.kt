@@ -23,16 +23,16 @@ import timber.log.Timber
 
 // gli oggetti dentro questa sealed li stiamo aggiungendo a seconda dell'ordine della nostra schermata
 // io seguo un pò anche il discorso di ivan perchè la nostra schermata è diversa
-sealed class DetailScreenItems {
-    data class Title(val title: String) : DetailScreenItems()
-    data class Video(val video: String, val image: String) : DetailScreenItems()
+sealed class RecipeDetailsUI {
+    data class Title(val title: String, val area: String) : RecipeDetailsUI()
+    data class Video(val video: String, val image: String) : RecipeDetailsUI()
     data class IngredientsInstructionsList(
         val ingredients: List<IngredientUI>,
         val instruction: String,
         val isIngredientsVisible: Boolean,
-    ) : DetailScreenItems()
+    ) : RecipeDetailsUI()
 
-    object TabLayout : DetailScreenItems()
+    object TabLayout : RecipeDetailsUI()
 }
 
 private const val VIDEO_VIEWTYPE = 1
@@ -43,7 +43,7 @@ private const val YOUTUBE_INDEX = 8
 
 class DetailScreenAdapter(private val onIngredientsClick: () -> Unit, private val onInstructionsClick: () -> Unit) :
     RecyclerView.Adapter<DetailScreenViewHolder>() {
-    var items: List<DetailScreenItems> = emptyList()
+    var items: List<RecipeDetailsUI> = emptyList()
         set(value) {
             field = value
             notifyDataSetChanged()
@@ -55,10 +55,10 @@ class DetailScreenAdapter(private val onIngredientsClick: () -> Unit, private va
     override fun getItemViewType(position: Int): Int {
         val item = items[position]
         return when (item) {
-            is DetailScreenItems.Video -> VIDEO_VIEWTYPE
-            is DetailScreenItems.IngredientsInstructionsList -> IGNREDIENTSINSTRUCTIONS_VIEWTYPE
-            is DetailScreenItems.Title -> TITLE_VIEWTYPE
-            is DetailScreenItems.TabLayout -> TABLAYOUT_VIEWTYPE
+            is RecipeDetailsUI.Video -> VIDEO_VIEWTYPE
+            is RecipeDetailsUI.IngredientsInstructionsList -> IGNREDIENTSINSTRUCTIONS_VIEWTYPE
+            is RecipeDetailsUI.Title -> TITLE_VIEWTYPE
+            is RecipeDetailsUI.TabLayout -> TABLAYOUT_VIEWTYPE
         }
     }
 
@@ -87,11 +87,11 @@ class DetailScreenAdapter(private val onIngredientsClick: () -> Unit, private va
 
     override fun onBindViewHolder(holder: DetailScreenViewHolder, position: Int) {
         when (holder) {
-            is VideoViewHolder -> holder.bind(items[position] as DetailScreenItems.Video)
+            is VideoViewHolder -> holder.bind(items[position] as RecipeDetailsUI.Video)
             is IngredientInstructionListViewHolder -> holder.bind(
-                items[position] as DetailScreenItems.IngredientsInstructionsList
+                items[position] as RecipeDetailsUI.IngredientsInstructionsList
             )
-            is TitleViewHolder -> holder.bind(items[position] as DetailScreenItems.Title)
+            is TitleViewHolder -> holder.bind(items[position] as RecipeDetailsUI.Title)
             is TabLayoutViewHolder -> holder.bind(onIngredientsClick, onInstructionsClick)
         }
     }
@@ -102,17 +102,18 @@ class DetailScreenAdapter(private val onIngredientsClick: () -> Unit, private va
 sealed class DetailScreenViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     // view holder per il titolo
     class TitleViewHolder(private val binding: DetailScreenTitleBinding) : DetailScreenViewHolder(binding.root) {
-        fun bind(title: DetailScreenItems.Title) {
+        fun bind(title: RecipeDetailsUI.Title) {
             binding.detailScreenTitle.text = title.title
+            binding.recipeFlag.load(title.area)
         }
     }
 
     class VideoViewHolder(private val binding: DetailScreenVideoBinding) : DetailScreenViewHolder(binding.root) {
         private var startSeconds = 0f // secondi a cui far iniziare il video (0 = dall'inizio)
         private var videoNotWorking = false
-        fun bind(video: DetailScreenItems.Video) {
+        fun bind(video: RecipeDetailsUI.Video) {
             if (video.video.isEmpty() || videoNotWorking) { // se il video è vuoto (non esiste) mostra l'immagine
-               showImage(video.image)
+                showImage(video.image)
             } else { // altrimenti nasconde l'immagine e mostra il video
                 binding.detailScreenVideo.visible()
                 binding.detailScreenImage.gone()
@@ -144,7 +145,7 @@ sealed class DetailScreenViewHolder(itemView: View) : RecyclerView.ViewHolder(it
 
     class IngredientInstructionListViewHolder(private val binding: DetailIngredientInstructionBinding) :
         DetailScreenViewHolder(binding.root) {
-        fun bind(item: DetailScreenItems.IngredientsInstructionsList) {
+        fun bind(item: RecipeDetailsUI.IngredientsInstructionsList) {
             // questa striscia contiene una recyclerview quindi a questa lista serve:
             // - un adapter e una lista di elem da passare all'adapter.
             val adapter = ListIngredientAdapter()
