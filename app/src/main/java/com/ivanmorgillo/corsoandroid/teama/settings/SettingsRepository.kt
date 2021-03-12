@@ -6,9 +6,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 interface SettingsRepository {
-
-    suspend fun setDarkTheme(darkEnable:Boolean): Boolean
-    suspend fun isDarkThemeEnabled():Boolean
+    suspend fun setDarkTheme(darkEnable: Boolean): Boolean
+    suspend fun isDarkThemeEnabled(): Boolean
+    suspend fun setFavouriteMessageShown(shown: Boolean): Boolean
+    suspend fun isFavouriteMessageShown(): Boolean
 }
 
 class SettingsRepositoryImpl(val context: Context) : SettingsRepository{
@@ -21,6 +22,14 @@ class SettingsRepositoryImpl(val context: Context) : SettingsRepository{
 
     override suspend fun isDarkThemeEnabled(): Boolean = withContext(Dispatchers.IO){
        storage.getBoolean("dark_theme", isNightModeEnabled())
+    }
+
+    override suspend fun setFavouriteMessageShown(shown: Boolean): Boolean = withContext(Dispatchers.IO) {
+        storage.edit().putBoolean("favourite_message_shown", shown).commit()
+    }
+
+    override suspend fun isFavouriteMessageShown(): Boolean = withContext(Dispatchers.IO) {
+        storage.getBoolean("favourite_message_shown", false)
     }
 
     private fun isNightModeEnabled(): Boolean {

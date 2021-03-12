@@ -59,6 +59,7 @@ class FavouriteFragment : Fragment(R.layout.fragment_favourite), SearchView.OnQu
                     } else {
                         binding.favouriteList.visible()
                         binding.favouriteTextView.gone()
+                        showHowToDeleteSnackbar(state.isFavouriteMessageShown)
                     }
                 }
                 FavouriteScreenStates.Error -> binding.favouriteRefresh.isRefreshing = false
@@ -90,6 +91,19 @@ class FavouriteFragment : Fragment(R.layout.fragment_favourite), SearchView.OnQu
                     Snackbar.LENGTH_LONG)
             snackbar.setAction(resources.getString(R.string.restore)) { v ->
                 viewModel.send(FavouriteScreenEvent.OnUndoDeleteFavourite(deletedFavourite))
+            }
+            snackbar.show()
+        }
+    }
+
+    private fun showHowToDeleteSnackbar(alreadyShown: Boolean) {
+        if (!alreadyShown) {
+            val snackbar: Snackbar =
+                Snackbar.make(binding.root,
+                    getString(R.string.how_delete_favourite_message),
+                    Snackbar.LENGTH_LONG)
+            snackbar.setAction(getString(R.string.understand)) { v ->
+                viewModel.send(FavouriteScreenEvent.OnDeleteMessageRead)
             }
             snackbar.show()
         }
