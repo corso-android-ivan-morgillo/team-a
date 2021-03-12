@@ -5,6 +5,6 @@ data class Category(
     val image: String,
     val id: String,
     val recipeAmount: String,
-    val categoryArea: List<String>,
+  //  val categoryArea: List<String>,
     val categoryDescription: String
 )
