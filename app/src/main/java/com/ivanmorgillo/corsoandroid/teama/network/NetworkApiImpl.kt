@@ -99,6 +99,7 @@ class NetworkApiImpl(cacheDir: File) : NetworkAPI {
                 if (video.isNullOrBlank()) {
                     video = ""
                 }
+                val reformatFlagName = reformatFlagName(recipeDetail.strArea)
                 val recipeDetails = RecipeDetails(
                     name = recipeDetail.strMeal,
                     image = recipeDetail.strMealThumb,
@@ -106,8 +107,7 @@ class NetworkApiImpl(cacheDir: File) : NetworkAPI {
                     idMeal = recipeDetail.idMeal.toLong(),
                     ingredients = ingredients,
                     instructions = recipeDetail.strInstructions,
-                    area = recipeDetail.strArea,
-                    notes = ""
+                    area = "https://www.themealdb.com/images/icons/flags/big/64/${reformatFlagName}.png"
                 )
                 LoadRecipeDetailsResult.Success(recipeDetails)
             }
@@ -298,8 +298,7 @@ class NetworkApiImpl(cacheDir: File) : NetworkAPI {
                     idMeal = recipeDetail.idMeal.toLong(),
                     ingredients = ingredients,
                     instructions = recipeDetail.strInstructions,
-                    area = recipeDetail.strArea,
-                    notes = ""
+                    area = recipeDetail.strArea
                 )
                 LoadRecipeDetailsResult.Success(recipeDetails)
             }

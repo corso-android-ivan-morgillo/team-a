@@ -91,10 +91,10 @@ class DetailViewModel(
 
     private fun createContent(details: RecipeDetails, isIngredientsVisible: Boolean, isFavourite: Boolean): Content {
         val detailScreenItems = listOf(
-            DetailScreenItems.Video(details.video, details.image),
-            DetailScreenItems.Title(details.name),
-            DetailScreenItems.TabLayout,
-            DetailScreenItems.IngredientsInstructionsList(
+            RecipeDetailsUI.Video(details.video, details.image),
+            RecipeDetailsUI.Title(details.name,details.area),
+            RecipeDetailsUI.TabLayout,
+            RecipeDetailsUI.IngredientsInstructionsList(
                 details.ingredients.map {
                     IngredientUI(it.ingredientName, it.ingredientQuantity, it.ingredientImage)
                 },
@@ -131,7 +131,7 @@ class DetailViewModel(
         if (currentState != null && currentState is Content) {
             val updatedItems = currentState.details
                 .map {
-                    if (it is DetailScreenItems.IngredientsInstructionsList) {
+                    if (it is RecipeDetailsUI.IngredientsInstructionsList) {
                         it.copy(isIngredientsVisible = isIngredientsVisible)
                     } else {
                         it
@@ -149,7 +149,7 @@ sealed class DetailScreenStates {
     object Error : DetailScreenStates()
 
     // se la lista cambia dobbiamo usare una 'data class' quindi non usiamo 'object'
-    data class Content(val details: List<DetailScreenItems>, val isFavourite: Boolean) : DetailScreenStates()
+    data class Content(val details: List<RecipeDetailsUI>, val isFavourite: Boolean) : DetailScreenStates()
 }
 
 sealed class DetailScreenAction {

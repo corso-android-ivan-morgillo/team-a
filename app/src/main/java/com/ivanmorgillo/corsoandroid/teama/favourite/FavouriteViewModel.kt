@@ -66,7 +66,6 @@ class FavouriteViewModel(
                 title = it.name,
                 image = it.image,
                 id = it.idMeal,
-                notes = it.notes,
                 video = it.video,
                 ingredients = it.ingredients,
                 instructions = it.instructions,
@@ -114,8 +113,8 @@ class FavouriteViewModel(
                 idMeal = removedFavourite.id,
                 ingredients = removedFavourite.ingredients,
                 instructions = removedFavourite.instructions,
-                area = "",
-                notes = removedFavourite.notes
+                area = removedFavourite.area,
+
             )
             repository.add(newFavourite)
             val currentState = states.value
