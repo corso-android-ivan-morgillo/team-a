@@ -8,11 +8,16 @@ import com.ivanmorgillo.corsoandroid.teama.Tracking
 import com.ivanmorgillo.corsoandroid.teama.crashlytics.SingleLiveEvent
 import com.ivanmorgillo.corsoandroid.teama.detail.RecipeDetails
 import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
+import com.ivanmorgillo.corsoandroid.teama.settings.SettingsRepository
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.*
 
-class FavouriteViewModel(private val repository: FavouriteRepository, private val tracking: Tracking) : ViewModel() {
+class FavouriteViewModel(
+    private val repository: FavouriteRepository,
+    private val tracking: Tracking,
+    private val settingsRepository: SettingsRepository
+) : ViewModel() {
     private var favourites: List<FavouriteUI>? = null
     val states = MutableLiveData<FavouriteScreenStates>()
     val actions = SingleLiveEvent<FavouriteScreenAction>()
@@ -30,11 +35,18 @@ class FavouriteViewModel(private val repository: FavouriteRepository, private va
             is FavouriteScreenEvent.OnFavouriteSwiped -> onFavouriteSwiped(event.position) // elimina preferito
             is FavouriteScreenEvent.OnUndoDeleteFavourite -> onUndoDeleteFavourite(event.deletedFavourite)
             is FavouriteScreenEvent.OnFavouriteSearch -> onFavouriteSearch(event.query)
-            FavouriteScreenEvent.OnRefresh -> {
+            FavouriteScreenEvent.OnRefresh -> { // ricarica i preferiti
                 tracking.logEvent("favourite_refresh_clicked")
                 loadContent()
-            } // ricarica i preferiti
+            }
+            FavouriteScreenEvent.OnDeleteMessageRead -> onDeleteMessageRead()
         }.exhaustive
+    }
+
+    private fun onDeleteMessageRead() {
+        viewModelScope.launch {
+            settingsRepository.setFavouriteMessageShown(true)
+        }
     }
 
     private fun loadContent() {
@@ -62,7 +74,10 @@ class FavouriteViewModel(private val repository: FavouriteRepository, private va
             )
         }
         this.favourites = favourites
-        states.postValue(FavouriteScreenStates.Content(favourites, null))
+        viewModelScope.launch {
+            val isFavouriteMessageShown = settingsRepository.isFavouriteMessageShown()
+            states.postValue(FavouriteScreenStates.Content(favourites, null, isFavouriteMessageShown))
+        }
     }
 
     private fun onFavouriteClick(event: FavouriteScreenEvent.OnFavouriteClick) {
@@ -78,7 +93,11 @@ class FavouriteViewModel(private val repository: FavouriteRepository, private va
             val updatedFavourites = favourites?.minus(favouriteToDelete)
             if (updatedFavourites != null) {
                 favourites = updatedFavourites
-                states.postValue(FavouriteScreenStates.Content(updatedFavourites, favouriteToDelete))
+                states.postValue(FavouriteScreenStates.Content(
+                    updatedFavourites,
+                    favouriteToDelete,
+                    true
+                ))
             } else {
                 Timber.e("updatedFavourites was null")
             }
@@ -104,7 +123,7 @@ class FavouriteViewModel(private val repository: FavouriteRepository, private va
                 val updatedFavourites = favourites?.plus(removedFavourite)
                 if (updatedFavourites != null) {
                     favourites = updatedFavourites
-                    states.postValue(FavouriteScreenStates.Content(updatedFavourites, null))
+                    states.postValue(FavouriteScreenStates.Content(updatedFavourites, null, true))
                 } else {
                     Timber.e("updatedFavourites was null")
                 }
@@ -115,7 +134,7 @@ class FavouriteViewModel(private val repository: FavouriteRepository, private va
     private fun onFavouriteSearch(query: String) {
         tracking.logEvent("favourite_search_clicked")
         val filteredFavourites = filter(favourites, query)
-        states.postValue(FavouriteScreenStates.Content(filteredFavourites, null))
+        states.postValue(FavouriteScreenStates.Content(filteredFavourites, null, true))
     }
 
     private fun filter(originalList: List<FavouriteUI>?, query: String): List<FavouriteUI> {
@@ -144,8 +163,11 @@ sealed class FavouriteScreenStates {
     object Error : FavouriteScreenStates()
 
     // se la lista cambia dobbiamo usare una 'data class' quindi non usiamo 'object'
-    data class Content(val favourites: List<FavouriteUI>, val deletedFavourite: FavouriteUI? = null) :
-        FavouriteScreenStates()
+    data class Content(
+        val favourites: List<FavouriteUI>,
+        val deletedFavourite: FavouriteUI? = null,
+        val isFavouriteMessageShown: Boolean
+    ) : FavouriteScreenStates()
 }
 
 sealed class FavouriteScreenEvent {
@@ -154,6 +176,7 @@ sealed class FavouriteScreenEvent {
     data class OnFavouriteSwiped(val position: Int) : FavouriteScreenEvent()
     data class OnUndoDeleteFavourite(val deletedFavourite: FavouriteUI) : FavouriteScreenEvent()
     data class OnFavouriteSearch(val query: String) : FavouriteScreenEvent()
+    object OnDeleteMessageRead : FavouriteScreenEvent()
 
     object OnReady : FavouriteScreenEvent()
     object OnRefresh : FavouriteScreenEvent()
