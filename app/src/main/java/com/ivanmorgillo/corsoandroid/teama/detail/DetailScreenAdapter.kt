@@ -21,20 +21,6 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import timber.log.Timber
 
-// gli oggetti dentro questa sealed li stiamo aggiungendo a seconda dell'ordine della nostra schermata
-// io seguo un pò anche il discorso di ivan perchè la nostra schermata è diversa
-sealed class RecipeDetailsUI {
-    data class Title(val title: String, val area: String) : RecipeDetailsUI()
-    data class Video(val video: String, val image: String) : RecipeDetailsUI()
-    data class IngredientsInstructionsList(
-        val ingredients: List<IngredientUI>,
-        val instruction: String,
-        val isIngredientsVisible: Boolean,
-    ) : RecipeDetailsUI()
-
-    object TabLayout : RecipeDetailsUI()
-}
-
 private const val VIDEO_VIEWTYPE = 1
 private const val IGNREDIENTSINSTRUCTIONS_VIEWTYPE = 2
 private const val TITLE_VIEWTYPE = 3
