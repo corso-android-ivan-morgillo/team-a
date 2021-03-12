@@ -50,7 +50,7 @@
     <string name="not_now">Not now</string>
     <string name="info_button_description">Info Button</string>
     <string name="category_image_description">categoryImage</string>
+    <string name="how_delete_favourite_message">Swipe to delete</string>
     <string name="click_info">Click here for more info</string>
-    <string name="how_delete_favourite_message">To delete, do a swipe</string>
     <string name="understand">OK</string>
 </resources>
