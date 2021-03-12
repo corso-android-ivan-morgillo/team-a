@@ -221,32 +221,19 @@ class NetworkApiImpl(cacheDir: File) : NetworkAPI {
 
     private suspend fun loadCategoryInfo(categoryName: String): CategoryInfo {
         val recipesList: LoadRecipeResult = loadRecipes(categoryName)
-        var categoryInfo = CategoryInfo("", emptyList())
+
+        var categoryInfo = CategoryInfo("")
         if (recipesList is Success) {
             val recipesAmount = recipesList.recipes.size.toString()
-            val areaNames = loadCategoriesFlags(recipesList.recipes)
-            categoryInfo = CategoryInfo(recipesAmount, areaNames)
+            categoryInfo = CategoryInfo(recipesAmount)
         }
         return categoryInfo
     }
 
     data class CategoryInfo(
         var recipesAmount: String,
-        var areaNames: List<String>,
+      //  var areaNames: List<String>,
     )
-
-    private suspend fun loadCategoriesFlags(recipes: List<Recipe>): List<String> = coroutineScope {
-        recipes
-            .map {
-                async { loadRecipeDetails(it.idMeal) }
-            }.awaitAll()
-            .filterIsInstance(LoadRecipeDetailsResult.Success::class.java)
-            .map {
-                reformatFlagName(it.details.area)
-            }
-            .distinct()
-            .sortedDescending()
-    }
 
     private fun reformatFlagName(areaName: String): String {
         return when (areaName) {
@@ -337,9 +324,9 @@ class NetworkApiImpl(cacheDir: File) : NetworkAPI {
                 id = idCategory,
                 categoryDescription = strCategoryDescription,
                 recipeAmount = categoryInfo.recipesAmount,
-                categoryArea = categoryInfo.areaNames.map {
+               /* categoryArea = categoryInfo.areaNames.map {
                     "https://www.themealdb.com/images/icons/flags/big/64/$it.png"
-                }
+                } */
             )
             // possibilità di implementare la descrizione
         } else {

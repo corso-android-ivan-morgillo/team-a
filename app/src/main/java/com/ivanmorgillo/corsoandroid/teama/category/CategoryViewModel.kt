@@ -79,9 +79,9 @@ class CategoryViewModel(private val repository: CategoryRepository, private val 
                 title = it.name,
                 image = it.image,
                 id = it.id.toLong(),
-                flags = it.categoryArea.map {
+               /* flags = it.categoryArea.map {
                     FlagUI(it)
-                },
+                }, */
                 recipesCount = it.recipeAmount,
                 description = it.categoryDescription
             )
