@@ -46,7 +46,9 @@ class MainActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.categoryFragment, R.id.favouriteFragment, R.id.settingsFragment, R.id.nav_feedback, R.id.login, R.id.logout
+                R.id.categoryFragment, R.id.favouriteFragment,
+                R.id.settingsFragment, R.id.nav_feedback,
+                R.id.login, R.id.logout
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -113,23 +115,25 @@ class MainActivity : AppCompatActivity() {
         binding.drawerLayout.closeDrawer(GravityCompat.START)
     }
 
-    private var firebaseAuthenticationResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+    private var firebaseAuthenticationResultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult())
+        { result ->
 
-        if (result.resultCode == Activity.RESULT_OK) {
-            // Successfully signed in
-            val user = FirebaseAuth.getInstance().currentUser
-            //   Timber.e("User:" , "$user")
-            Toast.makeText(this, "Welcome, ${user?.displayName}", Toast.LENGTH_LONG).show()
-            // ...
-        } else {
-            Toast.makeText(this, "ERROR LOGIN", Toast.LENGTH_LONG).show()
-            // Sign in failed. If response is null the user canceled the
-            // sign-in flow using the back button. Otherwise check
-            // response.getError().getErrorCode() and handle the error.
-            // ...
-            // Timber.e("User:", "${result.response?.error?.errorCode}")
+            if (result.resultCode == Activity.RESULT_OK) {
+                // Successfully signed in
+                val user = FirebaseAuth.getInstance().currentUser
+                //   Timber.e("User:" , "$user")
+                Toast.makeText(this, "Welcome, ${user?.displayName}", Toast.LENGTH_LONG).show()
+                // ...
+            } else {
+                Toast.makeText(this, "ERROR LOGIN", Toast.LENGTH_LONG).show()
+                // Sign in failed. If response is null the user canceled the
+                // sign-in flow using the back button. Otherwise check
+                // response.getError().getErrorCode() and handle the error.
+                // ...
+                // Timber.e("User:", "${result.response?.error?.errorCode}")
+            }
         }
-    }
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment)
