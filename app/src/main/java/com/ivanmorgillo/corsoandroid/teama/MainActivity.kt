@@ -82,6 +82,7 @@ class MainActivity : AppCompatActivity() {
                             .setAvailableProviders(providers)
                             .build(),
                         RC_SIGN_IN)
+                    binding.drawerLayout.closeDrawer(GravityCompat.START)
                     viewModel.send(MainScreenEvent.OnSettingsClick)
 
                 }
@@ -124,13 +125,14 @@ class MainActivity : AppCompatActivity() {
                 // Successfully signed in
                 val user = FirebaseAuth.getInstance().currentUser
                 Timber.e("User:" , "$user")
+                Toast.makeText(this,"Welcome, ${user.displayName}",Toast.LENGTH_LONG).show()
                 // ...
             } else {
                 // Sign in failed. If response is null the user canceled the
                 // sign-in flow using the back button. Otherwise check
                 // response.getError().getErrorCode() and handle the error.
                 // ...
-                Timber.e("", "${response?.error?.errorCode}")
+                Timber.e("User:", "${response?.error?.errorCode}")
             }
         }
     }
