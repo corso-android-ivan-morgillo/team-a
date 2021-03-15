@@ -35,8 +35,13 @@ import android.os.Build
 
 import android.util.DisplayMetrics
 import androidx.appcompat.view.ContextThemeWrapper
-
+import com.firebase.ui.auth.AuthUI
+import com.firebase.ui.auth.IdpResponse
+import com.google.android.datatransport.runtime.logging.Logging.e
+import com.google.firebase.auth.FirebaseAuth
+private const val RC_SIGN_IN: Int = 1234
 class MainActivity : AppCompatActivity() {
+
     private val viewModel: MainViewModel by viewModel()
     private lateinit var binding: ActivityMainBinding
     private lateinit var appBarConfiguration: AppBarConfiguration
@@ -66,7 +71,21 @@ class MainActivity : AppCompatActivity() {
                 R.id.detailFragment -> viewModel.send(MainScreenEvent.OnRandomRecipeClick)
                 R.id.favouriteFragment -> viewModel.send(MainScreenEvent.OnFavouritesClick)
                 R.id.nav_feedback -> viewModel.send(MainScreenEvent.OnFeedbackClick)
-                R.id.settingsFragment -> viewModel.send(MainScreenEvent.OnSettingsClick)
+                R.id.settingsFragment ->{
+                    //activity firebaase LOGIN
+
+                    val providers = arrayListOf(
+                        AuthUI.IdpConfig.GoogleBuilder().build() )
+                    startActivityForResult(
+                        AuthUI.getInstance()
+                            .createSignInIntentBuilder()
+                            .setAvailableProviders(providers)
+                            .build(),
+                        RC_SIGN_IN)
+                    viewModel.send(MainScreenEvent.OnSettingsClick)
+
+                }
+
             }
             binding.drawerLayout.closeDrawer(GravityCompat.START)
             true
@@ -93,6 +112,27 @@ class MainActivity : AppCompatActivity() {
             }.exhaustive
         })
         viewModel.send(MainScreenEvent.OnInitTheme)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == RC_SIGN_IN) {
+            val response = IdpResponse.fromResultIntent(data)
+
+            if (resultCode == Activity.RESULT_OK) {
+                // Successfully signed in
+                val user = FirebaseAuth.getInstance().currentUser
+                Timber.e("User:" , "$user")
+                // ...
+            } else {
+                // Sign in failed. If response is null the user canceled the
+                // sign-in flow using the back button. Otherwise check
+                // response.getError().getErrorCode() and handle the error.
+                // ...
+                Timber.e("", "${response?.error?.errorCode}")
+            }
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {

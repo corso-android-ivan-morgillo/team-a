@@ -130,6 +130,9 @@ dependencies {
 
     // Preferences for list component
     implementation "androidx.preference:preference-ktx:1.1.1"
+    //firebase login ui
+    implementation 'com.firebaseui:firebase-ui-auth:6.4.0'
+
     // Testing
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
