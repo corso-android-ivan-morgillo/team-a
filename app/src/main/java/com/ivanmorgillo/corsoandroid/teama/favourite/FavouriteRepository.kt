@@ -2,8 +2,7 @@ package com.ivanmorgillo.corsoandroid.teama.favourite
 
 import android.annotation.SuppressLint
 import android.content.Context
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
+import android.content.SharedPreferences
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 import com.ivanmorgillo.corsoandroid.teama.detail.Ingredient
@@ -20,21 +19,17 @@ interface FavouriteRepository {
 }
 
 class FavouriteRepositoryImpl(private val context: Context, private val gson: Gson) : FavouriteRepository {
-    //  private val storage: SharedPreferences by lazy { context.getSharedPreferences("favourites", Context.MODE_PRIVATE) }
-
-    private val database by lazy {
-        Firebase.database.reference
-    }
-    private val favourites = database.child("favourites")
-
-
+    private val storage: SharedPreferences by lazy { context.getSharedPreferences("favourites", Context.MODE_PRIVATE) }
+    
     override suspend fun loadAll(): LoadFavouriteResult = withContext(Dispatchers.IO) {
         Timber.d("loading favourites")
-        val children = favourites.get()
-            .result
-            .children
-            .mapNotNull {
-                it.getValue(RecipeDetailEntity::class.java)
+        val all = storage.all // <id, stringa json>
+            .values
+            .map {
+                it as String // la singola stringa json (veramente di tipo String), quindi 1 preferito completo
+            }
+            .map { // it = ogni stringa di Entity (es: name, image, video, ecc)
+                gson.fromJson(it, RecipeDetailEntity::class.java)
             }
             .map {
                 RecipeDetails(
@@ -47,33 +42,12 @@ class FavouriteRepositoryImpl(private val context: Context, private val gson: Gs
                     area = it.area
                 )
             }
-        LoadFavouriteResult.Success(children)
-        /*  val all = storage.all // <id, stringa json>
-              .values
-              .map {
-                  it as String // la singola stringa json (veramente di tipo String), quindi 1 preferito completo
-              }
-              .map { // it = ogni stringa di Entity (es: name, image, video, ecc)
-                  gson.fromJson(it, RecipeDetailEntity::class.java)
-              }
-              .map {
-                  RecipeDetails(name = it.name,
-                      image = it.image,
-                      video = it.video,
-                      idMeal = it.id,
-                      ingredients = it.ingredients,
-                      instructions = it.instructions,
-                      area = it.area)
-              } */
-        // LoadFavouriteResult.Success(all)
+        LoadFavouriteResult.Success(all)
     }
 
     override suspend fun isFavourite(idMeal: Long): Boolean = withContext(Dispatchers.IO) {
-        // Timber.d("is favourite: $isFavourite")
-        val maybeFavourite = favourites.child(idMeal.toString()).get().result
+        val maybeFavourite = storage.getString(idMeal.toString(), null)
         maybeFavourite != null
-        // val maybeFavourite = storage.getString(idMeal.toString(), null)
-        // maybeFavourite != null
     }
 
 
@@ -89,23 +63,19 @@ class FavouriteRepositoryImpl(private val context: Context, private val gson: Gs
             instructions = favourite.instructions,
             area = favourite.area
         )
-        favourites.child(favourite.idMeal.toString()).setValue(recipeDetailEntity)
-        //  val serializedRecipeDetail = gson.toJson(recipeDetailEntity)
-        //storage.edit().putString(favourite.idMeal.toString(), serializedRecipeDetail).commit()
-        return@withContext true
+        val serializedRecipeDetail = gson.toJson(recipeDetailEntity)
+        storage.edit().putString(favourite.idMeal.toString(), serializedRecipeDetail).commit()
     }
 
     @SuppressLint("ApplySharedPref")
     override suspend fun delete(idMeal: Long): Boolean = withContext(Dispatchers.IO) {
-        //   val success = storage.edit().remove(idMeal.toString()).commit()
-        favourites.child(idMeal.toString()).removeValue()
-        return@withContext true
-        /* if (success) {
-             Timber.d("deleted favourite successfully")
-         } else {
-             Timber.d("error deleting favourite")
-         }
-         success*/
+        val success = storage.edit().remove(idMeal.toString()).commit()
+        if (success) {
+            Timber.d("deleted favourite successfully")
+        } else {
+            Timber.d("error deleting favourite")
+        }
+        success
     }
 }
 

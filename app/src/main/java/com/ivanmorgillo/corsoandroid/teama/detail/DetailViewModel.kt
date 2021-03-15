@@ -92,7 +92,7 @@ class DetailViewModel(
     private fun createContent(details: RecipeDetails, isIngredientsVisible: Boolean, isFavourite: Boolean): Content {
         val detailScreenItems = listOf(
             RecipeDetailsUI.Video(details.video, details.image),
-            RecipeDetailsUI.Title(details.name,details.area),
+            RecipeDetailsUI.Title(details.name, details.area),
             RecipeDetailsUI.TabLayout,
             RecipeDetailsUI.IngredientsInstructionsList(
                 details.ingredients.map {
