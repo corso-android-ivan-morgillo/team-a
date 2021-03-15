@@ -57,6 +57,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.detailFragment -> viewModel.send(MainScreenEvent.OnRandomRecipeClick)
                 R.id.favouriteFragment ->{
                     //Sign out da firebase google.
+                    /**Per questo va  aggiunto il pulsante apposito logout*/
                     AuthUI.getInstance()
                         .signOut(this)
                         .addOnCompleteListener {
@@ -69,7 +70,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_feedback -> viewModel.send(MainScreenEvent.OnFeedbackClick)
                 R.id.settingsFragment ->{
                     //activity firebaase LOGIN
-
+                    /**Per questo va  aggiunto il pulsante apposito login*/
                     val providers = arrayListOf(
                         AuthUI.IdpConfig.GoogleBuilder().build() )
                     val intent = AuthUI.getInstance()
