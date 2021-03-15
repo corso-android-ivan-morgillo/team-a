@@ -10,34 +10,20 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.os.bundleOf
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.navigation.NavController
-import androidx.navigation.NavGraph
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.navigation.NavigationView
-import com.ivanmorgillo.corsoandroid.teama.category.CategoryFragmentDirections
 import com.ivanmorgillo.corsoandroid.teama.databinding.ActivityMainBinding
 import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import timber.log.Timber
 import android.app.Activity
-import android.content.Context
-import android.content.res.Configuration
-import android.content.res.Resources
-import android.os.LocaleList
-import com.google.android.material.internal.ContextUtils
-import java.util.*
-import android.os.Build
 
-import android.util.DisplayMetrics
-import androidx.appcompat.view.ContextThemeWrapper
+import androidx.activity.result.contract.ActivityResultContracts
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
-import com.google.android.datatransport.runtime.logging.Logging.e
 import com.google.firebase.auth.FirebaseAuth
 private const val RC_SIGN_IN: Int = 1234
 class MainActivity : AppCompatActivity() {
@@ -69,19 +55,28 @@ class MainActivity : AppCompatActivity() {
             when (it.itemId) {
                 R.id.categoryFragment -> viewModel.send(MainScreenEvent.OnCategoryClick)
                 R.id.detailFragment -> viewModel.send(MainScreenEvent.OnRandomRecipeClick)
-                R.id.favouriteFragment -> viewModel.send(MainScreenEvent.OnFavouritesClick)
+                R.id.favouriteFragment ->{
+                    //Sign out da firebase google.
+                    AuthUI.getInstance()
+                        .signOut(this)
+                        .addOnCompleteListener {
+                            // ...
+                        }
+                viewModel.send(MainScreenEvent.OnFavouritesClick)
+
+                }
+
                 R.id.nav_feedback -> viewModel.send(MainScreenEvent.OnFeedbackClick)
                 R.id.settingsFragment ->{
                     //activity firebaase LOGIN
 
                     val providers = arrayListOf(
                         AuthUI.IdpConfig.GoogleBuilder().build() )
-                    startActivityForResult(
-                        AuthUI.getInstance()
-                            .createSignInIntentBuilder()
-                            .setAvailableProviders(providers)
-                            .build(),
-                        RC_SIGN_IN)
+                    val intent = AuthUI.getInstance()
+                        .createSignInIntentBuilder()
+                        .setAvailableProviders(providers)
+                        .build()
+                    firebaseAuthenticationResultLauncher.launch(intent)
                     binding.drawerLayout.closeDrawer(GravityCompat.START)
                     viewModel.send(MainScreenEvent.OnSettingsClick)
 
@@ -115,25 +110,21 @@ class MainActivity : AppCompatActivity() {
         viewModel.send(MainScreenEvent.OnInitTheme)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
+    private var firebaseAuthenticationResultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
 
-        if (requestCode == RC_SIGN_IN) {
-            val response = IdpResponse.fromResultIntent(data)
-
-            if (resultCode == Activity.RESULT_OK) {
-                // Successfully signed in
-                val user = FirebaseAuth.getInstance().currentUser
-                Timber.e("User:" , "$user")
-                Toast.makeText(this,"Welcome, ${user.displayName}",Toast.LENGTH_LONG).show()
-                // ...
-            } else {
-                // Sign in failed. If response is null the user canceled the
-                // sign-in flow using the back button. Otherwise check
-                // response.getError().getErrorCode() and handle the error.
-                // ...
-                Timber.e("User:", "${response?.error?.errorCode}")
-            }
+        if (result.resultCode == Activity.RESULT_OK) {
+            // Successfully signed in
+            val user = FirebaseAuth.getInstance().currentUser
+         //   Timber.e("User:" , "$user")
+            Toast.makeText(this,"Welcome, ${user?.displayName}",Toast.LENGTH_LONG).show()
+            // ...
+        } else {
+            Toast.makeText(this,"ERROR LOGIN",Toast.LENGTH_LONG).show()
+            // Sign in failed. If response is null the user canceled the
+            // sign-in flow using the back button. Otherwise check
+            // response.getError().getErrorCode() and handle the error.
+            // ...
+           // Timber.e("User:", "${result.response?.error?.errorCode}")
         }
     }
 

@@ -134,6 +134,10 @@ dependencies {
     implementation 'com.firebaseui:firebase-ui-auth:6.4.0'
     implementation platform('com.google.firebase:firebase-bom:26.7.0')
 
+    //dipendenze per errore low 16 bit
+    implementation 'androidx.activity:activity-ktx:1.3.0-alpha04'
+    implementation 'androidx.fragment:fragment-ktx:1.3.1'
+
     // Also declare the dependency for the Google Play services library and specify its version
     implementation 'com.google.android.gms:play-services-auth:19.0.0'
 
