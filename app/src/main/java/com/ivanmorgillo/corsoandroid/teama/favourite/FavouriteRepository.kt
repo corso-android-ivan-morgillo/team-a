@@ -4,10 +4,9 @@ import android.content.Context
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
-import com.google.gson.annotations.SerializedName
-import com.ivanmorgillo.corsoandroid.teama.detail.Ingredient
 import com.ivanmorgillo.corsoandroid.teama.detail.RecipeDetails
 import kotlinx.coroutines.tasks.await
+import timber.log.Timber
 
 interface FavouriteRepository {
     suspend fun loadAll(): LoadFavouriteResult
@@ -49,7 +48,13 @@ class FavouriteRepositoryImpl(private val context: Context, private val gson: Gs
     }
 
     override suspend fun isFavourite(idMeal: Long): Boolean {
-        return false
+        val x = favouriteCollection
+            .document(idMeal.toString())
+            .get()
+            .await()
+        Timber.d("x is favourite --> $x")
+        // return x != null
+        return x.exists()
     }
 
 
@@ -64,18 +69,22 @@ class FavouriteRepositoryImpl(private val context: Context, private val gson: Gs
         )
 
         favouriteCollection
-            .add(favouriteMap)
+            .document(favourite.idMeal.toString())
+            .set(favouriteMap)
             .await()
-
         return true
 
     }
 
     override suspend fun delete(idMeal: Long): Boolean {
+        favouriteCollection
+            .document(idMeal.toString())
+            .delete()
+            .await()
         return true
     }
 }
-
+/*
 data class RecipeDetailEntity(
     @SerializedName("name")
     val name: String,
@@ -91,7 +100,7 @@ data class RecipeDetailEntity(
     val instructions: String,
     @SerializedName("area")
     val area: String
-)
+)*/
 
 /*  override suspend fun isFavourite(idMeal: Long): Boolean = withContext(Dispatchers.IO) {
       val maybeFavourite = storage.getString(idMeal.toString(), null)
