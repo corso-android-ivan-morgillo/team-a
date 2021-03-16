@@ -130,6 +130,26 @@ dependencies {
 
     // Preferences for list component
     implementation "androidx.preference:preference-ktx:1.1.1"
+
+    //dipendenze per errore low 16 bit
+    implementation 'androidx.activity:activity-ktx:1.3.0-alpha04'
+    implementation 'androidx.fragment:fragment-ktx:1.3.1'
+
+    //firebase login ui
+    implementation 'com.firebaseui:firebase-ui-auth:6.4.0'
+    implementation platform('com.google.firebase:firebase-bom:26.7.0')
+
+    //firestore
+    implementation 'com.google.firebase:firebase-firestore-ktx'
+
+    //Firebase
+    implementation 'com.google.firebase:firebase-auth-ktx'
+    implementation 'com.google.firebase:firebase-messaging-ktx'
+    implementation 'com.google.firebase:firebase-database-ktx'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.1.1'
+    implementation 'com.google.android.gms:play-services-auth:19.0.0'
+
+
     // Testing
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

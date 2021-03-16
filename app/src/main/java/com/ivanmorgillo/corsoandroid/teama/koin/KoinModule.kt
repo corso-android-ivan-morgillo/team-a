@@ -40,7 +40,7 @@ val appModule = module {
         CategoryRepositoryImpl(api = get())
     }
     single<FavouriteRepository> {
-        FavouriteRepositoryImpl(context = androidContext(), Gson())
+        FavouriteRepositoryImpl(fireStoreDatabase = get())
     }
     single<SettingsRepository> {
         SettingsRepositoryImpl(context = androidContext())
@@ -48,6 +48,8 @@ val appModule = module {
     single<Tracking> {
         TrackingImpl()
     }
+
+
     viewModel { MainViewModel(repository = get(), tracking = get()) }
     viewModel { CategoryViewModel(repository = get(), tracking = get()) }
     viewModel { RecipeViewModel(repository = get(), tracking = get()) }

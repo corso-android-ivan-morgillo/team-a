@@ -28,6 +28,14 @@
             android:id="@+id/settingsFragment"
             android:icon="@drawable/ic_settings"
             android:title="@string/menu_slideshow" />
+        <item
+            android:id="@+id/login"
+            android:icon="@mipmap/ic_launcher"
+            android:title="Login with google" />
+        <item
+            android:id="@+id/logout"
+            android:icon="@mipmap/ic_launcher"
+            android:title="Logout from google" />
     </group>
 
     <group
