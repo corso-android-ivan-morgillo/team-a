@@ -12,6 +12,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.os.bundleOf
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -20,9 +21,14 @@ import androidx.navigation.ui.setupWithNavController
 import com.firebase.ui.auth.AuthUI
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.ivanmorgillo.corsoandroid.teama.databinding.ActivityMainBinding
 import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 private const val RC_SIGN_IN: Int = 1234
 
@@ -134,6 +140,28 @@ class MainActivity : AppCompatActivity() {
                 // Timber.e("User:", "${result.response?.error?.errorCode}")
             }
         }
+
+    /**In questa funzione andremo a capire se esiste un user/vediamo l'anonym-user ?? */
+    public override fun onStart() {
+        super.onStart()
+        // Check if user is signed in (non-null) and update UI accordingly.
+        val currentUser = Firebase.auth.currentUser
+
+        if (currentUser == null) {
+            //Sign in anonymously ?
+            signInAnonymously()
+        } else {
+            Timber.d("User is logged, welcome back!")
+        }
+        
+    }
+
+    private fun signInAnonymously() {
+        lifecycleScope.launch {
+            val x = Firebase.auth.signInAnonymously().await()
+            Timber.d("User anon is: ${x.user}")
+        }
+    }
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment)
