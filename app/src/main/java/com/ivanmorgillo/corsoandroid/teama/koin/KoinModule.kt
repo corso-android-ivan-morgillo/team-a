@@ -40,7 +40,7 @@ val appModule = module {
         CategoryRepositoryImpl(api = get())
     }
     single<FavouriteRepository> {
-        FavouriteRepositoryImpl(context = androidContext(), Gson())
+        FavouriteRepositoryImpl(context = androidContext(), gson = Gson())
     }
     single<SettingsRepository> {
         SettingsRepositoryImpl(context = androidContext())
