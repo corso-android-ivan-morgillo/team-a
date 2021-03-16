@@ -1,10 +1,8 @@
 package com.ivanmorgillo.corsoandroid.teama.favourite
 
-import android.content.Context
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
-import com.google.gson.Gson
 import com.ivanmorgillo.corsoandroid.teama.detail.RecipeDetails
 import kotlinx.coroutines.tasks.await
 import timber.log.Timber
@@ -16,11 +14,8 @@ interface FavouriteRepository {
     suspend fun isFavourite(idMeal: Long): Boolean
 }
 
-class FavouriteRepositoryImpl(private val context: Context, private val gson: Gson) :
-    FavouriteRepository {
-    private val fireStoreDatabase by lazy {
-        Firebase.firestore
-    }
+class FavouriteRepositoryImpl(private val fireStoreDatabase: FirebaseFirestore) : FavouriteRepository {
+
     private val favouriteCollection by lazy {
         val universalUserId = Firebase.auth.currentUser.uid
         fireStoreDatabase.collection("favourites-$universalUserId")
