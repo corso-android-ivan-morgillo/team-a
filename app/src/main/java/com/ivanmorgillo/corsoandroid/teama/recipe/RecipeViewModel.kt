@@ -3,18 +3,18 @@ package com.ivanmorgillo.corsoandroid.teama.recipe
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ateam.delicious.domain.LoadRecipeError
+import com.ateam.delicious.domain.LoadRecipeResult.Failure
+import com.ateam.delicious.domain.LoadRecipeResult.Success
 import com.ivanmorgillo.corsoandroid.teama.Screens
 import com.ivanmorgillo.corsoandroid.teama.Tracking
+import com.ivanmorgillo.corsoandroid.teama.crashlytics.SingleLiveEvent
+import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
 import com.ivanmorgillo.corsoandroid.teama.recipe.RecipeScreenAction.NavigateToDetail
 import com.ivanmorgillo.corsoandroid.teama.recipe.RecipeScreenAction.ShowNoInternetMessage
 import com.ivanmorgillo.corsoandroid.teama.recipe.RecipeScreenStates.Content
 import com.ivanmorgillo.corsoandroid.teama.recipe.RecipeScreenStates.Error
 import com.ivanmorgillo.corsoandroid.teama.recipe.RecipeScreenStates.Loading
-import com.ivanmorgillo.corsoandroid.teama.crashlytics.SingleLiveEvent
-import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
-import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeError
-import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeResult.Failure
-import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeResult.Success
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -55,7 +55,7 @@ class RecipeViewModel(private val repository: RecipesRepository, private val tra
                 image = it.image,
                 id = it.idMeal,
 
-            )
+                )
         }
         this.recipes = recipes
         states.postValue(Content(recipes))

@@ -1,7 +1,7 @@
 package com.ivanmorgillo.corsoandroid.teama.category
 
-import com.ivanmorgillo.corsoandroid.teama.network.LoadCategoryResult
-import com.ivanmorgillo.corsoandroid.teama.network.NetworkAPI
+import com.ateam.delicious.domain.LoadCategoryResult
+import com.ateam.delicious.domain.NetworkAPI
 
 interface CategoryRepository {
     suspend fun loadCategories(forced: Boolean): LoadCategoryResult

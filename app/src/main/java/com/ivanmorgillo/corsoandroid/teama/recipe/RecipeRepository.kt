@@ -1,7 +1,7 @@
 package com.ivanmorgillo.corsoandroid.teama.recipe
 
-import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeResult
-import com.ivanmorgillo.corsoandroid.teama.network.NetworkAPI
+import com.ateam.delicious.domain.LoadRecipeResult
+import com.ateam.delicious.domain.NetworkAPI
 
 interface RecipesRepository {
     suspend fun loadRecipes(categoryName: String): LoadRecipeResult
@@ -12,5 +12,3 @@ class RecipeRepositoryImpl(private val api: NetworkAPI) : RecipesRepository {
         return api.loadRecipes(categoryName)
     }
 }
-
-data class Recipe(val name: String, val image: String, val idMeal: Long)

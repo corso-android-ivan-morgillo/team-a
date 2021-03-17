@@ -1,9 +1,9 @@
 package com.ivanmorgillo.corsoandroid.teama.favourite
 
+import com.ateam.delicious.domain.RecipeDetails
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
-import com.ivanmorgillo.corsoandroid.teama.detail.RecipeDetails
 import kotlinx.coroutines.tasks.await
 import timber.log.Timber
 

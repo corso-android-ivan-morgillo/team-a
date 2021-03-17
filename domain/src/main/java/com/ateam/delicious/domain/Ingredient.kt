@@ -1,4 +1,4 @@
-package com.ivanmorgillo.corsoandroid.teama.detail
+package com.ateam.delicious.domain
 
 data class Ingredient(
     val ingredientName: String,

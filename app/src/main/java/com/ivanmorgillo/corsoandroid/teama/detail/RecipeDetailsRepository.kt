@@ -1,7 +1,7 @@
 package com.ivanmorgillo.corsoandroid.teama.detail
 
-import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeDetailsResult
-import com.ivanmorgillo.corsoandroid.teama.network.NetworkAPI
+import com.ateam.delicious.domain.LoadRecipeDetailsResult
+import com.ateam.delicious.domain.NetworkAPI
 
 interface RecipeDetailsRepository {
     suspend fun loadRecipeDetails(idMeal: Long): LoadRecipeDetailsResult
@@ -16,13 +16,3 @@ class RecipeDetailsRepositoryImpl(private val api: NetworkAPI) : RecipeDetailsRe
         }
     }
 }
-
-data class RecipeDetails(
-    val name: String,
-    val image: String,
-    val video: String,
-    val idMeal: Long,
-    val ingredients: List<Ingredient>,
-    val instructions: String,
-    val area: String
-)

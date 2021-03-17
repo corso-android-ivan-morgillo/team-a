@@ -1,17 +1,23 @@
 package com.ivanmorgillo.corsoandroid.teama.network
 
-import com.ivanmorgillo.corsoandroid.teama.category.Category
-import com.ivanmorgillo.corsoandroid.teama.detail.Ingredient
-import com.ivanmorgillo.corsoandroid.teama.detail.RecipeDetails
-import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeDetailError.NoDetailFound
-import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeError.InterruptedRequest
-import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeError.NoInternet
-import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeError.NoRecipeFound
-import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeError.ServerError
-import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeError.SlowInternet
-import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeResult.Failure
-import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeResult.Success
-import com.ivanmorgillo.corsoandroid.teama.recipe.Recipe
+import com.ateam.delicious.domain.Category
+import com.ateam.delicious.domain.Ingredient
+import com.ateam.delicious.domain.LoadCategoryError
+import com.ateam.delicious.domain.LoadCategoryResult
+import com.ateam.delicious.domain.LoadRecipeDetailError
+import com.ateam.delicious.domain.LoadRecipeDetailError.NoDetailFound
+import com.ateam.delicious.domain.LoadRecipeDetailsResult
+import com.ateam.delicious.domain.LoadRecipeError.InterruptedRequest
+import com.ateam.delicious.domain.LoadRecipeError.NoInternet
+import com.ateam.delicious.domain.LoadRecipeError.NoRecipeFound
+import com.ateam.delicious.domain.LoadRecipeError.ServerError
+import com.ateam.delicious.domain.LoadRecipeError.SlowInternet
+import com.ateam.delicious.domain.LoadRecipeResult
+import com.ateam.delicious.domain.LoadRecipeResult.Failure
+import com.ateam.delicious.domain.LoadRecipeResult.Success
+import com.ateam.delicious.domain.NetworkAPI
+import com.ateam.delicious.domain.Recipe
+import com.ateam.delicious.domain.RecipeDetails
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -46,20 +52,6 @@ class CacheInterceptor : Interceptor {
 
 private const val SIZEONE = 50L
 private const val SIZETWO = 1024L
-
-interface NetworkAPI {
-    @Suppress("TooGenericExceptionCaught")
-    suspend fun loadRecipeDetails(idMeal: Long): LoadRecipeDetailsResult
-
-    @Suppress("TooGenericExceptionCaught")
-    suspend fun loadRecipes(categoryName: String): LoadRecipeResult
-
-    @Suppress("TooGenericExceptionCaught")
-    suspend fun loadCategories(): LoadCategoryResult
-
-    @Suppress("TooGenericExceptionCaught")
-    suspend fun loadRandomRecipe(): LoadRecipeDetailsResult
-}
 
 class NetworkApiImpl(cacheDir: File) : NetworkAPI {
     private val service: RecipeService
@@ -232,7 +224,7 @@ class NetworkApiImpl(cacheDir: File) : NetworkAPI {
 
     data class CategoryInfo(
         var recipesAmount: String,
-      //  var areaNames: List<String>,
+        //  var areaNames: List<String>,
     )
 
     private fun reformatFlagName(areaName: String): String {
@@ -324,52 +316,13 @@ class NetworkApiImpl(cacheDir: File) : NetworkAPI {
                 id = idCategory,
                 categoryDescription = strCategoryDescription,
                 recipeAmount = categoryInfo.recipesAmount,
-               /* categoryArea = categoryInfo.areaNames.map {
-                    "https://www.themealdb.com/images/icons/flags/big/64/$it.png"
-                } */
+                /* categoryArea = categoryInfo.areaNames.map {
+                     "https://www.themealdb.com/images/icons/flags/big/64/$it.png"
+                 } */
             )
             // possibilità di implementare la descrizione
         } else {
             null
         }
     }
-}
-
-sealed class LoadRecipeError {
-    object NoRecipeFound : LoadRecipeError()
-    object NoInternet : LoadRecipeError()
-    object InterruptedRequest : LoadRecipeError()
-    object SlowInternet : LoadRecipeError()
-    object ServerError : LoadRecipeError()
-}
-
-sealed class LoadRecipeDetailError {
-    object NoDetailFound : LoadRecipeDetailError()
-    object NoInternet : LoadRecipeDetailError()
-    object InterruptedRequest : LoadRecipeDetailError()
-    object SlowInternet : LoadRecipeDetailError()
-    object ServerError : LoadRecipeDetailError()
-}
-
-sealed class LoadCategoryError {
-    object NoCategoryFound : LoadCategoryError()
-    object NoInternet : LoadCategoryError()
-    object InterruptedRequest : LoadCategoryError()
-    object SlowInternet : LoadCategoryError()
-    object ServerError : LoadCategoryError()
-}
-
-sealed class LoadRecipeResult {
-    data class Success(val recipes: List<Recipe>) : LoadRecipeResult()
-    data class Failure(val error: LoadRecipeError) : LoadRecipeResult()
-}
-
-sealed class LoadRecipeDetailsResult {
-    data class Success(val details: RecipeDetails) : LoadRecipeDetailsResult()
-    data class Failure(val error: LoadRecipeDetailError) : LoadRecipeDetailsResult()
-}
-
-sealed class LoadCategoryResult {
-    data class Success(val categories: List<Category>) : LoadCategoryResult()
-    data class Failure(val error: LoadCategoryError) : LoadCategoryResult()
 }
