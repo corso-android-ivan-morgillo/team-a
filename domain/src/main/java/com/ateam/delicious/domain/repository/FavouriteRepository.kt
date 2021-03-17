@@ -2,9 +2,8 @@ package com.ateam.delicious.domain.repository
 
 import com.ateam.delicious.domain.RecipeDetails
 import com.ateam.delicious.domain.result.LoadFavouriteResult
-import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.tasks.await
 import timber.log.Timber
 
@@ -15,48 +14,66 @@ interface FavouriteRepository {
     suspend fun isFavourite(idMeal: Long): Boolean
 }
 
-class FavouriteRepositoryImpl(private val fireStoreDatabase: FirebaseFirestore) : FavouriteRepository {
+class FavouriteRepositoryImpl(
+    private val fireStoreDatabase: FirebaseFirestore,
+    private val authManager: AuthenticationManager
+) : FavouriteRepository {
 
-    private val favouriteCollection by lazy {
-        val universalUserId = Firebase.auth.currentUser.uid
-        fireStoreDatabase.collection("favourites-$universalUserId")
+    private val favouriteCollection: CollectionReference? = getCollection()
+
+    private fun getCollection(): CollectionReference? {
+        val universalUserId = authManager.getUid()
+        return if (universalUserId == null) {
+            null
+        } else {
+            fireStoreDatabase.collection("favourites-$universalUserId")
+        }
     }
 
     override suspend fun loadAll(): LoadFavouriteResult {
-        val x = favouriteCollection
-            .get()
-            .await()
-            .documents
-            .map {
-                it.data
-                val name = it["name"] as String
-                val id = it["id"] as Long
-                val image = it["image"] as String
-                RecipeDetails(
-                    name = name,
-                    image = image,
-                    video = "",
-                    idMeal = id,
-                    ingredients = emptyList(),
-                    instructions = "",
-                    area = ""
-                )
-            }
 
-        return LoadFavouriteResult.Success(x)
+        if (favouriteCollection != null) {
+            val x = favouriteCollection
+                .get()
+                .await()
+                .documents
+                .map {
+                    it.data
+                    val name = it["name"] as String
+                    val id = it["id"] as Long
+                    val image = it["image"] as String
+                    RecipeDetails(
+                        name = name,
+                        image = image,
+                        video = "",
+                        idMeal = id,
+                        ingredients = emptyList(),
+                        instructions = "",
+                        area = ""
+                    )
+                }
+            return LoadFavouriteResult.Success(x)
+        } else {
+            return LoadFavouriteResult.Success(emptyList())
+        }
     }
 
     override suspend fun isFavourite(idMeal: Long): Boolean {
-        val x = favouriteCollection
-            .document(idMeal.toString())
-            .get()
-            .await()
-        Timber.d("x is favourite --> $x")
-        return x.exists()
+        return if (favouriteCollection != null) {
+            val x = favouriteCollection
+                .document(idMeal.toString())
+                .get()
+                .await()
+            Timber.d("x is favourite --> $x")
+            x.exists()
+        } else {
+            false
+        }
+
     }
 
-
     override suspend fun add(favourite: RecipeDetails): Boolean {
+        if (!authManager.isUserLoggedIn()) return false
 
         val favouriteMap = hashMapOf(
 
@@ -65,20 +82,30 @@ class FavouriteRepositoryImpl(private val fireStoreDatabase: FirebaseFirestore) 
             "image" to favourite.image
 
         )
-
-        favouriteCollection
-            .document(favourite.idMeal.toString())
-            .set(favouriteMap)
-            .await()
-        return true
+        return if (favouriteCollection != null) {
+            favouriteCollection
+                .document(favourite.idMeal.toString())
+                .set(favouriteMap)
+                .await()
+            true
+        } else {
+            false
+        }
 
     }
 
     override suspend fun delete(idMeal: Long): Boolean {
-        favouriteCollection
-            .document(idMeal.toString())
-            .delete()
-            .await()
-        return true
+        if (!authManager.isUserLoggedIn()) return false
+
+        return if (favouriteCollection != null) {
+            favouriteCollection
+                .document(idMeal.toString())
+                .delete()
+                .await()
+            true
+        } else {
+            false
+        }
+
     }
 }

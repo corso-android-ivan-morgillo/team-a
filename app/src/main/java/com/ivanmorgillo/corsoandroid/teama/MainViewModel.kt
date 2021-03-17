@@ -39,6 +39,8 @@ class MainViewModel(private val repository: SettingsRepository, private val trac
                     actions.postValue(MainScreenAction.ChangeTheme(darkEnabled))
                 }
             }
+            MainScreenEvent.OnLogin -> actions.postValue(MainScreenAction.ShowLoginDialog)
+            MainScreenEvent.OnLogout -> actions.postValue(MainScreenAction.ShowLogout)
         }.exhaustive
     }
 }
@@ -49,6 +51,9 @@ sealed class MainScreenAction {
     object NavigateToFavourites : MainScreenAction()
     object NavigateToSettings : MainScreenAction()
     object NavigateToFeedback : MainScreenAction()
+    object ShowLoginDialog : MainScreenAction()
+    object ShowLogout : MainScreenAction()
+
     data class ChangeTheme(val darkEnabled: Boolean) : MainScreenAction()
 }
 
@@ -59,4 +64,6 @@ sealed class MainScreenEvent {
     object OnSettingsClick : MainScreenEvent()
     object OnFeedbackClick : MainScreenEvent()
     object OnInitTheme : MainScreenEvent()
+    object OnLogin : MainScreenEvent()
+    object OnLogout : MainScreenEvent()
 }

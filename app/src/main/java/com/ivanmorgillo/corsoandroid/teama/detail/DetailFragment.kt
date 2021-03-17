@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.transition.MaterialContainerTransform
+import com.ivanmorgillo.corsoandroid.teama.GoogleSignInRequest
 import com.ivanmorgillo.corsoandroid.teama.R
 import com.ivanmorgillo.corsoandroid.teama.databinding.FragmentDetailBinding
 import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
@@ -66,6 +67,10 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                     } // non trova le ricette in fase di Loading ad esempio
                     DetailScreenStates.Error -> binding.detailsListProgressBar.gone()
                     DetailScreenStates.Loading -> binding.detailsListProgressBar.visible()
+                    DetailScreenStates.OnLogin -> {
+
+                        (activity as GoogleSignInRequest).onLoginGoogle()
+                    }
                 }.exhaustive
             })
             viewModel.actions.observe(viewLifecycleOwner, { action ->
@@ -75,6 +80,9 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                     DetailScreenAction.ShowSlowInternetMessage -> showNoInternetMessage(recipeId)
                     DetailScreenAction.ShowServerErrorMessage -> showServerErrorMessage(recipeId)
                     DetailScreenAction.ShowNoRecipeDetailFoundMessage -> showNoRecipeDetailFoundMessage(recipeId)
+                    DetailScreenAction.RequestGoogleSignIn -> {
+                        (activity as GoogleSignInRequest).onLoginGoogle()
+                    }
                 }.exhaustive
             })
             viewModel.send(DetailScreenEvent.OnReady(recipeId))
@@ -100,7 +108,8 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
-        return if (id == R.id.favourite_button) { // quando si clicca il pulsante per aggiungere ai preferiti
+        return if (id == R.id.favourite_button) {
+
             viewModel.send(DetailScreenEvent.OnAddFavouriteClick)
             false
         } else super.onOptionsItemSelected(item)

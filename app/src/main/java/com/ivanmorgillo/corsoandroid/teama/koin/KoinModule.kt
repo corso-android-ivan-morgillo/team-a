@@ -1,5 +1,7 @@
 package com.ivanmorgillo.corsoandroid.teama.koin
 
+import com.ateam.delicious.domain.repository.AuthenticationManager
+import com.ateam.delicious.domain.repository.AuthenticationManagerImpl
 import com.ateam.delicious.domain.repository.CategoryRepository
 import com.ateam.delicious.domain.repository.CategoryRepositoryImpl
 import com.ateam.delicious.domain.repository.FavouriteRepository
@@ -34,9 +36,12 @@ val appModule = module {
         CategoryRepositoryImpl(api = get())
     }
     single<FavouriteRepository> {
-        FavouriteRepositoryImpl(fireStoreDatabase = get())
+        FavouriteRepositoryImpl(fireStoreDatabase = get(), authManager = get())
     }
 
+    single<AuthenticationManager> {
+        AuthenticationManagerImpl()
+    }
 
 
     single<SettingsRepository> {
@@ -50,7 +55,7 @@ val appModule = module {
     viewModel { MainViewModel(repository = get(), tracking = get()) }
     viewModel { CategoryViewModel(repository = get(), tracking = get()) }
     viewModel { RecipeViewModel(repository = get(), tracking = get()) }
-    viewModel { DetailViewModel(repository = get(), tracking = get(), favouritesRepository = get()) }
+    viewModel { DetailViewModel(repository = get(), tracking = get(), favouritesRepository = get(), authManager = get()) }
     viewModel { FavouriteViewModel(repository = get(), tracking = get(), settingsRepository = get()) }
     viewModel { SettingsViewModel(repository = get(), tracking = get()) }
 }
