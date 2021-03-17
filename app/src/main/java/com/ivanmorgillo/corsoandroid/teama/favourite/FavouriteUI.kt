@@ -1,6 +1,6 @@
 package com.ivanmorgillo.corsoandroid.teama.favourite
 
-import com.ivanmorgillo.corsoandroid.teama.detail.Ingredient
+import com.ateam.delicious.domain.Ingredient
 
 data class FavouriteUI(
     val id: Long,

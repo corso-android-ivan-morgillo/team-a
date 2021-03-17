@@ -3,6 +3,16 @@ package com.ivanmorgillo.corsoandroid.teama.detail
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ateam.delicious.domain.FavouriteRepository
+import com.ateam.delicious.domain.LoadRecipeDetailError.InterruptedRequest
+import com.ateam.delicious.domain.LoadRecipeDetailError.NoDetailFound
+import com.ateam.delicious.domain.LoadRecipeDetailError.NoInternet
+import com.ateam.delicious.domain.LoadRecipeDetailError.ServerError
+import com.ateam.delicious.domain.LoadRecipeDetailError.SlowInternet
+import com.ateam.delicious.domain.LoadRecipeDetailsResult.Failure
+import com.ateam.delicious.domain.LoadRecipeDetailsResult.Success
+import com.ateam.delicious.domain.RecipeDetails
+import com.ateam.delicious.domain.RecipeDetailsRepository
 import com.ivanmorgillo.corsoandroid.teama.Screens
 import com.ivanmorgillo.corsoandroid.teama.Tracking
 import com.ivanmorgillo.corsoandroid.teama.crashlytics.SingleLiveEvent
@@ -18,14 +28,6 @@ import com.ivanmorgillo.corsoandroid.teama.detail.DetailScreenStates.Content
 import com.ivanmorgillo.corsoandroid.teama.detail.DetailScreenStates.Error
 import com.ivanmorgillo.corsoandroid.teama.detail.DetailScreenStates.Loading
 import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
-import com.ivanmorgillo.corsoandroid.teama.favourite.FavouriteRepository
-import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeDetailError.InterruptedRequest
-import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeDetailError.NoDetailFound
-import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeDetailError.NoInternet
-import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeDetailError.ServerError
-import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeDetailError.SlowInternet
-import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeDetailsResult.Failure
-import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeDetailsResult.Success
 import kotlinx.coroutines.launch
 
 class DetailViewModel(

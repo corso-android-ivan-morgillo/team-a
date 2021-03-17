@@ -3,6 +3,13 @@ package com.ivanmorgillo.corsoandroid.teama.category
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ateam.delicious.domain.CategoryRepository
+import com.ateam.delicious.domain.LoadCategoryError.InterruptedRequest
+import com.ateam.delicious.domain.LoadCategoryError.NoCategoryFound
+import com.ateam.delicious.domain.LoadCategoryError.NoInternet
+import com.ateam.delicious.domain.LoadCategoryError.ServerError
+import com.ateam.delicious.domain.LoadCategoryError.SlowInternet
+import com.ateam.delicious.domain.LoadCategoryResult
 import com.ivanmorgillo.corsoandroid.teama.Screens
 import com.ivanmorgillo.corsoandroid.teama.Tracking
 import com.ivanmorgillo.corsoandroid.teama.category.CategoryScreenAction.ShowInterruptedRequestMessage
@@ -15,12 +22,6 @@ import com.ivanmorgillo.corsoandroid.teama.category.CategoryScreenStates.Error
 import com.ivanmorgillo.corsoandroid.teama.category.CategoryScreenStates.Loading
 import com.ivanmorgillo.corsoandroid.teama.crashlytics.SingleLiveEvent
 import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
-import com.ivanmorgillo.corsoandroid.teama.network.LoadCategoryError.InterruptedRequest
-import com.ivanmorgillo.corsoandroid.teama.network.LoadCategoryError.NoCategoryFound
-import com.ivanmorgillo.corsoandroid.teama.network.LoadCategoryError.NoInternet
-import com.ivanmorgillo.corsoandroid.teama.network.LoadCategoryError.ServerError
-import com.ivanmorgillo.corsoandroid.teama.network.LoadCategoryError.SlowInternet
-import com.ivanmorgillo.corsoandroid.teama.network.LoadCategoryResult
 import kotlinx.coroutines.launch
 
 class CategoryViewModel(private val repository: CategoryRepository, private val tracking: Tracking) : ViewModel() {
@@ -79,9 +80,9 @@ class CategoryViewModel(private val repository: CategoryRepository, private val 
                 title = it.name,
                 image = it.image,
                 id = it.id.toLong(),
-               /* flags = it.categoryArea.map {
-                    FlagUI(it)
-                }, */
+                /* flags = it.categoryArea.map {
+                     FlagUI(it)
+                 }, */
                 recipesCount = it.recipeAmount,
                 description = it.categoryDescription
             )

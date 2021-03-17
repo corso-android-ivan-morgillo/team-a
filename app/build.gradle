@@ -68,9 +68,16 @@ android {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
+
+    //Qui stiamo inserendo le dipendenze per il modulo app (entry point di android per "standard") così che possa conoscere ciò che gli serve.
+    implementation project(":di")
+    implementation project(":domain")
+
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.core:core-ktx:1.3.2'
     implementation 'androidx.appcompat:appcompat:1.2.0'
+
+    //Le dipendenze Ui le terremo nel modulo app.
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
 
     // RecyclerView
@@ -90,25 +97,6 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-livedata:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycle_version"
-
-    // Koin AndroidX features
-    implementation "org.koin:koin-androidx-scope:$koin_version"
-    implementation "org.koin:koin-androidx-viewmodel:$koin_version"
-    implementation "org.koin:koin-androidx-fragment:$koin_version"
-
-    //Kotlin coroutines
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.2'
-
-    // Retrofit
-    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
-    implementation 'com.google.code.gson:gson:2.8.6'
-    implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
-
-    // Logging interceptor
-    implementation("com.squareup.okhttp3:logging-interceptor:4.9.0")
-
-    // Timber
-    implementation 'com.jakewharton.timber:timber:4.7.1'
 
     //Firebase
     implementation platform('com.google.firebase:firebase-bom:26.4.0')
@@ -138,17 +126,9 @@ dependencies {
 
     //firebase login ui
     implementation 'com.firebaseui:firebase-ui-auth:6.4.0'
-    implementation platform('com.google.firebase:firebase-bom:26.7.0')
-
-    //firestore
-    implementation 'com.google.firebase:firebase-firestore-ktx'
-
-    //Firebase
-    implementation 'com.google.firebase:firebase-auth-ktx'
+    
     implementation 'com.google.firebase:firebase-messaging-ktx'
     implementation 'com.google.firebase:firebase-database-ktx'
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.1.1'
-    implementation 'com.google.android.gms:play-services-auth:19.0.0'
 
 
     // Testing
