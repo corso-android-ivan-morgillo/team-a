@@ -1,4 +1,4 @@
-package com.ateam.delicious.domain
+package com.ateam.delicious.domain.repository
 
 import android.content.Context
 import android.content.res.Configuration

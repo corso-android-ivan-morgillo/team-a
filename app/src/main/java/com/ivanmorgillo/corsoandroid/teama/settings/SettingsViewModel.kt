@@ -3,7 +3,7 @@ package com.ivanmorgillo.corsoandroid.teama.settings
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ateam.delicious.domain.SettingsRepository
+import com.ateam.delicious.domain.repository.SettingsRepository
 import com.ivanmorgillo.corsoandroid.teama.Tracking
 import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
 import kotlinx.coroutines.launch

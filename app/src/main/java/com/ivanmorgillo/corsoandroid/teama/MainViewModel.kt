@@ -2,7 +2,7 @@ package com.ivanmorgillo.corsoandroid.teama
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ateam.delicious.domain.SettingsRepository
+import com.ateam.delicious.domain.repository.SettingsRepository
 import com.ivanmorgillo.corsoandroid.teama.crashlytics.SingleLiveEvent
 import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
 import kotlinx.coroutines.launch

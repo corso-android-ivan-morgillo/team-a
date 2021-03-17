@@ -3,11 +3,11 @@ package com.ivanmorgillo.corsoandroid.teama.favourite
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ateam.delicious.domain.FavouriteRepository
-import com.ateam.delicious.domain.LoadFavouriteError
-import com.ateam.delicious.domain.LoadFavouriteResult
 import com.ateam.delicious.domain.RecipeDetails
-import com.ateam.delicious.domain.SettingsRepository
+import com.ateam.delicious.domain.error.LoadFavouriteError
+import com.ateam.delicious.domain.repository.FavouriteRepository
+import com.ateam.delicious.domain.repository.SettingsRepository
+import com.ateam.delicious.domain.result.LoadFavouriteResult
 import com.ivanmorgillo.corsoandroid.teama.Screens
 import com.ivanmorgillo.corsoandroid.teama.Tracking
 import com.ivanmorgillo.corsoandroid.teama.crashlytics.SingleLiveEvent

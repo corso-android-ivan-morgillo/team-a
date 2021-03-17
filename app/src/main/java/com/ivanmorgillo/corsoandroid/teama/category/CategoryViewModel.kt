@@ -3,13 +3,13 @@ package com.ivanmorgillo.corsoandroid.teama.category
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ateam.delicious.domain.CategoryRepository
-import com.ateam.delicious.domain.LoadCategoryError.InterruptedRequest
-import com.ateam.delicious.domain.LoadCategoryError.NoCategoryFound
-import com.ateam.delicious.domain.LoadCategoryError.NoInternet
-import com.ateam.delicious.domain.LoadCategoryError.ServerError
-import com.ateam.delicious.domain.LoadCategoryError.SlowInternet
-import com.ateam.delicious.domain.LoadCategoryResult
+import com.ateam.delicious.domain.error.LoadCategoryError.InterruptedRequest
+import com.ateam.delicious.domain.error.LoadCategoryError.NoCategoryFound
+import com.ateam.delicious.domain.error.LoadCategoryError.NoInternet
+import com.ateam.delicious.domain.error.LoadCategoryError.ServerError
+import com.ateam.delicious.domain.error.LoadCategoryError.SlowInternet
+import com.ateam.delicious.domain.repository.CategoryRepository
+import com.ateam.delicious.domain.result.LoadCategoryResult
 import com.ivanmorgillo.corsoandroid.teama.Screens
 import com.ivanmorgillo.corsoandroid.teama.Tracking
 import com.ivanmorgillo.corsoandroid.teama.category.CategoryScreenAction.ShowInterruptedRequestMessage
@@ -80,9 +80,6 @@ class CategoryViewModel(private val repository: CategoryRepository, private val 
                 title = it.name,
                 image = it.image,
                 id = it.id.toLong(),
-                /* flags = it.categoryArea.map {
-                     FlagUI(it)
-                 }, */
                 recipesCount = it.recipeAmount,
                 description = it.categoryDescription
             )

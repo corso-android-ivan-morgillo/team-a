@@ -3,10 +3,10 @@ package com.ivanmorgillo.corsoandroid.teama.recipe
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ateam.delicious.domain.LoadRecipeError
-import com.ateam.delicious.domain.LoadRecipeResult.Failure
-import com.ateam.delicious.domain.LoadRecipeResult.Success
-import com.ateam.delicious.domain.RecipesRepository
+import com.ateam.delicious.domain.error.LoadRecipeError
+import com.ateam.delicious.domain.repository.RecipesRepository
+import com.ateam.delicious.domain.result.LoadRecipeResult.Failure
+import com.ateam.delicious.domain.result.LoadRecipeResult.Success
 import com.ivanmorgillo.corsoandroid.teama.Screens
 import com.ivanmorgillo.corsoandroid.teama.Tracking
 import com.ivanmorgillo.corsoandroid.teama.crashlytics.SingleLiveEvent

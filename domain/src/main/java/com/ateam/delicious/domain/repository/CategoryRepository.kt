@@ -1,4 +1,7 @@
-package com.ateam.delicious.domain
+package com.ateam.delicious.domain.repository
+
+import com.ateam.delicious.domain.NetworkAPI
+import com.ateam.delicious.domain.result.LoadCategoryResult
 
 interface CategoryRepository {
     suspend fun loadCategories(forced: Boolean): LoadCategoryResult
