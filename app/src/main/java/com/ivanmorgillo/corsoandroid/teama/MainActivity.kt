@@ -153,7 +153,7 @@ class MainActivity : AppCompatActivity() {
         } else {
             Timber.d("User is logged, welcome back!")
         }
-        
+
     }
 
     private fun signInAnonymously() {

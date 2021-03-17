@@ -4,10 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
 import android.view.View
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.ivanmorgillo.corsoandroid.teama.R
 import com.ivanmorgillo.corsoandroid.teama.category.CategoryScreenAction.NavigateToRecipes
 import com.ivanmorgillo.corsoandroid.teama.category.CategoryScreenAction.ShowInterruptedRequestMessage
@@ -73,7 +71,6 @@ class CategoryFragment : Fragment(R.layout.fragment_category) {
                 }.exhaustive
             })
 
-        // viewModel.send(CategoryScreenEvent.OnReady)
     }
 
     override fun onResume() {

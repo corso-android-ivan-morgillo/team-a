@@ -1,15 +1,15 @@
 package com.ivanmorgillo.corsoandroid.teama.koin
 
-import com.ateam.delicious.domain.CategoryRepository
-import com.ateam.delicious.domain.CategoryRepositoryImpl
-import com.ateam.delicious.domain.FavouriteRepository
-import com.ateam.delicious.domain.FavouriteRepositoryImpl
-import com.ateam.delicious.domain.RecipeDetailsRepository
-import com.ateam.delicious.domain.RecipeDetailsRepositoryImpl
-import com.ateam.delicious.domain.RecipeRepositoryImpl
-import com.ateam.delicious.domain.RecipesRepository
-import com.ateam.delicious.domain.SettingsRepository
-import com.ateam.delicious.domain.SettingsRepositoryImpl
+import com.ateam.delicious.domain.repository.CategoryRepository
+import com.ateam.delicious.domain.repository.CategoryRepositoryImpl
+import com.ateam.delicious.domain.repository.FavouriteRepository
+import com.ateam.delicious.domain.repository.FavouriteRepositoryImpl
+import com.ateam.delicious.domain.repository.RecipeDetailsRepository
+import com.ateam.delicious.domain.repository.RecipeDetailsRepositoryImpl
+import com.ateam.delicious.domain.repository.RecipeRepositoryImpl
+import com.ateam.delicious.domain.repository.RecipesRepository
+import com.ateam.delicious.domain.repository.SettingsRepository
+import com.ateam.delicious.domain.repository.SettingsRepositoryImpl
 import com.ivanmorgillo.corsoandroid.teama.MainViewModel
 import com.ivanmorgillo.corsoandroid.teama.Tracking
 import com.ivanmorgillo.corsoandroid.teama.TrackingImpl

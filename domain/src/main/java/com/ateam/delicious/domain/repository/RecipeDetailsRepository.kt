@@ -1,4 +1,7 @@
-package com.ateam.delicious.domain
+package com.ateam.delicious.domain.repository
+
+import com.ateam.delicious.domain.NetworkAPI
+import com.ateam.delicious.domain.result.LoadRecipeDetailsResult
 
 interface RecipeDetailsRepository {
     suspend fun loadRecipeDetails(idMeal: Long): LoadRecipeDetailsResult

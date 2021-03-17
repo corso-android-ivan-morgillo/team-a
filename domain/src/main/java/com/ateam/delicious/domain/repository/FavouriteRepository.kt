@@ -1,5 +1,7 @@
-package com.ateam.delicious.domain
+package com.ateam.delicious.domain.repository
 
+import com.ateam.delicious.domain.RecipeDetails
+import com.ateam.delicious.domain.result.LoadFavouriteResult
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase

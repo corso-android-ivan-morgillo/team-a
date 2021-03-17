@@ -1,5 +1,8 @@
 package com.ateam.delicious.networking
 
+import com.ateam.delicious.networking.dto.CategoryDTO
+import com.ateam.delicious.networking.dto.RecipeDTO
+import com.ateam.delicious.networking.dto.RecipeDetailsDTO
 import retrofit2.http.GET
 import retrofit2.http.Query
 

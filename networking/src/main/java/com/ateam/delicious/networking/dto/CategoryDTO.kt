@@ -1,4 +1,4 @@
-package com.ateam.delicious.networking
+package com.ateam.delicious.networking.dto
 
 import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
