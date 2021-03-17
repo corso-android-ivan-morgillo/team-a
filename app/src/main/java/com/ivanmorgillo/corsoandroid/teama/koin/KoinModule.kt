@@ -55,7 +55,14 @@ val appModule = module {
     viewModel { MainViewModel(repository = get(), tracking = get()) }
     viewModel { CategoryViewModel(repository = get(), tracking = get()) }
     viewModel { RecipeViewModel(repository = get(), tracking = get()) }
-    viewModel { DetailViewModel(repository = get(), tracking = get(), favouritesRepository = get(), authManager = get()) }
+    viewModel {
+        DetailViewModel(
+            repository = get(),
+            tracking = get(),
+            favouritesRepository = get(),
+            authManager = get()
+        )
+    }
     viewModel { FavouriteViewModel(repository = get(), tracking = get(), settingsRepository = get()) }
     viewModel { SettingsViewModel(repository = get(), tracking = get()) }
 }
