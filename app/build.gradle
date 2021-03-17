@@ -35,6 +35,7 @@ android {
 
     buildTypes {
         release {
+            //la proprietà minifyEnabled,proguardFiles serve per offuscare il codice sorgente dell'applicazione.
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             manifestPlaceholders = [crashlyticsCollectionEnabled: "true"]
@@ -132,8 +133,8 @@ dependencies {
     implementation "androidx.preference:preference-ktx:1.1.1"
 
     //dipendenze per errore low 16 bit
-    implementation 'androidx.activity:activity-ktx:1.3.0-alpha04'
-    implementation 'androidx.fragment:fragment-ktx:1.3.1'
+    implementation 'androidx.activity:activity-ktx:1.2.1'
+    implementation 'androidx.fragment:fragment-ktx:1.3.0'
 
     //firebase login ui
     implementation 'com.firebaseui:firebase-ui-auth:6.4.0'
