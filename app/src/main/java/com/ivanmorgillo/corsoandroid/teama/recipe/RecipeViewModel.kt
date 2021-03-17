@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.ateam.delicious.domain.LoadRecipeError
 import com.ateam.delicious.domain.LoadRecipeResult.Failure
 import com.ateam.delicious.domain.LoadRecipeResult.Success
+import com.ateam.delicious.domain.RecipesRepository
 import com.ivanmorgillo.corsoandroid.teama.Screens
 import com.ivanmorgillo.corsoandroid.teama.Tracking
 import com.ivanmorgillo.corsoandroid.teama.crashlytics.SingleLiveEvent

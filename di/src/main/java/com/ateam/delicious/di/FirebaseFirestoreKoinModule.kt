@@ -1,4 +1,4 @@
-package com.ivanmorgillo.corsoandroid.teama.koin
+package com.ateam.delicious.di
 
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore

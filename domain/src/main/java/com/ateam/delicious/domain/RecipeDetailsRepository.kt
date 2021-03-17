@@ -1,7 +1,4 @@
-package com.ivanmorgillo.corsoandroid.teama.detail
-
-import com.ateam.delicious.domain.LoadRecipeDetailsResult
-import com.ateam.delicious.domain.NetworkAPI
+package com.ateam.delicious.domain
 
 interface RecipeDetailsRepository {
     suspend fun loadRecipeDetails(idMeal: Long): LoadRecipeDetailsResult

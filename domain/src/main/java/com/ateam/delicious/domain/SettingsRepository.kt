@@ -1,4 +1,4 @@
-package com.ivanmorgillo.corsoandroid.teama.settings
+package com.ateam.delicious.domain
 
 import android.content.Context
 import android.content.res.Configuration
@@ -12,16 +12,16 @@ interface SettingsRepository {
     suspend fun isFavouriteMessageShown(): Boolean
 }
 
-class SettingsRepositoryImpl(val context: Context) : SettingsRepository{
+class SettingsRepositoryImpl(val context: Context) : SettingsRepository {
 
     private val storage by lazy { context.getSharedPreferences("settings", Context.MODE_PRIVATE) }
 
     override suspend fun setDarkTheme(darkEnable: Boolean): Boolean = withContext(Dispatchers.IO) {
-       storage.edit().putBoolean("dark_theme", darkEnable).commit()
+        storage.edit().putBoolean("dark_theme", darkEnable).commit()
     }
 
-    override suspend fun isDarkThemeEnabled(): Boolean = withContext(Dispatchers.IO){
-       storage.getBoolean("dark_theme", isNightModeEnabled())
+    override suspend fun isDarkThemeEnabled(): Boolean = withContext(Dispatchers.IO) {
+        storage.getBoolean("dark_theme", isNightModeEnabled())
     }
 
     override suspend fun setFavouriteMessageShown(shown: Boolean): Boolean = withContext(Dispatchers.IO) {

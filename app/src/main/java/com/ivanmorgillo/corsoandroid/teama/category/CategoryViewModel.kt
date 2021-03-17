@@ -3,6 +3,7 @@ package com.ivanmorgillo.corsoandroid.teama.category
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ateam.delicious.domain.CategoryRepository
 import com.ateam.delicious.domain.LoadCategoryError.InterruptedRequest
 import com.ateam.delicious.domain.LoadCategoryError.NoCategoryFound
 import com.ateam.delicious.domain.LoadCategoryError.NoInternet

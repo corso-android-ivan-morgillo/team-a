@@ -3,12 +3,15 @@ package com.ivanmorgillo.corsoandroid.teama.favourite
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ateam.delicious.domain.FavouriteRepository
+import com.ateam.delicious.domain.LoadFavouriteError
+import com.ateam.delicious.domain.LoadFavouriteResult
 import com.ateam.delicious.domain.RecipeDetails
+import com.ateam.delicious.domain.SettingsRepository
 import com.ivanmorgillo.corsoandroid.teama.Screens
 import com.ivanmorgillo.corsoandroid.teama.Tracking
 import com.ivanmorgillo.corsoandroid.teama.crashlytics.SingleLiveEvent
 import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
-import com.ivanmorgillo.corsoandroid.teama.settings.SettingsRepository
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.*
@@ -181,13 +184,4 @@ sealed class FavouriteScreenEvent {
 
     object OnReady : FavouriteScreenEvent()
     object OnRefresh : FavouriteScreenEvent()
-}
-
-sealed class LoadFavouriteResult {
-    data class Success(val favourites: List<RecipeDetails>) : LoadFavouriteResult()
-    data class Failure(val error: LoadFavouriteError) : LoadFavouriteResult()
-}
-
-sealed class LoadFavouriteError {
-    object NoFavouriteFound : LoadFavouriteError()
 }
