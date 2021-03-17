@@ -1,4 +1,4 @@
-package com.ivanmorgillo.corsoandroid.teama.network
+package com.ateam.delicious.networking
 
 import retrofit2.http.GET
 import retrofit2.http.Query

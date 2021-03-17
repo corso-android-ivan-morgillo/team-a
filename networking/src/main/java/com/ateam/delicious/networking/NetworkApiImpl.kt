@@ -1,4 +1,4 @@
-package com.ivanmorgillo.corsoandroid.teama.network
+package com.ateam.delicious.networking
 
 import com.ateam.delicious.domain.Category
 import com.ateam.delicious.domain.Ingredient

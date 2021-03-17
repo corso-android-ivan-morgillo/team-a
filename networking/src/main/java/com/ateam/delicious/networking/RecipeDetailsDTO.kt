@@ -1,4 +1,4 @@
-package com.ivanmorgillo.corsoandroid.teama.network
+package com.ateam.delicious.networking
 
 import androidx.annotation.Keep
 import com.google.gson.annotations.SerializedName
