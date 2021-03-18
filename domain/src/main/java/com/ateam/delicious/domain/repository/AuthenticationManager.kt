@@ -10,7 +10,7 @@ interface AuthenticationManager {
 
     fun getUid(): String?
     fun isUserLoggedIn(): Boolean
-    fun getCollection(dataBase: FirebaseFirestore): CollectionReference?
+    fun getFavouriteCollection(dataBase: FirebaseFirestore): CollectionReference?
 }
 
 class AuthenticationManagerImpl() : AuthenticationManager {
@@ -22,7 +22,7 @@ class AuthenticationManagerImpl() : AuthenticationManager {
         return Firebase.auth.currentUser != null
     }
 
-    override fun getCollection(dataBase: FirebaseFirestore): CollectionReference? {
+    override fun getFavouriteCollection(dataBase: FirebaseFirestore): CollectionReference? {
         val universalUserId = getUid()
         return if (universalUserId == null) {
             Timber.d("Add sono in get collection ma non c'è Uid")

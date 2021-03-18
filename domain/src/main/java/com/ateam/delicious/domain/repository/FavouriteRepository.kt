@@ -19,7 +19,7 @@ class FavouriteRepositoryImpl(
     private val authManager: AuthenticationManager
 ) : FavouriteRepository {
 
-    private var favouriteCollection: CollectionReference? = authManager.getCollection(fireStoreDatabase)
+    private var favouriteCollection: CollectionReference? = authManager.getFavouriteCollection(fireStoreDatabase)
 
     override suspend fun loadAll(): LoadFavouriteResult {
         Timber.d("Add Sono in load all con questo Uid ${authManager.getUid()}")
@@ -68,7 +68,7 @@ class FavouriteRepositoryImpl(
         Timber.d("Add prima riga!")
         if (!authManager.isUserLoggedIn()) return false
 
-        if (favouriteCollection == null) favouriteCollection = authManager.getCollection(fireStoreDatabase)
+        if (favouriteCollection == null) favouriteCollection = authManager.getFavouriteCollection(fireStoreDatabase)
 
         Timber.d("Add Dopo il guard!")
         val favouriteMap = hashMapOf(
