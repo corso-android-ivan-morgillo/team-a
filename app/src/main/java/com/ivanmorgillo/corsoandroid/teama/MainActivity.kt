@@ -5,7 +5,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.Gravity
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -40,7 +39,8 @@ class MainActivity : AppCompatActivity(), GoogleLoginRequest {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
-       // headerBinding = NavHeaderMainBinding.bind(headerView)
+        val headerView = binding.navView.getHeaderView(0)
+        headerBinding = NavHeaderMainBinding.bind(headerView)
         val view = binding.root
         setContentView(view)
         val toolbar: Toolbar = binding.appBarMain.toolbar
@@ -72,8 +72,8 @@ class MainActivity : AppCompatActivity(), GoogleLoginRequest {
             binding.drawerLayout.closeDrawer(GravityCompat.START)
             true
         }
-        viewModel.states.observe(this, {state ->
-            when(state) {
+        viewModel.states.observe(this, { state ->
+            when (state) {
                 is MainScreenStates.LoggedIn -> {
                     val user = state.user
                     if (user != null) {
@@ -85,9 +85,6 @@ class MainActivity : AppCompatActivity(), GoogleLoginRequest {
                         )
                         message.setGravity(Gravity.CENTER, 0, 0)
                         message.show()
-                        // val headerView = binding.navView.getHeaderView(0)
-                        // val headerBinding = NavHeaderMainBinding.bind(headerView)
-
                         val imageView = headerBinding.imageView
                         val userTextView = headerBinding.userTextView
                         userTextView.text = user.email
@@ -169,15 +166,16 @@ class MainActivity : AppCompatActivity(), GoogleLoginRequest {
         binding.drawerLayout.closeDrawer(GravityCompat.START)
     }
 
-    private val firebaseAuthenticationResultLauncher= registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            Timber.d("Login successful")
-            viewModel.send(MainScreenEvent.OnLoginSuccessful(Firebase.auth.currentUser))
-        } else {
-            Timber.e("User login failed")
-            viewModel.send(MainScreenEvent.OnLoginFailed)
+    private val firebaseAuthenticationResultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                Timber.d("Login successful")
+                viewModel.send(MainScreenEvent.OnLoginSuccessful(Firebase.auth.currentUser))
+            } else {
+                Timber.e("User login failed")
+                viewModel.send(MainScreenEvent.OnLoginFailed)
+            }
         }
-    }
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment)
