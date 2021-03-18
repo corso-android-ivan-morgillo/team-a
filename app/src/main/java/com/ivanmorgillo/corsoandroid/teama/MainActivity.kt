@@ -24,7 +24,7 @@ import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
-class MainActivity : AppCompatActivity(), GoogleSignInRequest {
+class MainActivity : AppCompatActivity(), GoogleLoginRequest {
 
     private val viewModel: MainViewModel by viewModel()
     private lateinit var binding: ActivityMainBinding
@@ -90,7 +90,7 @@ class MainActivity : AppCompatActivity(), GoogleSignInRequest {
         viewModel.send(MainScreenEvent.OnInitTheme)
     }
 
-    override fun onLoginGoogle() {
+    override fun onGoogleLogin() {
         viewModel.send(MainScreenEvent.OnLogin)
     }
 

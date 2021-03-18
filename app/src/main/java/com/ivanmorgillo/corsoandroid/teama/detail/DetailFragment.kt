@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.transition.MaterialContainerTransform
-import com.ivanmorgillo.corsoandroid.teama.GoogleSignInRequest
+import com.ivanmorgillo.corsoandroid.teama.GoogleLoginRequest
 import com.ivanmorgillo.corsoandroid.teama.R
 import com.ivanmorgillo.corsoandroid.teama.databinding.FragmentDetailBinding
 import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
@@ -49,7 +49,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
             { viewModel.send(DetailScreenEvent.OnInstructionsClick) }
         )
         binding.detailScreenRecyclerview.adapter = adapter
-        var recipeId = args.recipeId // ID ottenuto dalla direction da un'altro fragment (es: recipeFragment)
+        var recipeId = args.recipeId // ID ottenuto dalla direction da un altro fragment (es: recipeFragment)
         if (arguments != null) { // ID ottenuto dal bundle, cioè dalla MainActivity (menu laterale)
             recipeId = arguments!!.getLong("recipe_id")
         }
@@ -67,10 +67,6 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                     } // non trova le ricette in fase di Loading ad esempio
                     DetailScreenStates.Error -> binding.detailsListProgressBar.gone()
                     DetailScreenStates.Loading -> binding.detailsListProgressBar.visible()
-                    DetailScreenStates.OnLogin -> {
-
-                        (activity as GoogleSignInRequest).onLoginGoogle()
-                    }
                 }.exhaustive
             })
             viewModel.actions.observe(viewLifecycleOwner, { action ->
@@ -80,9 +76,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                     DetailScreenAction.ShowSlowInternetMessage -> showNoInternetMessage(recipeId)
                     DetailScreenAction.ShowServerErrorMessage -> showServerErrorMessage(recipeId)
                     DetailScreenAction.ShowNoRecipeDetailFoundMessage -> showNoRecipeDetailFoundMessage(recipeId)
-                    DetailScreenAction.RequestGoogleSignIn -> {
-                        (activity as GoogleSignInRequest).onLoginGoogle()
-                    }
+                    DetailScreenAction.RequestGoogleLogin -> (activity as GoogleLoginRequest).onGoogleLogin()
                 }.exhaustive
             })
             viewModel.send(DetailScreenEvent.OnReady(recipeId))

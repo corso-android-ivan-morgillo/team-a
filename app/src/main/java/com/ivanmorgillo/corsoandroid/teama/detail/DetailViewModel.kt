@@ -55,15 +55,13 @@ class DetailViewModel(
             is OnAddFavouriteClick -> {
                 tracking.logEvent("on_favourite_clicked")
                 if (!authManager.isUserLoggedIn()) {
-                    actions.postValue(DetailScreenAction.RequestGoogleSignIn)
+                    actions.postValue(DetailScreenAction.RequestGoogleLogin)
                 } else {
                     //aggiungi favorito
                     viewModelScope.launch { toggleFavourite() }
                 }
 
             }
-            DetailScreenEvent.OnLogin -> states.postValue(DetailScreenStates.OnLogin)
-
         }.exhaustive
     }
 
@@ -162,8 +160,6 @@ sealed class DetailScreenStates {
     // questi oggetti rappresentano la nostra schermata inequivocabilmente
     object Loading : DetailScreenStates()
     object Error : DetailScreenStates()
-    object OnLogin : DetailScreenStates()
-
     // se la lista cambia dobbiamo usare una 'data class' quindi non usiamo 'object'
     data class Content(val details: List<RecipeDetailsUI>, val isFavourite: Boolean) : DetailScreenStates()
 }
@@ -174,7 +170,7 @@ sealed class DetailScreenAction {
     object ShowServerErrorMessage : DetailScreenAction()
     object ShowInterruptedRequestMessage : DetailScreenAction()
     object ShowNoRecipeDetailFoundMessage : DetailScreenAction()
-    object RequestGoogleSignIn : DetailScreenAction()
+    object RequestGoogleLogin : DetailScreenAction()
 }
 
 sealed class DetailScreenEvent {
@@ -182,6 +178,5 @@ sealed class DetailScreenEvent {
     object OnIngredientsClick : DetailScreenEvent()
     object OnInstructionsClick : DetailScreenEvent()
     object OnAddFavouriteClick : DetailScreenEvent()
-    object OnLogin : DetailScreenEvent()
 
 }
