@@ -23,8 +23,7 @@ class FavouriteRepositoryImpl(
 
     override suspend fun loadAll(): LoadFavouriteResult {
         Timber.d("Add Sono in load all con questo Uid ${authManager.getUid()}")
-        if (!authManager.isUserLoggedIn()) favouriteCollection = null
-
+        favouriteCollection = authManager.getFavouriteCollection(fireStoreDatabase)
         if (favouriteCollection != null) {
             val x = favouriteCollection!!
                 .get()
@@ -52,6 +51,7 @@ class FavouriteRepositoryImpl(
     }
 
     override suspend fun isFavourite(idMeal: Long): Boolean {
+        favouriteCollection = authManager.getFavouriteCollection(fireStoreDatabase)
         return if (favouriteCollection != null) {
             val x = favouriteCollection!!
                 .document(idMeal.toString())
@@ -68,7 +68,7 @@ class FavouriteRepositoryImpl(
         Timber.d("Add prima riga!")
         if (!authManager.isUserLoggedIn()) return false
 
-        if (favouriteCollection == null) favouriteCollection = authManager.getFavouriteCollection(fireStoreDatabase)
+        favouriteCollection = authManager.getFavouriteCollection(fireStoreDatabase)
 
         Timber.d("Add Dopo il guard!")
         val favouriteMap = hashMapOf(
@@ -93,7 +93,7 @@ class FavouriteRepositoryImpl(
 
     override suspend fun delete(idMeal: Long): Boolean {
         if (!authManager.isUserLoggedIn()) return false
-
+        favouriteCollection = authManager.getFavouriteCollection(fireStoreDatabase)
         return if (favouriteCollection != null) {
             favouriteCollection!!
                 .document(idMeal.toString())
