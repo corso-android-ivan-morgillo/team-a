@@ -15,20 +15,11 @@ interface FavouriteRepository {
 }
 
 class FavouriteRepositoryImpl(
-    private val fireStoreDatabase: FirebaseFirestore,
+    fireStoreDatabase: FirebaseFirestore,
     private val authManager: AuthenticationManager
 ) : FavouriteRepository {
 
-    private val favouriteCollection: CollectionReference? = getCollection()
-
-    private fun getCollection(): CollectionReference? {
-        val universalUserId = authManager.getUid()
-        return if (universalUserId == null) {
-            null
-        } else {
-            fireStoreDatabase.collection("favourites-$universalUserId")
-        }
-    }
+    private val favouriteCollection: CollectionReference? = authManager.getCollection(fireStoreDatabase)
 
     override suspend fun loadAll(): LoadFavouriteResult {
 
@@ -73,8 +64,9 @@ class FavouriteRepositoryImpl(
     }
 
     override suspend fun add(favourite: RecipeDetails): Boolean {
+        Timber.d("Add prima riga!")
         if (!authManager.isUserLoggedIn()) return false
-
+        Timber.d("Add Dopo il guard!")
         val favouriteMap = hashMapOf(
 
             "id" to favourite.idMeal,

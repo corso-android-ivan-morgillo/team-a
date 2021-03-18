@@ -105,7 +105,7 @@ class MainActivity : AppCompatActivity(), GoogleLoginRequest {
     }
 
     private fun firebaseLogin() {
-        //activity firebaase LOGIN
+        //activity firebase LOGIN
         /**Per questo va  aggiunto il pulsante apposito login*/
         val providers = arrayListOf(
             AuthUI.IdpConfig.GoogleBuilder().build()
@@ -124,6 +124,7 @@ class MainActivity : AppCompatActivity(), GoogleLoginRequest {
 
             if (result.resultCode == Activity.RESULT_OK) {
                 Timber.d("Login successful")
+                /** */
             } else {
                 Timber.e("User login failed")
             }
