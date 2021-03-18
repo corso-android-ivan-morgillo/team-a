@@ -49,8 +49,6 @@ class MainActivity : AppCompatActivity(), GoogleLoginRequest {
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.categoryFragment, R.id.favouriteFragment,
@@ -73,6 +71,43 @@ class MainActivity : AppCompatActivity(), GoogleLoginRequest {
             binding.drawerLayout.closeDrawer(GravityCompat.START)
             true
         }
+        observeStates()
+        viewModel.actions.observe(this, { action ->
+            when (action) {
+                MainScreenAction.NavigateToCategory -> navController.navigate(R.id.categoryFragment)
+                MainScreenAction.NavigateToFavourites -> navController.navigate(R.id.favouriteFragment)
+                MainScreenAction.NavigateToFeedback -> openUrl(getString(R.string.feedback_url))
+                MainScreenAction.NavigateToRandomRecipe -> {
+                    Toast.makeText(this, getString(R.string.loading_random_recipe), Toast.LENGTH_SHORT).show()
+                    val bundle = bundleOf("recipe_id" to -1L)
+                    navController.navigate(R.id.detailFragment, bundle)
+                }
+                MainScreenAction.NavigateToSettings -> navController.navigate(R.id.settingsFragment)
+                is MainScreenAction.ChangeTheme -> initTheme(action.darkEnabled)
+                MainScreenAction.ShowLoginDialog -> firebaseLogin()
+                MainScreenAction.ShowLogout -> firebaseLogout()
+                is MainScreenAction.UserLogin -> {
+                    if (action.userLogged) {
+                        viewModel.send(MainScreenEvent.OnLogin)
+                    } else {
+                        Timber.d("L'utente non era loggato e quindi non richiedo il login allo startup")
+                    }
+                }
+            }.exhaustive
+        })
+        viewModel.send(MainScreenEvent.OnInitTheme)
+        viewModel.send(MainScreenEvent.OnInitUser)
+    }
+
+    private fun initTheme(darkEnabled: Boolean) {
+        if (darkEnabled) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        }
+    }
+
+    private fun observeStates() {
         viewModel.states.observe(this, { state ->
             when (state) {
                 is MainScreenStates.LoggedIn -> {
@@ -90,38 +125,6 @@ class MainActivity : AppCompatActivity(), GoogleLoginRequest {
                 }
             }.exhaustive
         })
-        viewModel.actions.observe(this, { action ->
-            when (action) {
-                MainScreenAction.NavigateToCategory -> navController.navigate(R.id.categoryFragment)
-                MainScreenAction.NavigateToFavourites -> navController.navigate(R.id.favouriteFragment)
-                MainScreenAction.NavigateToFeedback -> openUrl(getString(R.string.feedback_url))
-                MainScreenAction.NavigateToRandomRecipe -> {
-                    Toast.makeText(this, getString(R.string.loading_random_recipe), Toast.LENGTH_SHORT).show()
-                    val bundle = bundleOf("recipe_id" to -1L)
-                    navController.navigate(R.id.detailFragment, bundle)
-                }
-                MainScreenAction.NavigateToSettings -> navController.navigate(R.id.settingsFragment)
-                is MainScreenAction.ChangeTheme -> {
-                    val darkEnabled = action.darkEnabled
-                    if (darkEnabled) {
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                    } else {
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                    }
-                }
-                MainScreenAction.ShowLoginDialog -> firebaseLogin()
-                MainScreenAction.ShowLogout -> firebaseLogout()
-                is MainScreenAction.UserLogin -> {
-                    if (action.userLogged) {
-                        viewModel.send(MainScreenEvent.OnLogin)
-                    } else {
-                        Timber.d("L'utente non era loggato e quindi non richiedo il login allo startup")
-                    }
-                }
-            }.exhaustive
-        })
-        viewModel.send(MainScreenEvent.OnInitTheme)
-        viewModel.send(MainScreenEvent.OnInitUser)
     }
 
     private fun onLoginFailure() {
