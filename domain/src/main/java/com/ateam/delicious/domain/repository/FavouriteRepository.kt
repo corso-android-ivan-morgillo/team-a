@@ -15,16 +15,18 @@ interface FavouriteRepository {
 }
 
 class FavouriteRepositoryImpl(
-    fireStoreDatabase: FirebaseFirestore,
+    private val fireStoreDatabase: FirebaseFirestore,
     private val authManager: AuthenticationManager
 ) : FavouriteRepository {
 
-    private val favouriteCollection: CollectionReference? = authManager.getCollection(fireStoreDatabase)
+    private var favouriteCollection: CollectionReference? = authManager.getCollection(fireStoreDatabase)
 
     override suspend fun loadAll(): LoadFavouriteResult {
+        Timber.d("Add Sono in load all con questo Uid ${authManager.getUid()}")
+        if (!authManager.isUserLoggedIn()) favouriteCollection = null
 
         if (favouriteCollection != null) {
-            val x = favouriteCollection
+            val x = favouriteCollection!!
                 .get()
                 .await()
                 .documents
@@ -51,7 +53,7 @@ class FavouriteRepositoryImpl(
 
     override suspend fun isFavourite(idMeal: Long): Boolean {
         return if (favouriteCollection != null) {
-            val x = favouriteCollection
+            val x = favouriteCollection!!
                 .document(idMeal.toString())
                 .get()
                 .await()
@@ -60,12 +62,14 @@ class FavouriteRepositoryImpl(
         } else {
             false
         }
-
     }
 
     override suspend fun add(favourite: RecipeDetails): Boolean {
         Timber.d("Add prima riga!")
         if (!authManager.isUserLoggedIn()) return false
+
+        if (favouriteCollection == null) favouriteCollection = authManager.getCollection(fireStoreDatabase)
+
         Timber.d("Add Dopo il guard!")
         val favouriteMap = hashMapOf(
 
@@ -75,7 +79,8 @@ class FavouriteRepositoryImpl(
 
         )
         return if (favouriteCollection != null) {
-            favouriteCollection
+            Timber.d("Add sto settando la collection in add.")
+            favouriteCollection!!
                 .document(favourite.idMeal.toString())
                 .set(favouriteMap)
                 .await()
@@ -90,7 +95,7 @@ class FavouriteRepositoryImpl(
         if (!authManager.isUserLoggedIn()) return false
 
         return if (favouriteCollection != null) {
-            favouriteCollection
+            favouriteCollection!!
                 .document(idMeal.toString())
                 .delete()
                 .await()
