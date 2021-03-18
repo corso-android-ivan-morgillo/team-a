@@ -80,13 +80,7 @@ class MainActivity : AppCompatActivity(), GoogleLoginRequest {
                     onUserLoggedIn(user)
                 }
                 MainScreenStates.LoginFailure -> {
-                    val message = Toast.makeText(
-                        this,
-                        getString(R.string.failed_login),
-                        Toast.LENGTH_SHORT
-                    )
-                    message.setGravity(Gravity.CENTER, 0, 0)
-                    message.show()
+                    onLoginFailure()
                 }
                 MainScreenStates.LoggedOut -> {
                     Toast.makeText(this, "Logout effettuato!", Toast.LENGTH_LONG).show()
@@ -128,6 +122,16 @@ class MainActivity : AppCompatActivity(), GoogleLoginRequest {
         })
         viewModel.send(MainScreenEvent.OnInitTheme)
         viewModel.send(MainScreenEvent.OnInitUser)
+    }
+
+    private fun onLoginFailure() {
+        val message = Toast.makeText(
+            this,
+            getString(R.string.failed_login),
+            Toast.LENGTH_SHORT
+        )
+        message.setGravity(Gravity.CENTER, 0, 0)
+        message.show()
     }
 
     private fun onUserLoggedIn(user: FirebaseUser?) {

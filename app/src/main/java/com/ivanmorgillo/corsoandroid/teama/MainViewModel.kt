@@ -37,10 +37,7 @@ class MainViewModel(private val repository: SettingsRepository, private val trac
                 actions.postValue(MainScreenAction.NavigateToSettings)
             }
             MainScreenEvent.OnInitTheme -> {
-                viewModelScope.launch {
-                    val darkEnabled = repository.isDarkThemeEnabled()
-                    actions.postValue(MainScreenAction.ChangeTheme(darkEnabled))
-                }
+                onInitTheme()
             }
             MainScreenEvent.OnLogin -> actions.postValue(MainScreenAction.ShowLoginDialog)
             MainScreenEvent.OnLogout -> actions.postValue(MainScreenAction.ShowLogout)
@@ -50,10 +47,7 @@ class MainViewModel(private val repository: SettingsRepository, private val trac
             }
             is MainScreenEvent.OnLoginSuccessful -> {
                 tracking.logEvent("user_login_successful")
-                viewModelScope.launch {
-                    repository.setUserLogged(true)
-                    states.postValue(MainScreenStates.LoggedIn(event.user))
-                }
+                onLoginSuccessful(event.user)
             }
             MainScreenEvent.OnLogoutFailed -> {
                 tracking.logEvent("user_logout_failed")
@@ -61,17 +55,39 @@ class MainViewModel(private val repository: SettingsRepository, private val trac
             }
             MainScreenEvent.OnLogoutSuccessful -> {
                 tracking.logEvent("user_logout_successful")
-                viewModelScope.launch {
-                    repository.setUserLogged(false)
-                    states.postValue(MainScreenStates.LoggedOut)
-                }
+                onLogoutSuccessful()
             }
             MainScreenEvent.OnInitUser -> {
-                viewModelScope.launch {
-                    actions.postValue(MainScreenAction.UserLogin(repository.isUserLogged()))
-                }
+                onInitUser()
             }
         }.exhaustive
+    }
+
+    private fun onInitUser() {
+        viewModelScope.launch {
+            actions.postValue(MainScreenAction.UserLogin(repository.isUserLogged()))
+        }
+    }
+
+    private fun onLogoutSuccessful() {
+        viewModelScope.launch {
+            repository.setUserLogged(false)
+            states.postValue(MainScreenStates.LoggedOut)
+        }
+    }
+
+    private fun onLoginSuccessful(user: FirebaseUser?) {
+        viewModelScope.launch {
+            repository.setUserLogged(true)
+            states.postValue(MainScreenStates.LoggedIn(user))
+        }
+    }
+
+    private fun onInitTheme() {
+        viewModelScope.launch {
+            val darkEnabled = repository.isDarkThemeEnabled()
+            actions.postValue(MainScreenAction.ChangeTheme(darkEnabled))
+        }
     }
 }
 
