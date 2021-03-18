@@ -67,6 +67,36 @@ class MainActivity : AppCompatActivity(), GoogleLoginRequest {
             binding.drawerLayout.closeDrawer(GravityCompat.START)
             true
         }
+        viewModel.states.observe(this, {state ->
+            when(state) {
+                is MainScreenStates.LoggedIn -> {
+                    val user = state.user
+                    if (user != null) {
+                        val email = user.email ?: ""
+                        val message = Toast.makeText(
+                            this,
+                            getString(R.string.welcome) + email,
+                            Toast.LENGTH_SHORT
+                        )
+                        message.setGravity(Gravity.CENTER, 0, 0)
+                        message.show()
+                    } else {
+                        Timber.d("User logged in but user is null")
+                    }
+                }
+                MainScreenStates.LoginFailure -> {
+                    val message = Toast.makeText(this, getString(R.string.failed_login), Toast.LENGTH_SHORT)
+                    message.setGravity(Gravity.CENTER, 0, 0)
+                    message.show()
+                }
+                MainScreenStates.LoggedOut -> {
+                    Toast.makeText(this, "Logout effettuato!", Toast.LENGTH_LONG).show()
+                }
+                MainScreenStates.LogoutFailure -> {
+                    Toast.makeText(this, "Logout fallito!", Toast.LENGTH_LONG).show()
+                }
+            }.exhaustive
+        })
         viewModel.actions.observe(this, { action ->
             when (action) {
                 MainScreenAction.NavigateToCategory -> navController.navigate(R.id.categoryFragment)
@@ -103,10 +133,8 @@ class MainActivity : AppCompatActivity(), GoogleLoginRequest {
         AuthUI.getInstance()
             .signOut(this)
             .addOnCompleteListener {
-                Toast.makeText(this, "Logout effettuato!", Toast.LENGTH_LONG).show()
                 viewModel.send(MainScreenEvent.OnLogoutSuccessful)
             }.addOnFailureListener {
-                Toast.makeText(this, "Logout fallito!", Toast.LENGTH_LONG).show()
                 viewModel.send(MainScreenEvent.OnLogoutFailed)
             }
     }
@@ -125,30 +153,15 @@ class MainActivity : AppCompatActivity(), GoogleLoginRequest {
         binding.drawerLayout.closeDrawer(GravityCompat.START)
     }
 
-    private var firebaseAuthenticationResultLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                Timber.d("Login successful")
-                val firebaseUser = Firebase.auth.currentUser
-                if (firebaseUser != null) {
-                    val email = firebaseUser.email ?: ""
-                    val message = Toast.makeText(
-                        this,
-                        getString(R.string.welcome) + email,
-                        Toast.LENGTH_SHORT
-                    )
-                    message.setGravity(Gravity.CENTER, 0, 0)
-                    message.show()
-                }
-                viewModel.send(MainScreenEvent.OnLoginSuccessful)
-            } else {
-                Timber.e("User login failed")
-                val message = Toast.makeText(this, getString(R.string.failed_login), Toast.LENGTH_SHORT)
-                message.setGravity(Gravity.CENTER, 0, 0)
-                message.show()
-                viewModel.send(MainScreenEvent.OnLoginFailed)
-            }
+    private val firebaseAuthenticationResultLauncher= registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            Timber.d("Login successful")
+            viewModel.send(MainScreenEvent.OnLoginSuccessful(Firebase.auth.currentUser))
+        } else {
+            Timber.e("User login failed")
+            viewModel.send(MainScreenEvent.OnLoginFailed)
         }
+    }
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment)
