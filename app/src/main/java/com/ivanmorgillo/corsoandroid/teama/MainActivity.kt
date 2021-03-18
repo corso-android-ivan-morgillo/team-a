@@ -134,6 +134,7 @@ class MainActivity : AppCompatActivity(), GoogleLoginRequest {
             }.exhaustive
         })
         viewModel.send(MainScreenEvent.OnInitTheme)
+        viewModel.send(MainScreenEvent.OnLogin)
     }
 
     override fun onGoogleLogin() {
