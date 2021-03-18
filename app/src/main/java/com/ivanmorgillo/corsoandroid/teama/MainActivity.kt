@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.Gravity
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -18,6 +19,7 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import coil.load
 import com.firebase.ui.auth.AuthUI
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.ktx.auth
@@ -80,12 +82,19 @@ class MainActivity : AppCompatActivity(), GoogleLoginRequest {
                         )
                         message.setGravity(Gravity.CENTER, 0, 0)
                         message.show()
+                        val headerView = binding.navView.getHeaderView(0)
+                        val imageView = headerView.findViewById<ImageView>(R.id.image_view)
+                        imageView.load(user.photoUrl)
                     } else {
                         Timber.d("User logged in but user is null")
                     }
                 }
                 MainScreenStates.LoginFailure -> {
-                    val message = Toast.makeText(this, getString(R.string.failed_login), Toast.LENGTH_SHORT)
+                    val message = Toast.makeText(
+                        this,
+                        getString(R.string.failed_login),
+                        Toast.LENGTH_SHORT
+                    )
                     message.setGravity(Gravity.CENTER, 0, 0)
                     message.show()
                 }
