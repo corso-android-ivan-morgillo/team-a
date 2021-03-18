@@ -3,6 +3,17 @@ package com.ivanmorgillo.corsoandroid.teama.detail
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ateam.delicious.domain.RecipeDetails
+import com.ateam.delicious.domain.error.LoadRecipeDetailError.InterruptedRequest
+import com.ateam.delicious.domain.error.LoadRecipeDetailError.NoDetailFound
+import com.ateam.delicious.domain.error.LoadRecipeDetailError.NoInternet
+import com.ateam.delicious.domain.error.LoadRecipeDetailError.ServerError
+import com.ateam.delicious.domain.error.LoadRecipeDetailError.SlowInternet
+import com.ateam.delicious.domain.repository.AuthenticationManager
+import com.ateam.delicious.domain.repository.FavouriteRepository
+import com.ateam.delicious.domain.repository.RecipeDetailsRepository
+import com.ateam.delicious.domain.result.LoadRecipeDetailsResult.Failure
+import com.ateam.delicious.domain.result.LoadRecipeDetailsResult.Success
 import com.ivanmorgillo.corsoandroid.teama.Screens
 import com.ivanmorgillo.corsoandroid.teama.Tracking
 import com.ivanmorgillo.corsoandroid.teama.crashlytics.SingleLiveEvent
@@ -18,20 +29,13 @@ import com.ivanmorgillo.corsoandroid.teama.detail.DetailScreenStates.Content
 import com.ivanmorgillo.corsoandroid.teama.detail.DetailScreenStates.Error
 import com.ivanmorgillo.corsoandroid.teama.detail.DetailScreenStates.Loading
 import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
-import com.ivanmorgillo.corsoandroid.teama.favourite.FavouriteRepository
-import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeDetailError.InterruptedRequest
-import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeDetailError.NoDetailFound
-import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeDetailError.NoInternet
-import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeDetailError.ServerError
-import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeDetailError.SlowInternet
-import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeDetailsResult.Failure
-import com.ivanmorgillo.corsoandroid.teama.network.LoadRecipeDetailsResult.Success
 import kotlinx.coroutines.launch
 
 class DetailViewModel(
     private val repository: RecipeDetailsRepository,
     private val tracking: Tracking,
     private val favouritesRepository: FavouriteRepository,
+    private val authManager: AuthenticationManager
 ) : ViewModel() {
 
     val states = MutableLiveData<DetailScreenStates>()
@@ -48,7 +52,16 @@ class DetailViewModel(
             is OnReady -> loadContent(event.idMeal)
             OnIngredientsClick -> onIngredientsClick()
             OnInstructionsClick -> onInstructionsClick()
-            is OnAddFavouriteClick -> viewModelScope.launch { toggleFavourite() }
+            is OnAddFavouriteClick -> {
+                tracking.logEvent("on_favourite_clicked")
+                if (!authManager.isUserLoggedIn()) {
+                    actions.postValue(DetailScreenAction.RequestGoogleLogin)
+                } else {
+                    //aggiungi favorito
+                    viewModelScope.launch { toggleFavourite() }
+                }
+
+            }
         }.exhaustive
     }
 
@@ -91,10 +104,10 @@ class DetailViewModel(
 
     private fun createContent(details: RecipeDetails, isIngredientsVisible: Boolean, isFavourite: Boolean): Content {
         val detailScreenItems = listOf(
-            DetailScreenItems.Video(details.video, details.image),
-            DetailScreenItems.Title(details.name),
-            DetailScreenItems.TabLayout,
-            DetailScreenItems.IngredientsInstructionsList(
+            RecipeDetailsUI.Video(details.video, details.image),
+            RecipeDetailsUI.Title(details.name, details.area),
+            RecipeDetailsUI.TabLayout,
+            RecipeDetailsUI.IngredientsInstructionsList(
                 details.ingredients.map {
                     IngredientUI(it.ingredientName, it.ingredientQuantity, it.ingredientImage)
                 },
@@ -131,7 +144,7 @@ class DetailViewModel(
         if (currentState != null && currentState is Content) {
             val updatedItems = currentState.details
                 .map {
-                    if (it is DetailScreenItems.IngredientsInstructionsList) {
+                    if (it is RecipeDetailsUI.IngredientsInstructionsList) {
                         it.copy(isIngredientsVisible = isIngredientsVisible)
                     } else {
                         it
@@ -147,9 +160,8 @@ sealed class DetailScreenStates {
     // questi oggetti rappresentano la nostra schermata inequivocabilmente
     object Loading : DetailScreenStates()
     object Error : DetailScreenStates()
-
     // se la lista cambia dobbiamo usare una 'data class' quindi non usiamo 'object'
-    data class Content(val details: List<DetailScreenItems>, val isFavourite: Boolean) : DetailScreenStates()
+    data class Content(val details: List<RecipeDetailsUI>, val isFavourite: Boolean) : DetailScreenStates()
 }
 
 sealed class DetailScreenAction {
@@ -158,6 +170,7 @@ sealed class DetailScreenAction {
     object ShowServerErrorMessage : DetailScreenAction()
     object ShowInterruptedRequestMessage : DetailScreenAction()
     object ShowNoRecipeDetailFoundMessage : DetailScreenAction()
+    object RequestGoogleLogin : DetailScreenAction()
 }
 
 sealed class DetailScreenEvent {
@@ -165,4 +178,5 @@ sealed class DetailScreenEvent {
     object OnIngredientsClick : DetailScreenEvent()
     object OnInstructionsClick : DetailScreenEvent()
     object OnAddFavouriteClick : DetailScreenEvent()
+
 }

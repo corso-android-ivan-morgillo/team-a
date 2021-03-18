@@ -1,42 +1,31 @@
 package com.ivanmorgillo.corsoandroid.teama
 
+import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import androidx.core.os.bundleOf
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.navigation.NavController
-import androidx.navigation.NavGraph
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.firebase.ui.auth.AuthUI
 import com.google.android.material.navigation.NavigationView
-import com.ivanmorgillo.corsoandroid.teama.category.CategoryFragmentDirections
 import com.ivanmorgillo.corsoandroid.teama.databinding.ActivityMainBinding
 import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
-import android.app.Activity
-import android.content.Context
-import android.content.res.Configuration
-import android.content.res.Resources
-import android.os.LocaleList
-import com.google.android.material.internal.ContextUtils
-import java.util.*
-import android.os.Build
 
-import android.util.DisplayMetrics
-import androidx.appcompat.view.ContextThemeWrapper
+class MainActivity : AppCompatActivity(), GoogleLoginRequest {
 
-class MainActivity : AppCompatActivity() {
     private val viewModel: MainViewModel by viewModel()
     private lateinit var binding: ActivityMainBinding
     private lateinit var appBarConfiguration: AppBarConfiguration
@@ -55,7 +44,9 @@ class MainActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.categoryFragment, R.id.favouriteFragment, R.id.settingsFragment, R.id.nav_feedback
+                R.id.categoryFragment, R.id.favouriteFragment,
+                R.id.settingsFragment, R.id.nav_feedback,
+                R.id.login, R.id.logout
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -67,6 +58,8 @@ class MainActivity : AppCompatActivity() {
                 R.id.favouriteFragment -> viewModel.send(MainScreenEvent.OnFavouritesClick)
                 R.id.nav_feedback -> viewModel.send(MainScreenEvent.OnFeedbackClick)
                 R.id.settingsFragment -> viewModel.send(MainScreenEvent.OnSettingsClick)
+                R.id.login -> viewModel.send(MainScreenEvent.OnLogin)
+                R.id.logout -> viewModel.send(MainScreenEvent.OnLogout)
             }
             binding.drawerLayout.closeDrawer(GravityCompat.START)
             true
@@ -81,7 +74,7 @@ class MainActivity : AppCompatActivity() {
                     val bundle = bundleOf("recipe_id" to -1L)
                     navController.navigate(R.id.detailFragment, bundle)
                 }
-                 MainScreenAction.NavigateToSettings -> navController.navigate(R.id.settingsFragment)
+                MainScreenAction.NavigateToSettings -> navController.navigate(R.id.settingsFragment)
                 is MainScreenAction.ChangeTheme -> {
                     val darkEnabled = action.darkEnabled
                     if (darkEnabled) {
@@ -90,10 +83,51 @@ class MainActivity : AppCompatActivity() {
                         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
                     }
                 }
+                MainScreenAction.ShowLoginDialog -> firebaseLogin()
+                MainScreenAction.ShowLogout -> firebaseLogout()
             }.exhaustive
         })
         viewModel.send(MainScreenEvent.OnInitTheme)
     }
+
+    override fun onGoogleLogin() {
+        viewModel.send(MainScreenEvent.OnLogin)
+    }
+
+    private fun firebaseLogout() {
+        //Sign out da firebase google.
+        /**Per questo va  aggiunto il pulsante apposito logout*/
+        AuthUI.getInstance()
+            .signOut(this)
+            .addOnCompleteListener {
+                Toast.makeText(this, "Logout effettuato!", Toast.LENGTH_LONG).show()
+            }
+    }
+
+    private fun firebaseLogin() {
+        //activity firebaase LOGIN
+        /**Per questo va  aggiunto il pulsante apposito login*/
+        val providers = arrayListOf(
+            AuthUI.IdpConfig.GoogleBuilder().build()
+        )
+        val intent = AuthUI.getInstance()
+            .createSignInIntentBuilder()
+            .setAvailableProviders(providers)
+            .build()
+        firebaseAuthenticationResultLauncher.launch(intent)
+        binding.drawerLayout.closeDrawer(GravityCompat.START)
+    }
+
+    private var firebaseAuthenticationResultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult())
+        { result ->
+
+            if (result.resultCode == Activity.RESULT_OK) {
+                Timber.d("Login successful")
+            } else {
+                Timber.e("User login failed")
+            }
+        }
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment)

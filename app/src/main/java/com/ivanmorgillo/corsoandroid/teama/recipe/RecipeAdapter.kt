@@ -48,6 +48,7 @@ class RecipeViewHolder(private val binding: RecipeItemBinding) : RecyclerView.Vi
         binding.recipeTitle.text = item.title
         binding.recipeImage.load(item.image)
         binding.recipeImage.contentDescription = item.title
+
         /** Il click deve essere gestito inviando indietro al viewModel
          * il click dell'utente e l'oggetto che è stato cliccato */
         binding.recipeRoot.setOnClickListener { onclick(item, it) }

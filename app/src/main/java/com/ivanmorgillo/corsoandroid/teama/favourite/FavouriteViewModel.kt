@@ -3,12 +3,15 @@ package com.ivanmorgillo.corsoandroid.teama.favourite
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ateam.delicious.domain.RecipeDetails
+import com.ateam.delicious.domain.error.LoadFavouriteError
+import com.ateam.delicious.domain.repository.FavouriteRepository
+import com.ateam.delicious.domain.repository.SettingsRepository
+import com.ateam.delicious.domain.result.LoadFavouriteResult
 import com.ivanmorgillo.corsoandroid.teama.Screens
 import com.ivanmorgillo.corsoandroid.teama.Tracking
 import com.ivanmorgillo.corsoandroid.teama.crashlytics.SingleLiveEvent
-import com.ivanmorgillo.corsoandroid.teama.detail.RecipeDetails
 import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
-import com.ivanmorgillo.corsoandroid.teama.settings.SettingsRepository
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.util.*
@@ -66,7 +69,6 @@ class FavouriteViewModel(
                 title = it.name,
                 image = it.image,
                 id = it.idMeal,
-                notes = it.notes,
                 video = it.video,
                 ingredients = it.ingredients,
                 instructions = it.instructions,
@@ -86,18 +88,20 @@ class FavouriteViewModel(
     }
 
     private fun onFavouriteSwiped(position: Int) {
-        val favouriteToDelete = favourites?.get(position)?: return
+        val favouriteToDelete = favourites?.get(position) ?: return
         tracking.logEvent("favourite_deleted")
         viewModelScope.launch {
             repository.delete(favouriteToDelete.id)
             val updatedFavourites = favourites?.minus(favouriteToDelete)
             if (updatedFavourites != null) {
                 favourites = updatedFavourites
-                states.postValue(FavouriteScreenStates.Content(
-                    updatedFavourites,
-                    favouriteToDelete,
-                    true
-                ))
+                states.postValue(
+                    FavouriteScreenStates.Content(
+                        updatedFavourites,
+                        favouriteToDelete,
+                        true
+                    )
+                )
             } else {
                 Timber.e("updatedFavourites was null")
             }
@@ -114,9 +118,9 @@ class FavouriteViewModel(
                 idMeal = removedFavourite.id,
                 ingredients = removedFavourite.ingredients,
                 instructions = removedFavourite.instructions,
-                area = "",
-                notes = removedFavourite.notes
-            )
+                area = removedFavourite.area,
+
+                )
             repository.add(newFavourite)
             val currentState = states.value
             if (currentState != null && currentState is FavouriteScreenStates.Content) {
@@ -180,13 +184,4 @@ sealed class FavouriteScreenEvent {
 
     object OnReady : FavouriteScreenEvent()
     object OnRefresh : FavouriteScreenEvent()
-}
-
-sealed class LoadFavouriteResult {
-    data class Success(val favourites: List<RecipeDetails>) : LoadFavouriteResult()
-    data class Failure(val error: LoadFavouriteError) : LoadFavouriteResult()
-}
-
-sealed class LoadFavouriteError {
-    object NoFavouriteFound : LoadFavouriteError()
 }

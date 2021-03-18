@@ -19,7 +19,6 @@
     <string name="network_settings">Network settings</string>
     <string name="search">Search</string>
     <string name="search_hint">Search by title…</string>
-
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">@string/app_name</string>
@@ -29,7 +28,6 @@
     <string name="favourite_deleted">Successfully deleted!</string>
     <string name="add_to_favourites">Add to favourites</string>
     <string name="share">Share</string>
-
     <string name="category_fragment">Categories</string>
     <string name="recipe_fragment">Recipes</string>
     <string name="detail_fragment">Recipe</string>
@@ -52,6 +50,7 @@
     <string name="not_now">Not now</string>
     <string name="info_button_description">Info Button</string>
     <string name="category_image_description">categoryImage</string>
-    <string name="how_delete_favourite_message">To delete, do a swipe</string>
+    <string name="how_delete_favourite_message">Swipe to delete</string>
+    <string name="click_info">Click here for more info</string>
     <string name="understand">OK</string>
 </resources>

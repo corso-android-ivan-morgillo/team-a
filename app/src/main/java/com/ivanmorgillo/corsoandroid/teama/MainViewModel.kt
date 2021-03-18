@@ -1,11 +1,10 @@
 package com.ivanmorgillo.corsoandroid.teama
 
-import android.content.res.Configuration
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ateam.delicious.domain.repository.SettingsRepository
 import com.ivanmorgillo.corsoandroid.teama.crashlytics.SingleLiveEvent
 import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
-import com.ivanmorgillo.corsoandroid.teama.settings.SettingsRepository
 import kotlinx.coroutines.launch
 
 class MainViewModel(private val repository: SettingsRepository, private val tracking: Tracking) : ViewModel() {
@@ -13,7 +12,7 @@ class MainViewModel(private val repository: SettingsRepository, private val trac
 
     @Suppress("IMPLICIT_CAST_TO_ANY")
     fun send(event: MainScreenEvent) {
-        when(event) {
+        when (event) {
             MainScreenEvent.OnCategoryClick -> {
                 tracking.logEvent("category_menu_clicked")
                 actions.postValue(MainScreenAction.NavigateToCategory)
@@ -40,6 +39,8 @@ class MainViewModel(private val repository: SettingsRepository, private val trac
                     actions.postValue(MainScreenAction.ChangeTheme(darkEnabled))
                 }
             }
+            MainScreenEvent.OnLogin -> actions.postValue(MainScreenAction.ShowLoginDialog)
+            MainScreenEvent.OnLogout -> actions.postValue(MainScreenAction.ShowLogout)
         }.exhaustive
     }
 }
@@ -50,6 +51,9 @@ sealed class MainScreenAction {
     object NavigateToFavourites : MainScreenAction()
     object NavigateToSettings : MainScreenAction()
     object NavigateToFeedback : MainScreenAction()
+    object ShowLoginDialog : MainScreenAction()
+    object ShowLogout : MainScreenAction()
+
     data class ChangeTheme(val darkEnabled: Boolean) : MainScreenAction()
 }
 
@@ -60,4 +64,6 @@ sealed class MainScreenEvent {
     object OnSettingsClick : MainScreenEvent()
     object OnFeedbackClick : MainScreenEvent()
     object OnInitTheme : MainScreenEvent()
+    object OnLogin : MainScreenEvent()
+    object OnLogout : MainScreenEvent()
 }

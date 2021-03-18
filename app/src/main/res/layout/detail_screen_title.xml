@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/detail_screen_title"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:text="Musty beef pie delicious"
-    android:textSize="28sp"
-    android:gravity="center"
-    android:fontFamily="sans-serif-medium" />
+    android:padding="8dp">
+
+    <TextView
+        android:id="@+id/detail_screen_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center"
+        android:padding="8dp"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/recipe_flag"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Beedfdff Banh Mi Bowls with Sriracha Mayo, Carrot E Pickled Cucumber" />
+
+    <ImageView
+        android:id="@+id/recipe_flag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/category_image_description"
+        app:layout_constraintBottom_toBottomOf="@+id/detail_screen_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/detail_screen_title"
+        tools:src="@drawable/ic_cake" />
+</androidx.constraintlayout.widget.ConstraintLayout>

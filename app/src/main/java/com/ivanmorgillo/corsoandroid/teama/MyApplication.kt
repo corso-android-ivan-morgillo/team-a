@@ -2,6 +2,8 @@ package com.ivanmorgillo.corsoandroid.teama
 
 import android.app.Application
 import android.os.StrictMode
+import com.ateam.delicious.di.firebaseFirestoreKoinModule
+import com.ateam.delicious.di.networkingKoinModule
 import com.ivanmorgillo.corsoandroid.teama.crashlytics.CrashReportingTree
 import com.ivanmorgillo.corsoandroid.teama.crashlytics.LineNumberDebugTree
 import com.ivanmorgillo.corsoandroid.teama.koin.appModule
@@ -19,7 +21,7 @@ class MyApplication : Application() {
         startKoin {
             androidLogger()
             androidContext(this@MyApplication)
-            modules(appModule)
+            modules(appModule, firebaseFirestoreKoinModule, networkingKoinModule)
         }
         if (BuildConfig.DEBUG) {
             Timber.plant(LineNumberDebugTree())
