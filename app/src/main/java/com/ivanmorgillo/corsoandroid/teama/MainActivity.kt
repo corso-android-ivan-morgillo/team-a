@@ -101,6 +101,10 @@ class MainActivity : AppCompatActivity(), GoogleLoginRequest {
             .signOut(this)
             .addOnCompleteListener {
                 Toast.makeText(this, "Logout effettuato!", Toast.LENGTH_LONG).show()
+                viewModel.send(MainScreenEvent.OnLogoutSuccessful)
+            }.addOnFailureListener {
+                Toast.makeText(this, "Logout fallito!", Toast.LENGTH_LONG).show()
+                viewModel.send(MainScreenEvent.OnLogoutFailed)
             }
     }
 
@@ -119,14 +123,13 @@ class MainActivity : AppCompatActivity(), GoogleLoginRequest {
     }
 
     private var firebaseAuthenticationResultLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult())
-        { result ->
-
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 Timber.d("Login successful")
-                /** */
+                viewModel.send(MainScreenEvent.OnLoginSuccessful)
             } else {
                 Timber.e("User login failed")
+                viewModel.send(MainScreenEvent.OnLoginFailed)
             }
         }
 

@@ -38,20 +38,15 @@ val appModule = module {
     single<FavouriteRepository> {
         FavouriteRepositoryImpl(fireStoreDatabase = get(), authManager = get())
     }
-
     single<AuthenticationManager> {
         AuthenticationManagerImpl()
     }
-
-
     single<SettingsRepository> {
         SettingsRepositoryImpl(context = androidContext())
     }
     single<Tracking> {
         TrackingImpl()
     }
-
-
     viewModel { MainViewModel(repository = get(), tracking = get()) }
     viewModel { CategoryViewModel(repository = get(), tracking = get()) }
     viewModel { RecipeViewModel(repository = get(), tracking = get()) }

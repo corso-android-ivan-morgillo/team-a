@@ -41,6 +41,10 @@ class MainViewModel(private val repository: SettingsRepository, private val trac
             }
             MainScreenEvent.OnLogin -> actions.postValue(MainScreenAction.ShowLoginDialog)
             MainScreenEvent.OnLogout -> actions.postValue(MainScreenAction.ShowLogout)
+            MainScreenEvent.OnLoginFailed -> tracking.logEvent("user_login_failed")
+            MainScreenEvent.OnLoginSuccessful -> tracking.logEvent("user_login_successful")
+            MainScreenEvent.OnLogoutFailed -> tracking.logEvent("user_logout_failed")
+            MainScreenEvent.OnLogoutSuccessful -> tracking.logEvent("user_logout_successful")
         }.exhaustive
     }
 }
@@ -66,4 +70,8 @@ sealed class MainScreenEvent {
     object OnInitTheme : MainScreenEvent()
     object OnLogin : MainScreenEvent()
     object OnLogout : MainScreenEvent()
+    object OnLoginSuccessful : MainScreenEvent()
+    object OnLoginFailed : MainScreenEvent()
+    object OnLogoutSuccessful : MainScreenEvent()
+    object OnLogoutFailed : MainScreenEvent()
 }
