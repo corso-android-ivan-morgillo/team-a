@@ -57,4 +57,6 @@
     <string name="required_login_message">You need to login to save favourites.\n\nN.B. After you logged in you can add your favourite</string>
     <string name="login">Login</string>
     <string name="cancel">Cancel</string>
+    <string name="failed_login">Login failed</string>
+    <string name="welcome">Welcome </string>
 </resources>

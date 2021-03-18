@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.Gravity
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -19,6 +20,8 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.firebase.ui.auth.AuthUI
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import com.ivanmorgillo.corsoandroid.teama.databinding.ActivityMainBinding
 import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -126,9 +129,23 @@ class MainActivity : AppCompatActivity(), GoogleLoginRequest {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 Timber.d("Login successful")
+                val firebaseUser = Firebase.auth.currentUser
+                if (firebaseUser != null) {
+                    val email = firebaseUser.email ?: ""
+                    val message = Toast.makeText(
+                        this,
+                        getString(R.string.welcome) + email,
+                        Toast.LENGTH_SHORT
+                    )
+                    message.setGravity(Gravity.CENTER, 0, 0)
+                    message.show()
+                }
                 viewModel.send(MainScreenEvent.OnLoginSuccessful)
             } else {
                 Timber.e("User login failed")
+                val message = Toast.makeText(this, getString(R.string.failed_login), Toast.LENGTH_SHORT)
+                message.setGravity(Gravity.CENTER, 0, 0)
+                message.show()
                 viewModel.send(MainScreenEvent.OnLoginFailed)
             }
         }
