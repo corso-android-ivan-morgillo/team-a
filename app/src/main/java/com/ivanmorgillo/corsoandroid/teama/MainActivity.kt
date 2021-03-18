@@ -21,6 +21,7 @@ import androidx.navigation.ui.setupWithNavController
 import coil.load
 import com.firebase.ui.auth.AuthUI
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.ivanmorgillo.corsoandroid.teama.databinding.ActivityMainBinding
@@ -76,22 +77,7 @@ class MainActivity : AppCompatActivity(), GoogleLoginRequest {
             when (state) {
                 is MainScreenStates.LoggedIn -> {
                     val user = state.user
-                    if (user != null) {
-                        val email = user.email ?: ""
-                        val message = Toast.makeText(
-                            this,
-                            getString(R.string.welcome) + email,
-                            Toast.LENGTH_SHORT
-                        )
-                        message.setGravity(Gravity.CENTER, 0, 0)
-                        message.show()
-                        val imageView = headerBinding.imageView
-                        val userTextView = headerBinding.userTextView
-                        userTextView.text = user.email
-                        imageView.load(user.photoUrl)
-                    } else {
-                        Timber.d("User logged in but user is null")
-                    }
+                    onUserLoggedIn(user)
                 }
                 MainScreenStates.LoginFailure -> {
                     val message = Toast.makeText(
@@ -131,10 +117,36 @@ class MainActivity : AppCompatActivity(), GoogleLoginRequest {
                 }
                 MainScreenAction.ShowLoginDialog -> firebaseLogin()
                 MainScreenAction.ShowLogout -> firebaseLogout()
+                is MainScreenAction.UserLogin -> {
+                    if (action.userLogged) {
+                        viewModel.send(MainScreenEvent.OnLogin)
+                    } else {
+                        Timber.d("L'utente non era loggato e quindi non richiedo il login allo startup")
+                    }
+                }
             }.exhaustive
         })
         viewModel.send(MainScreenEvent.OnInitTheme)
-        viewModel.send(MainScreenEvent.OnLogin)
+        viewModel.send(MainScreenEvent.OnInitUser)
+    }
+
+    private fun onUserLoggedIn(user: FirebaseUser?) {
+        if (user != null) {
+            val email = user.email ?: ""
+            val message = Toast.makeText(
+                this,
+                getString(R.string.welcome) + email,
+                Toast.LENGTH_SHORT
+            )
+            message.setGravity(Gravity.CENTER, 0, 0)
+            message.show()
+            val imageView = headerBinding.imageView
+            val userTextView = headerBinding.userTextView
+            userTextView.text = user.email
+            imageView.load(user.photoUrl)
+        } else {
+            Timber.d("User logged in but user is null")
+        }
     }
 
     override fun onGoogleLogin() {

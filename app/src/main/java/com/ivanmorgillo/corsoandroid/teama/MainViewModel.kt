@@ -50,7 +50,10 @@ class MainViewModel(private val repository: SettingsRepository, private val trac
             }
             is MainScreenEvent.OnLoginSuccessful -> {
                 tracking.logEvent("user_login_successful")
-                states.postValue(MainScreenStates.LoggedIn(event.user))
+                viewModelScope.launch {
+                    repository.setUserLogged(true)
+                    states.postValue(MainScreenStates.LoggedIn(event.user))
+                }
             }
             MainScreenEvent.OnLogoutFailed -> {
                 tracking.logEvent("user_logout_failed")
@@ -58,7 +61,15 @@ class MainViewModel(private val repository: SettingsRepository, private val trac
             }
             MainScreenEvent.OnLogoutSuccessful -> {
                 tracking.logEvent("user_logout_successful")
-                states.postValue(MainScreenStates.LoggedOut)
+                viewModelScope.launch {
+                    repository.setUserLogged(false)
+                    states.postValue(MainScreenStates.LoggedOut)
+                }
+            }
+            MainScreenEvent.OnInitUser -> {
+                viewModelScope.launch {
+                    actions.postValue(MainScreenAction.UserLogin(repository.isUserLogged()))
+                }
             }
         }.exhaustive
     }
@@ -79,6 +90,7 @@ sealed class MainScreenAction {
     object NavigateToFeedback : MainScreenAction()
     object ShowLoginDialog : MainScreenAction()
     object ShowLogout : MainScreenAction()
+    data class UserLogin(val userLogged: Boolean): MainScreenAction()
 
     data class ChangeTheme(val darkEnabled: Boolean) : MainScreenAction()
 }
@@ -90,6 +102,7 @@ sealed class MainScreenEvent {
     object OnSettingsClick : MainScreenEvent()
     object OnFeedbackClick : MainScreenEvent()
     object OnInitTheme : MainScreenEvent()
+    object OnInitUser : MainScreenEvent()
     object OnLogin : MainScreenEvent()
     object OnLogout : MainScreenEvent()
     data class OnLoginSuccessful(val user: FirebaseUser?) : MainScreenEvent()
