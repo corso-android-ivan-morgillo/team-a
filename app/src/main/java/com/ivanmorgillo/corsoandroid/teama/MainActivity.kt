@@ -59,15 +59,7 @@ class MainActivity : AppCompatActivity(), GoogleLoginRequest {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
         navView.setNavigationItemSelectedListener {
-            when (it.itemId) {
-                R.id.categoryFragment -> viewModel.send(MainScreenEvent.OnCategoryClick)
-                R.id.detailFragment -> viewModel.send(MainScreenEvent.OnRandomRecipeClick)
-                R.id.favouriteFragment -> viewModel.send(MainScreenEvent.OnFavouritesClick)
-                R.id.nav_feedback -> viewModel.send(MainScreenEvent.OnFeedbackClick)
-                R.id.settingsFragment -> viewModel.send(MainScreenEvent.OnSettingsClick)
-                R.id.login -> viewModel.send(MainScreenEvent.OnLogin)
-                R.id.logout -> viewModel.send(MainScreenEvent.OnLogout)
-            }
+            onItemSelected(it.itemId)
             binding.drawerLayout.closeDrawer(GravityCompat.START)
             true
         }
@@ -97,6 +89,18 @@ class MainActivity : AppCompatActivity(), GoogleLoginRequest {
         })
         viewModel.send(MainScreenEvent.OnInitTheme)
         viewModel.send(MainScreenEvent.OnInitUser)
+    }
+
+    private fun onItemSelected(itemId: Int) {
+        when (itemId) {
+            R.id.categoryFragment -> viewModel.send(MainScreenEvent.OnCategoryClick)
+            R.id.detailFragment -> viewModel.send(MainScreenEvent.OnRandomRecipeClick)
+            R.id.favouriteFragment -> viewModel.send(MainScreenEvent.OnFavouritesClick)
+            R.id.nav_feedback -> viewModel.send(MainScreenEvent.OnFeedbackClick)
+            R.id.settingsFragment -> viewModel.send(MainScreenEvent.OnSettingsClick)
+            R.id.login -> viewModel.send(MainScreenEvent.OnLogin)
+            R.id.logout -> viewModel.send(MainScreenEvent.OnLogout)
+        }
     }
 
     private fun initTheme(darkEnabled: Boolean) {
