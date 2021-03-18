@@ -25,6 +25,7 @@ import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import com.ivanmorgillo.corsoandroid.teama.databinding.ActivityMainBinding
+import com.ivanmorgillo.corsoandroid.teama.databinding.NavHeaderMainBinding
 import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
@@ -33,11 +34,13 @@ class MainActivity : AppCompatActivity(), GoogleLoginRequest {
 
     private val viewModel: MainViewModel by viewModel()
     private lateinit var binding: ActivityMainBinding
+    private lateinit var headerBinding: NavHeaderMainBinding
     private lateinit var appBarConfiguration: AppBarConfiguration
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
+       // headerBinding = NavHeaderMainBinding.bind(headerView)
         val view = binding.root
         setContentView(view)
         val toolbar: Toolbar = binding.appBarMain.toolbar
@@ -82,8 +85,12 @@ class MainActivity : AppCompatActivity(), GoogleLoginRequest {
                         )
                         message.setGravity(Gravity.CENTER, 0, 0)
                         message.show()
-                        val headerView = binding.navView.getHeaderView(0)
-                        val imageView = headerView.findViewById<ImageView>(R.id.image_view)
+                        // val headerView = binding.navView.getHeaderView(0)
+                        // val headerBinding = NavHeaderMainBinding.bind(headerView)
+
+                        val imageView = headerBinding.imageView
+                        val userTextView = headerBinding.userTextView
+                        userTextView.text = user.email
                         imageView.load(user.photoUrl)
                     } else {
                         Timber.d("User logged in but user is null")
