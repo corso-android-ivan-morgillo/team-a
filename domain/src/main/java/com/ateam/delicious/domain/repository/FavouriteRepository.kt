@@ -19,21 +19,13 @@ class FavouriteRepositoryImpl(
     private val authManager: AuthenticationManager
 ) : FavouriteRepository {
 
-    private val favouriteCollection: CollectionReference? = getCollection()
-
-    private fun getCollection(): CollectionReference? {
-        val universalUserId = authManager.getUid()
-        return if (universalUserId == null) {
-            null
-        } else {
-            fireStoreDatabase.collection("favourites-$universalUserId")
-        }
-    }
+    private var favouriteCollection: CollectionReference? = authManager.getFavouriteCollection(fireStoreDatabase)
 
     override suspend fun loadAll(): LoadFavouriteResult {
-
+        Timber.d("Add Sono in load all con questo Uid ${authManager.getUid()}")
+        favouriteCollection = authManager.getFavouriteCollection(fireStoreDatabase)
         if (favouriteCollection != null) {
-            val x = favouriteCollection
+            val x = favouriteCollection!!
                 .get()
                 .await()
                 .documents
@@ -59,8 +51,9 @@ class FavouriteRepositoryImpl(
     }
 
     override suspend fun isFavourite(idMeal: Long): Boolean {
+        favouriteCollection = authManager.getFavouriteCollection(fireStoreDatabase)
         return if (favouriteCollection != null) {
-            val x = favouriteCollection
+            val x = favouriteCollection!!
                 .document(idMeal.toString())
                 .get()
                 .await()
@@ -69,12 +62,15 @@ class FavouriteRepositoryImpl(
         } else {
             false
         }
-
     }
 
     override suspend fun add(favourite: RecipeDetails): Boolean {
+        Timber.d("Add prima riga!")
         if (!authManager.isUserLoggedIn()) return false
 
+        favouriteCollection = authManager.getFavouriteCollection(fireStoreDatabase)
+
+        Timber.d("Add Dopo il guard!")
         val favouriteMap = hashMapOf(
 
             "id" to favourite.idMeal,
@@ -83,7 +79,8 @@ class FavouriteRepositoryImpl(
 
         )
         return if (favouriteCollection != null) {
-            favouriteCollection
+            Timber.d("Add sto settando la collection in add.")
+            favouriteCollection!!
                 .document(favourite.idMeal.toString())
                 .set(favouriteMap)
                 .await()
@@ -96,9 +93,9 @@ class FavouriteRepositoryImpl(
 
     override suspend fun delete(idMeal: Long): Boolean {
         if (!authManager.isUserLoggedIn()) return false
-
+        favouriteCollection = authManager.getFavouriteCollection(fireStoreDatabase)
         return if (favouriteCollection != null) {
-            favouriteCollection
+            favouriteCollection!!
                 .document(idMeal.toString())
                 .delete()
                 .await()

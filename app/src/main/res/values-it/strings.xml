@@ -55,4 +55,10 @@
     <string name="click_info">Clicca qui per saperne di più</string>
     <string name="how_delete_favourite_message">Per eliminare fai uno swipe</string>
     <string name="understand">Ho capito</string>
+    <string name="required_login_title">Accesso richiesto</string>
+    <string name="required_login_message">E\' necessario loggarsi per poter salvare i preferiti.\n\nN.B. Dopo aver effettuato il login puoi aggiungere il tuo preferito</string>
+    <string name="login">Login</string>
+    <string name="cancel">Annulla</string>
+    <string name="failed_login">Login fallito</string>
+    <string name="welcome">Benvenuto </string>
 </resources>

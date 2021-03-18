@@ -1,13 +1,16 @@
 package com.ivanmorgillo.corsoandroid.teama
 
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ateam.delicious.domain.repository.SettingsRepository
+import com.google.firebase.auth.FirebaseUser
 import com.ivanmorgillo.corsoandroid.teama.crashlytics.SingleLiveEvent
 import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
 import kotlinx.coroutines.launch
 
 class MainViewModel(private val repository: SettingsRepository, private val tracking: Tracking) : ViewModel() {
+    val states = MutableLiveData<MainScreenStates>()
     val actions = SingleLiveEvent<MainScreenAction>()
 
     @Suppress("IMPLICIT_CAST_TO_ANY")
@@ -34,15 +37,65 @@ class MainViewModel(private val repository: SettingsRepository, private val trac
                 actions.postValue(MainScreenAction.NavigateToSettings)
             }
             MainScreenEvent.OnInitTheme -> {
-                viewModelScope.launch {
-                    val darkEnabled = repository.isDarkThemeEnabled()
-                    actions.postValue(MainScreenAction.ChangeTheme(darkEnabled))
-                }
+                onInitTheme()
             }
             MainScreenEvent.OnLogin -> actions.postValue(MainScreenAction.ShowLoginDialog)
             MainScreenEvent.OnLogout -> actions.postValue(MainScreenAction.ShowLogout)
+            MainScreenEvent.OnLoginFailed -> {
+                tracking.logEvent("user_login_failed")
+                states.postValue(MainScreenStates.LoginFailure)
+            }
+            is MainScreenEvent.OnLoginSuccessful -> {
+                tracking.logEvent("user_login_successful")
+                onLoginSuccessful(event.user)
+            }
+            MainScreenEvent.OnLogoutFailed -> {
+                tracking.logEvent("user_logout_failed")
+                states.postValue(MainScreenStates.LogoutFailure)
+            }
+            MainScreenEvent.OnLogoutSuccessful -> {
+                tracking.logEvent("user_logout_successful")
+                onLogoutSuccessful()
+            }
+            MainScreenEvent.OnInitUser -> {
+                onInitUser()
+            }
         }.exhaustive
     }
+
+    private fun onInitUser() {
+        viewModelScope.launch {
+            actions.postValue(MainScreenAction.UserLogin(repository.isUserLogged()))
+        }
+    }
+
+    private fun onLogoutSuccessful() {
+        viewModelScope.launch {
+            repository.setUserLogged(false)
+            states.postValue(MainScreenStates.LoggedOut)
+        }
+    }
+
+    private fun onLoginSuccessful(user: FirebaseUser?) {
+        viewModelScope.launch {
+            repository.setUserLogged(true)
+            states.postValue(MainScreenStates.LoggedIn(user))
+        }
+    }
+
+    private fun onInitTheme() {
+        viewModelScope.launch {
+            val darkEnabled = repository.isDarkThemeEnabled()
+            actions.postValue(MainScreenAction.ChangeTheme(darkEnabled))
+        }
+    }
+}
+
+sealed class MainScreenStates {
+    data class LoggedIn(val user: FirebaseUser?) : MainScreenStates()
+    object LoginFailure : MainScreenStates()
+    object LoggedOut : MainScreenStates()
+    object LogoutFailure : MainScreenStates()
 }
 
 sealed class MainScreenAction {
@@ -53,6 +106,7 @@ sealed class MainScreenAction {
     object NavigateToFeedback : MainScreenAction()
     object ShowLoginDialog : MainScreenAction()
     object ShowLogout : MainScreenAction()
+    data class UserLogin(val userLogged: Boolean): MainScreenAction()
 
     data class ChangeTheme(val darkEnabled: Boolean) : MainScreenAction()
 }
@@ -64,6 +118,11 @@ sealed class MainScreenEvent {
     object OnSettingsClick : MainScreenEvent()
     object OnFeedbackClick : MainScreenEvent()
     object OnInitTheme : MainScreenEvent()
+    object OnInitUser : MainScreenEvent()
     object OnLogin : MainScreenEvent()
     object OnLogout : MainScreenEvent()
+    data class OnLoginSuccessful(val user: FirebaseUser?) : MainScreenEvent()
+    object OnLoginFailed : MainScreenEvent()
+    object OnLogoutSuccessful : MainScreenEvent()
+    object OnLogoutFailed : MainScreenEvent()
 }

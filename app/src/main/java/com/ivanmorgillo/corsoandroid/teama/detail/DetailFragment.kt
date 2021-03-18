@@ -76,11 +76,23 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                     DetailScreenAction.ShowSlowInternetMessage -> showNoInternetMessage(recipeId)
                     DetailScreenAction.ShowServerErrorMessage -> showServerErrorMessage(recipeId)
                     DetailScreenAction.ShowNoRecipeDetailFoundMessage -> showNoRecipeDetailFoundMessage(recipeId)
+                    DetailScreenAction.ShowLoginMessage -> onShowLoginMessage()
                     DetailScreenAction.RequestGoogleLogin -> (activity as GoogleLoginRequest).onGoogleLogin()
                 }.exhaustive
             })
             viewModel.send(DetailScreenEvent.OnReady(recipeId))
         }
+    }
+
+    private fun onShowLoginMessage() {
+        binding.root.showAlertDialog(getString(R.string.required_login_title),
+            getString(R.string.required_login_message),
+            R.drawable.ic_account,
+            getString(R.string.login),
+            { viewModel.send(DetailScreenEvent.OnGoogleLogin) },
+            getString(R.string.cancel),
+            {}
+        )
     }
 
     private fun renderToolbarMenu(isFavourite: Boolean) {
@@ -103,7 +115,6 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
         return if (id == R.id.favourite_button) {
-
             viewModel.send(DetailScreenEvent.OnAddFavouriteClick)
             false
         } else super.onOptionsItemSelected(item)

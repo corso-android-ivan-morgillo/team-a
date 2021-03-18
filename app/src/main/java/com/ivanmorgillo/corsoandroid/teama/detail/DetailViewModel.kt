@@ -55,13 +55,13 @@ class DetailViewModel(
             is OnAddFavouriteClick -> {
                 tracking.logEvent("on_favourite_clicked")
                 if (!authManager.isUserLoggedIn()) {
-                    actions.postValue(DetailScreenAction.RequestGoogleLogin)
+                    actions.postValue(DetailScreenAction.ShowLoginMessage)
                 } else {
                     //aggiungi favorito
                     viewModelScope.launch { toggleFavourite() }
                 }
-
             }
+            DetailScreenEvent.OnGoogleLogin -> actions.postValue(DetailScreenAction.RequestGoogleLogin)
         }.exhaustive
     }
 
@@ -170,6 +170,7 @@ sealed class DetailScreenAction {
     object ShowServerErrorMessage : DetailScreenAction()
     object ShowInterruptedRequestMessage : DetailScreenAction()
     object ShowNoRecipeDetailFoundMessage : DetailScreenAction()
+    object ShowLoginMessage : DetailScreenAction()
     object RequestGoogleLogin : DetailScreenAction()
 }
 
@@ -178,5 +179,5 @@ sealed class DetailScreenEvent {
     object OnIngredientsClick : DetailScreenEvent()
     object OnInstructionsClick : DetailScreenEvent()
     object OnAddFavouriteClick : DetailScreenEvent()
-
+    object OnGoogleLogin : DetailScreenEvent()
 }
