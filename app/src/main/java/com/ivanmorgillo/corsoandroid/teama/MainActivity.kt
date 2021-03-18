@@ -79,11 +79,7 @@ class MainActivity : AppCompatActivity(), GoogleLoginRequest {
                 MainScreenAction.ShowLoginDialog -> firebaseLogin()
                 MainScreenAction.ShowLogout -> firebaseLogout()
                 is MainScreenAction.UserLogin -> {
-                    if (action.userLogged) {
-                        viewModel.send(MainScreenEvent.OnLogin)
-                    } else {
-                        Timber.d("L'utente non era loggato e quindi non richiedo il login allo startup")
-                    }
+                    onUserLoggedIn(action.user)
                 }
             }.exhaustive
         })
@@ -156,7 +152,7 @@ class MainActivity : AppCompatActivity(), GoogleLoginRequest {
             userTextView.text = user.email
             imageView.load(user.photoUrl)
         } else {
-            Timber.d("User logged in but user is null")
+            Timber.d("L'utente non era loggato e quindi non richiedo il login allo startup")
         }
     }
 

@@ -1,5 +1,6 @@
 package com.ateam.delicious.domain.repository
 
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.FirebaseFirestore
@@ -7,10 +8,10 @@ import com.google.firebase.ktx.Firebase
 import timber.log.Timber
 
 interface AuthenticationManager {
-
     fun getUid(): String?
     fun isUserLoggedIn(): Boolean
     fun getFavouriteCollection(dataBase: FirebaseFirestore): CollectionReference?
+    fun getUser(): FirebaseUser?
 }
 
 class AuthenticationManagerImpl() : AuthenticationManager {
@@ -33,5 +34,8 @@ class AuthenticationManagerImpl() : AuthenticationManager {
         }
     }
 
+    override fun getUser(): FirebaseUser? {
+        return Firebase.auth.currentUser
+    }
 
 }
