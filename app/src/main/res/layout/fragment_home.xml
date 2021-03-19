@@ -68,12 +68,11 @@
             android:layout_height="wrap_content"
             android:drawableTop="@drawable/ic_cake"
             android:padding="8dp"
-            android:text="Category"
+            android:text="@string/category"
             android:textSize="12sp"
             app:cornerRadius="8dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="HardcodedText" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/ingredient_button"
@@ -82,13 +81,12 @@
             android:layout_margin="8dp"
             android:drawableTop="@drawable/ic_ingredients"
             android:padding="8dp"
-            android:text="Ingredient"
+            android:text="@string/ingredient"
             android:textSize="12sp"
             app:cornerRadius="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/random_button"
-            app:layout_constraintTop_toBottomOf="@id/category_button"
-            tools:ignore="HardcodedText" />
+            app:layout_constraintTop_toBottomOf="@id/category_button" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/area_button"
@@ -97,14 +95,13 @@
             android:layout_margin="8dp"
             android:drawableTop="@drawable/ic_earth"
             android:padding="8dp"
-            android:text="Area"
+            android:text="@string/area"
             android:textSize="12sp"
             app:cornerRadius="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/ingredient_button"
-            tools:ignore="HardcodedText" />
+            app:layout_constraintTop_toBottomOf="@id/ingredient_button" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/random_button"
@@ -113,7 +110,7 @@
             android:layout_marginStart="16dp"
             android:drawableTop="@drawable/ic_dice"
             android:padding="16dp"
-            android:text="Random"
+            android:text="@string/random"
             app:cornerRadius="30dp"
             app:layout_constraintBottom_toTopOf="@id/area_button"
             app:layout_constraintStart_toStartOf="parent"
