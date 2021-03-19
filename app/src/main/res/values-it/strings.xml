@@ -59,4 +59,10 @@
     <string name="cancel">Annulla</string>
     <string name="failed_login">Login fallito</string>
     <string name="welcome">Benvenuto </string>
+    <string name="home_fragment">Home</string>
+    <string name="random">Random</string>
+    <string name="area">Area</string>
+    <string name="ingredient">Ingrediente</string>
+    <string name="category">Categoria</string>
+    <string name="work_in_progress">Work In Progress…</string>
 </resources>
