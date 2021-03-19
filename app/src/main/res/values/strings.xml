@@ -57,4 +57,5 @@
     <string name="cancel">Cancel</string>
     <string name="failed_login">Login failed</string>
     <string name="welcome">Welcome </string>
+    <string name="home_fragment">Home</string>
 </resources>
