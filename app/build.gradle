@@ -126,10 +126,12 @@ dependencies {
 
     //firebase login ui
     implementation 'com.firebaseui:firebase-ui-auth:6.4.0'
-    
+
     implementation 'com.google.firebase:firebase-messaging-ktx'
     implementation 'com.google.firebase:firebase-database-ktx'
 
+    //Palette
+    implementation 'androidx.palette:palette:1.0.0'
 
     // Testing
     testImplementation 'junit:junit:4.13.2'

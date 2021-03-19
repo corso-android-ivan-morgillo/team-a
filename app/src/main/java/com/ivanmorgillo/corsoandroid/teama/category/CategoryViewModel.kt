@@ -80,8 +80,7 @@ class CategoryViewModel(private val repository: CategoryRepository, private val 
                 title = it.name,
                 image = it.image,
                 id = it.id.toLong(),
-                recipesCount = it.recipeAmount,
-                description = it.categoryDescription
+                recipesCount = it.recipeAmount
             )
         }
         states.postValue(Content(categories))
