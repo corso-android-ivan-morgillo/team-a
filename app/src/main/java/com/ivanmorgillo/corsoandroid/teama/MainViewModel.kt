@@ -3,13 +3,18 @@ package com.ivanmorgillo.corsoandroid.teama
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ateam.delicious.domain.repository.AuthenticationManager
 import com.ateam.delicious.domain.repository.SettingsRepository
 import com.google.firebase.auth.FirebaseUser
 import com.ivanmorgillo.corsoandroid.teama.crashlytics.SingleLiveEvent
 import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
 import kotlinx.coroutines.launch
 
-class MainViewModel(private val repository: SettingsRepository, private val tracking: Tracking) : ViewModel() {
+class MainViewModel(
+    private val repository: SettingsRepository,
+    private val tracking: Tracking,
+    private val authManager: AuthenticationManager
+) : ViewModel() {
     val states = MutableLiveData<MainScreenStates>()
     val actions = SingleLiveEvent<MainScreenAction>()
 
@@ -36,9 +41,7 @@ class MainViewModel(private val repository: SettingsRepository, private val trac
                 tracking.logEvent("settings_menu_clicked")
                 actions.postValue(MainScreenAction.NavigateToSettings)
             }
-            MainScreenEvent.OnInitTheme -> {
-                onInitTheme()
-            }
+            MainScreenEvent.OnInitTheme -> onInitTheme()
             MainScreenEvent.OnLogin -> actions.postValue(MainScreenAction.ShowLoginDialog)
             MainScreenEvent.OnLogout -> actions.postValue(MainScreenAction.ShowLogout)
             MainScreenEvent.OnLoginFailed -> {
@@ -57,30 +60,20 @@ class MainViewModel(private val repository: SettingsRepository, private val trac
                 tracking.logEvent("user_logout_successful")
                 onLogoutSuccessful()
             }
-            MainScreenEvent.OnInitUser -> {
-                onInitUser()
-            }
+            MainScreenEvent.OnInitUser -> onInitUser()
         }.exhaustive
     }
 
     private fun onInitUser() {
-        viewModelScope.launch {
-            actions.postValue(MainScreenAction.UserLogin(repository.isUserLogged()))
-        }
+        actions.postValue(MainScreenAction.UserLogin(authManager.getUser()))
     }
 
     private fun onLogoutSuccessful() {
-        viewModelScope.launch {
-            repository.setUserLogged(false)
-            states.postValue(MainScreenStates.LoggedOut)
-        }
+        states.postValue(MainScreenStates.LoggedOut)
     }
 
     private fun onLoginSuccessful(user: FirebaseUser?) {
-        viewModelScope.launch {
-            repository.setUserLogged(true)
-            states.postValue(MainScreenStates.LoggedIn(user))
-        }
+        states.postValue(MainScreenStates.LoggedIn(user))
     }
 
     private fun onInitTheme() {
@@ -106,7 +99,7 @@ sealed class MainScreenAction {
     object NavigateToFeedback : MainScreenAction()
     object ShowLoginDialog : MainScreenAction()
     object ShowLogout : MainScreenAction()
-    data class UserLogin(val userLogged: Boolean): MainScreenAction()
+    data class UserLogin(val user: FirebaseUser?): MainScreenAction()
 
     data class ChangeTheme(val darkEnabled: Boolean) : MainScreenAction()
 }

@@ -47,7 +47,7 @@ val appModule = module {
     single<Tracking> {
         TrackingImpl()
     }
-    viewModel { MainViewModel(repository = get(), tracking = get()) }
+    viewModel { MainViewModel(repository = get(), tracking = get(), authManager = get()) }
     viewModel { CategoryViewModel(repository = get(), tracking = get()) }
     viewModel { RecipeViewModel(repository = get(), tracking = get()) }
     viewModel {
