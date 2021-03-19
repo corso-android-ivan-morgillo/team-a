@@ -27,6 +27,8 @@ import com.google.firebase.ktx.Firebase
 import com.ivanmorgillo.corsoandroid.teama.databinding.ActivityMainBinding
 import com.ivanmorgillo.corsoandroid.teama.databinding.NavHeaderMainBinding
 import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
+import com.ivanmorgillo.corsoandroid.teama.extension.gone
+import com.ivanmorgillo.corsoandroid.teama.extension.visible
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
@@ -112,12 +114,15 @@ class MainActivity : AppCompatActivity(), GoogleLoginRequest {
             when (state) {
                 is MainScreenStates.LoggedIn -> {
                     val user = state.user
+
                     onUserLoggedIn(user)
                 }
                 MainScreenStates.LoginFailure -> {
                     onLoginFailure()
                 }
                 MainScreenStates.LoggedOut -> {
+                    headerBinding.imageView.gone()
+                    headerBinding.userTextView.gone()
                     Toast.makeText(this, "Logout effettuato!", Toast.LENGTH_LONG).show()
                 }
                 MainScreenStates.LogoutFailure -> {
@@ -150,6 +155,8 @@ class MainActivity : AppCompatActivity(), GoogleLoginRequest {
             val imageView = headerBinding.imageView
             val userTextView = headerBinding.userTextView
             userTextView.text = user.email
+            imageView.visible()
+            userTextView.visible()
             imageView.load(user.photoUrl)
         } else {
             Timber.d("L'utente non era loggato e quindi non richiedo il login allo startup")

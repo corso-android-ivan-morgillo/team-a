@@ -23,9 +23,10 @@
             android:id="@+id/category_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:textSize="24sp"
-            app:layout_constraintStart_toStartOf="parent"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="@+id/image_view_constraint"
+            app:layout_constraintStart_toStartOf="@+id/image_view_constraint"
             app:layout_constraintTop_toBottomOf="@+id/image_view_constraint"
             tools:text="Titolo Categoria..." />
 
@@ -33,12 +34,12 @@
             android:id="@+id/recipe_counter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
             android:gravity="center"
             android:textSize="14sp"
-            android:layout_marginStart="8dp"
-            android:layout_marginBottom="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/category_title"
+            app:layout_constraintStart_toStartOf="@+id/category_title"
             app:layout_constraintTop_toBottomOf="@+id/category_title"
             tools:text="15 Recipes" />
 
