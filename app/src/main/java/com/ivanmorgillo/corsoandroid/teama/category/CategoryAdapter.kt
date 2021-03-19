@@ -1,17 +1,17 @@
 package com.ivanmorgillo.corsoandroid.teama.category
 
+import android.graphics.Bitmap
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
+import androidx.palette.graphics.Palette
 import androidx.recyclerview.widget.RecyclerView
-import androidx.transition.AutoTransition
-import androidx.transition.TransitionManager
+import coil.bitmap.BitmapPool
 import coil.load
+import coil.size.Size
+import coil.transform.Transformation
 import com.ivanmorgillo.corsoandroid.teama.R
 import com.ivanmorgillo.corsoandroid.teama.databinding.CategoryItemBinding
-import com.ivanmorgillo.corsoandroid.teama.extension.gone
-import com.ivanmorgillo.corsoandroid.teama.extension.visible
 
 class CategoryAdapter(private val onclick: (CategoryUI, View) -> Unit) : RecyclerView.Adapter<CategoryViewHolder>() {
     private var categories = emptyList<CategoryUI>()
@@ -22,7 +22,7 @@ class CategoryAdapter(private val onclick: (CategoryUI, View) -> Unit) : Recycle
 
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
         holder.bind(categories[position], onclick)
-        holder.setIsRecyclable(false)
+        //holder.setIsRecyclable(false)
     }
 
     override fun getItemCount(): Int {
@@ -46,29 +46,20 @@ class CategoryViewHolder(private val binding: CategoryItemBinding) : RecyclerVie
         val recipesCounterText = item.recipesCount + " " + binding.root.resources.getString(R.string.recipes)
         binding.recipeCounter.text = recipesCounterText
         binding.categoryTitle.text = item.title
-        binding.categoryDescription.text = item.description
-        binding.categoryImageCollapsed.load(item.image)
+        binding.categoryImageCollapsed.load(item.image) {
+            transformations(object : Transformation {
+                override fun key() = "paletteTransformer"
+                override suspend fun transform(pool: BitmapPool, input: Bitmap, size: Size): Bitmap {
+                    val p = Palette.from(input).generate()
+                    val color = p.getLightVibrantColor(R.color.colorPrimary)
+                    binding.imageViewConstraint.background.setTint(color)
+                    return input
+                }
+            })
+        }
+
         binding.categoryRoot.setOnClickListener { // per aprire il dettaglio della ricetta
             onclick(item, it)
-        }
-        binding.categoryInfo.setOnClickListener { // per espandere o collassare la card
-            expandOrCollapse()
-        }
-    }
-
-    private fun expandOrCollapse() {
-        if (binding.actionsCategoryExpanded.isVisible) {
-            binding.actionsCategoryExpanded.gone()
-            TransitionManager.beginDelayedTransition(
-                binding.categoryRoot,
-                AutoTransition()
-            )
-        } else {
-            binding.actionsCategoryExpanded.visible()
-            TransitionManager.beginDelayedTransition(
-                binding.categoryRoot,
-                AutoTransition()
-            )
         }
     }
 }

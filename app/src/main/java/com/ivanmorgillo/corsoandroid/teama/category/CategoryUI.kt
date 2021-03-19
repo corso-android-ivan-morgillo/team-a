@@ -5,5 +5,5 @@ data class CategoryUI(
     val title: String,
     val image: String,
     val recipesCount: String,
-    val description: String
-)
+
+    )

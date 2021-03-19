@@ -50,9 +50,7 @@
     <string name="restart_required">E\' necessario un riavvio dell\'app per applicare le modifiche</string>
     <string name="restart">Riavvia</string>
     <string name="not_now">Non ora</string>
-    <string name="info_button_description">Info Button</string>
     <string name="category_image_description">categoryImage</string>
-    <string name="click_info">Clicca qui per saperne di più</string>
     <string name="how_delete_favourite_message">Per eliminare fai uno swipe</string>
     <string name="understand">Ho capito</string>
     <string name="required_login_title">Accesso richiesto</string>

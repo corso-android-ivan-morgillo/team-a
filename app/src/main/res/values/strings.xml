@@ -48,10 +48,8 @@
     <string name="restart_required">An app restart is required to apply changes</string>
     <string name="restart">Restart</string>
     <string name="not_now">Not now</string>
-    <string name="info_button_description">Info Button</string>
     <string name="category_image_description">categoryImage</string>
     <string name="how_delete_favourite_message">Swipe to delete</string>
-    <string name="click_info">Click here for more info</string>
     <string name="understand">OK</string>
     <string name="required_login_title">Login required</string>
     <string name="required_login_message">You need to login to save favourites.\n\nN.B. After you logged in you can add your favourite</string>

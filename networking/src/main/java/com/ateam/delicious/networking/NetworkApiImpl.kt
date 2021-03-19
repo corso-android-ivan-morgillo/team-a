@@ -225,8 +225,7 @@ class NetworkApiImpl(cacheDir: File) : NetworkAPI {
     }
 
     data class CategoryInfo(
-        var recipesAmount: String,
-        //  var areaNames: List<String>,
+        var recipesAmount: String
     )
 
     private fun reformatFlagName(areaName: String): String {
@@ -316,13 +315,8 @@ class NetworkApiImpl(cacheDir: File) : NetworkAPI {
                 name = strCategory,
                 image = strCategoryThumb,
                 id = idCategory,
-                categoryDescription = strCategoryDescription,
-                recipeAmount = categoryInfo.recipesAmount,
-                /* categoryArea = categoryInfo.areaNames.map {
-                     "https://www.themealdb.com/images/icons/flags/big/64/$it.png"
-                 } */
+                recipeAmount = categoryInfo.recipesAmount
             )
-            // possibilità di implementare la descrizione
         } else {
             null
         }
