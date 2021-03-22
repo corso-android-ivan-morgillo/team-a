@@ -26,6 +26,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         val categoryButton = view.findViewById<Button>(R.id.category_button)
         val areaButton = view.findViewById<Button>(R.id.area_button)
         val ingredientsButton = view.findViewById<Button>(R.id.ingredient_button)
+        val randomButton = view.findViewById<Button>(R.id.random_button)
         categoryButton.setOnClickListener {
 
             val directions =
@@ -35,13 +36,18 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
         areaButton.setOnClickListener {
 
-            Toast.makeText(categoryButton.context, "Work In Progress...", Toast.LENGTH_LONG).show()
+            Toast.makeText(categoryButton.context, getString(R.string.work_in_progress), Toast.LENGTH_LONG).show()
 
 
         }
         ingredientsButton.setOnClickListener {
 
-            Toast.makeText(categoryButton.context, "Work In Progress...", Toast.LENGTH_LONG).show()
+            Toast.makeText(categoryButton.context, getString(R.string.work_in_progress), Toast.LENGTH_LONG).show()
+
+        }
+        randomButton.setOnClickListener {
+
+            Toast.makeText(categoryButton.context, getString(R.string.work_in_progress), Toast.LENGTH_LONG).show()
 
         }
 

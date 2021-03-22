@@ -8,9 +8,9 @@
         android:id="@+id/menu_top"
         android:checkableBehavior="single">
         <item
-            android:id="@+id/categoryFragment"
-            android:icon="@drawable/ic_food"
-            android:title="@string/category_fragment" />
+            android:id="@+id/homeFragment"
+            android:icon="@drawable/ic_home"
+            android:title="@string/home_fragment" />
         <item
             android:id="@+id/detailFragment"
             android:icon="@drawable/ic_dice"

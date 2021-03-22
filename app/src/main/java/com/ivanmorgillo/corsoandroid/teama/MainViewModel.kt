@@ -21,9 +21,9 @@ class MainViewModel(
     @Suppress("IMPLICIT_CAST_TO_ANY")
     fun send(event: MainScreenEvent) {
         when (event) {
-            MainScreenEvent.OnCategoryClick -> {
+            MainScreenEvent.OnHomeClick -> {
                 tracking.logEvent("category_menu_clicked")
-                actions.postValue(MainScreenAction.NavigateToCategory)
+                actions.postValue(MainScreenAction.NavigateToHome)
             }
             MainScreenEvent.OnFavouritesClick -> {
                 tracking.logEvent("favourites_menu_clicked")
@@ -61,6 +61,7 @@ class MainViewModel(
                 onLogoutSuccessful()
             }
             MainScreenEvent.OnInitUser -> onInitUser()
+
         }.exhaustive
     }
 
@@ -92,20 +93,20 @@ sealed class MainScreenStates {
 }
 
 sealed class MainScreenAction {
-    object NavigateToCategory : MainScreenAction()
     object NavigateToRandomRecipe : MainScreenAction()
     object NavigateToFavourites : MainScreenAction()
     object NavigateToSettings : MainScreenAction()
     object NavigateToFeedback : MainScreenAction()
     object ShowLoginDialog : MainScreenAction()
     object ShowLogout : MainScreenAction()
-    data class UserLogin(val user: FirebaseUser?): MainScreenAction()
+    object NavigateToHome : MainScreenAction()
+
+    data class UserLogin(val user: FirebaseUser?) : MainScreenAction()
 
     data class ChangeTheme(val darkEnabled: Boolean) : MainScreenAction()
 }
 
 sealed class MainScreenEvent {
-    object OnCategoryClick : MainScreenEvent()
     object OnRandomRecipeClick : MainScreenEvent()
     object OnFavouritesClick : MainScreenEvent()
     object OnSettingsClick : MainScreenEvent()
@@ -118,4 +119,5 @@ sealed class MainScreenEvent {
     object OnLoginFailed : MainScreenEvent()
     object OnLogoutSuccessful : MainScreenEvent()
     object OnLogoutFailed : MainScreenEvent()
+    object OnHomeClick : MainScreenEvent()
 }

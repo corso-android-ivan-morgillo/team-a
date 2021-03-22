@@ -43,7 +43,8 @@
         app:layout_constraintBottom_toBottomOf="@id/image_view"
         app:layout_constraintTop_toTopOf="@id/image_view"
         android:layout_marginStart="8dp"
-        android:textColor="@color/black" />
+        android:textColor="@color/black"
+        android:visibility="gone" />
 
     <ImageView
         android:id="@+id/image_view"
@@ -53,6 +54,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/logoImageView"
-        app:srcCompat="@drawable/ic_logo_delicious" />
+        app:srcCompat="@drawable/ic_cake"
+        android:visibility="gone" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

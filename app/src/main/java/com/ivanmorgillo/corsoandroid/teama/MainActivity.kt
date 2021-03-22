@@ -27,6 +27,8 @@ import com.google.firebase.ktx.Firebase
 import com.ivanmorgillo.corsoandroid.teama.databinding.ActivityMainBinding
 import com.ivanmorgillo.corsoandroid.teama.databinding.NavHeaderMainBinding
 import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
+import com.ivanmorgillo.corsoandroid.teama.extension.gone
+import com.ivanmorgillo.corsoandroid.teama.extension.visible
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 
@@ -51,7 +53,7 @@ class MainActivity : AppCompatActivity(), GoogleLoginRequest {
         val navController = findNavController(R.id.nav_host_fragment)
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.categoryFragment, R.id.favouriteFragment,
+                R.id.homeFragment, R.id.favouriteFragment,
                 R.id.settingsFragment, R.id.nav_feedback,
                 R.id.login, R.id.logout
             ), drawerLayout
@@ -66,7 +68,7 @@ class MainActivity : AppCompatActivity(), GoogleLoginRequest {
         observeStates()
         viewModel.actions.observe(this, { action ->
             when (action) {
-                MainScreenAction.NavigateToCategory -> navController.navigate(R.id.categoryFragment)
+                MainScreenAction.NavigateToHome -> navController.navigate(R.id.homeFragment)
                 MainScreenAction.NavigateToFavourites -> navController.navigate(R.id.favouriteFragment)
                 MainScreenAction.NavigateToFeedback -> openUrl(getString(R.string.feedback_url))
                 MainScreenAction.NavigateToRandomRecipe -> {
@@ -89,7 +91,7 @@ class MainActivity : AppCompatActivity(), GoogleLoginRequest {
 
     private fun onItemSelected(itemId: Int) {
         when (itemId) {
-            R.id.categoryFragment -> viewModel.send(MainScreenEvent.OnCategoryClick)
+            R.id.homeFragment -> viewModel.send(MainScreenEvent.OnHomeClick)
             R.id.detailFragment -> viewModel.send(MainScreenEvent.OnRandomRecipeClick)
             R.id.favouriteFragment -> viewModel.send(MainScreenEvent.OnFavouritesClick)
             R.id.nav_feedback -> viewModel.send(MainScreenEvent.OnFeedbackClick)
@@ -112,12 +114,15 @@ class MainActivity : AppCompatActivity(), GoogleLoginRequest {
             when (state) {
                 is MainScreenStates.LoggedIn -> {
                     val user = state.user
+
                     onUserLoggedIn(user)
                 }
                 MainScreenStates.LoginFailure -> {
                     onLoginFailure()
                 }
                 MainScreenStates.LoggedOut -> {
+                    headerBinding.imageView.gone()
+                    headerBinding.userTextView.gone()
                     Toast.makeText(this, "Logout effettuato!", Toast.LENGTH_LONG).show()
                 }
                 MainScreenStates.LogoutFailure -> {
@@ -150,6 +155,8 @@ class MainActivity : AppCompatActivity(), GoogleLoginRequest {
             val imageView = headerBinding.imageView
             val userTextView = headerBinding.userTextView
             userTextView.text = user.email
+            imageView.visible()
+            userTextView.visible()
             imageView.load(user.photoUrl)
         } else {
             Timber.d("L'utente non era loggato e quindi non richiedo il login allo startup")
