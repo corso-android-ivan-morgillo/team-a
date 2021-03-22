@@ -18,6 +18,7 @@ import com.ivanmorgillo.corsoandroid.teama.TrackingImpl
 import com.ivanmorgillo.corsoandroid.teama.category.CategoryViewModel
 import com.ivanmorgillo.corsoandroid.teama.detail.DetailViewModel
 import com.ivanmorgillo.corsoandroid.teama.favourite.FavouriteViewModel
+import com.ivanmorgillo.corsoandroid.teama.home.HomeViewModel
 import com.ivanmorgillo.corsoandroid.teama.recipe.RecipeViewModel
 import com.ivanmorgillo.corsoandroid.teama.settings.SettingsViewModel
 import org.koin.android.ext.koin.androidContext
@@ -60,4 +61,5 @@ val appModule = module {
     }
     viewModel { FavouriteViewModel(repository = get(), tracking = get(), settingsRepository = get()) }
     viewModel { SettingsViewModel(repository = get(), tracking = get()) }
+    viewModel { HomeViewModel(tracking = get()) }
 }
