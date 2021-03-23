@@ -54,9 +54,7 @@ class RecipeViewModel(private val repository: RecipesRepository, private val tra
             RecipeUI(
                 title = it.name,
                 image = it.image,
-                id = it.idMeal,
-
-                )
+                id = it.idMeal)
         }
         this.recipes = recipes
         states.postValue(Content(recipes))
@@ -116,10 +114,4 @@ sealed class RecipeScreenEvent {
     data class OnReady(val categoryName: String) : RecipeScreenEvent()
     data class OnRefresh(val categoryName: String) : RecipeScreenEvent()
     data class OnRecipeSearch(val query: String) : RecipeScreenEvent()
-}
-
-sealed class RecipeType {
-    object Category : RecipeType()
-    object Area : RecipeType()
-    object Ingredient : RecipeType()
 }

@@ -1,7 +1,5 @@
 package com.ivanmorgillo.corsoandroid.teama.recipe
 
-import android.app.SearchManager
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
