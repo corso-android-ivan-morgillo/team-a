@@ -58,7 +58,6 @@ class CategoryViewHolder(private val binding: CategoryItemBinding) : RecyclerVie
             })
         }
 
-
         binding.categoryRoot.setOnClickListener { // per aprire il dettaglio della ricetta
             onclick(item, it)
         }

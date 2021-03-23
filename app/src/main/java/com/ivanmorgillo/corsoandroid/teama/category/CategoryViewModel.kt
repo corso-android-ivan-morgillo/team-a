@@ -12,11 +12,11 @@ import com.ateam.delicious.domain.repository.CategoryRepository
 import com.ateam.delicious.domain.result.LoadCategoryResult
 import com.ivanmorgillo.corsoandroid.teama.Screens
 import com.ivanmorgillo.corsoandroid.teama.Tracking
-import com.ivanmorgillo.corsoandroid.teama.category.CategoryScreenAction.ShowInterruptedRequestMessage
-import com.ivanmorgillo.corsoandroid.teama.category.CategoryScreenAction.ShowNoCategoryFoundMessage
-import com.ivanmorgillo.corsoandroid.teama.category.CategoryScreenAction.ShowNoInternetMessage
-import com.ivanmorgillo.corsoandroid.teama.category.CategoryScreenAction.ShowServerErrorMessage
-import com.ivanmorgillo.corsoandroid.teama.category.CategoryScreenAction.ShowSlowInternetMessage
+import com.ivanmorgillo.corsoandroid.teama.category.AreaScreenAction.ShowInterruptedRequestMessage
+import com.ivanmorgillo.corsoandroid.teama.category.AreaScreenAction.ShowNoCategoryFoundMessage
+import com.ivanmorgillo.corsoandroid.teama.category.AreaScreenAction.ShowNoInternetMessage
+import com.ivanmorgillo.corsoandroid.teama.category.AreaScreenAction.ShowServerErrorMessage
+import com.ivanmorgillo.corsoandroid.teama.category.AreaScreenAction.ShowSlowInternetMessage
 import com.ivanmorgillo.corsoandroid.teama.category.CategoryScreenStates.Content
 import com.ivanmorgillo.corsoandroid.teama.category.CategoryScreenStates.Error
 import com.ivanmorgillo.corsoandroid.teama.category.CategoryScreenStates.Loading
@@ -27,21 +27,21 @@ import kotlinx.coroutines.launch
 class CategoryViewModel(private val repository: CategoryRepository, private val tracking: Tracking) : ViewModel() {
 
     val states = MutableLiveData<CategoryScreenStates>() // potremmo passarci direttamente loading
-    val actions = SingleLiveEvent<CategoryScreenAction>()
+    val actions = SingleLiveEvent<AreaScreenAction>()
 
     init {
         tracking.logScreen(Screens.Category)
     }
 
-    fun send(event: CategoryScreenEvent) {
+    fun send(event: AreaScreenEvent) {
         when (event) {
             // deve ricevere la lista delle ricette. La view deve ricevere eventi e reagire a stati.
-            CategoryScreenEvent.OnReady -> loadContent(false)
-            is CategoryScreenEvent.OnCategoryClick -> {
+            AreaScreenEvent.OnReady -> loadContent(false)
+            is AreaScreenEvent.OnCategoryClick -> {
                 tracking.logEvent("category_clicked")
                 onCategoryClick(event)
             }
-            CategoryScreenEvent.OnRefresh -> {
+            AreaScreenEvent.OnRefresh -> {
                 tracking.logEvent("category_refresh_clicked")
                 loadContent(true)
             }
@@ -59,8 +59,8 @@ class CategoryViewModel(private val repository: CategoryRepository, private val 
         }
     }
 
-    private fun onCategoryClick(event: CategoryScreenEvent.OnCategoryClick) {
-        actions.postValue(CategoryScreenAction.NavigateToRecipes(event.category))
+    private fun onCategoryClick(event: AreaScreenEvent.OnCategoryClick) {
+        actions.postValue(AreaScreenAction.NavigateToRecipes(event.category))
     }
 
     private fun onFailure(result: LoadCategoryResult.Failure) {
@@ -87,13 +87,13 @@ class CategoryViewModel(private val repository: CategoryRepository, private val 
     }
 }
 
-sealed class CategoryScreenAction {
-    data class NavigateToRecipes(val category: CategoryUI) : CategoryScreenAction()
-    object ShowNoInternetMessage : CategoryScreenAction()
-    object ShowSlowInternetMessage : CategoryScreenAction()
-    object ShowServerErrorMessage : CategoryScreenAction()
-    object ShowInterruptedRequestMessage : CategoryScreenAction()
-    object ShowNoCategoryFoundMessage : CategoryScreenAction()
+sealed class AreaScreenAction {
+    data class NavigateToRecipes(val category: CategoryUI) : AreaScreenAction()
+    object ShowNoInternetMessage : AreaScreenAction()
+    object ShowSlowInternetMessage : AreaScreenAction()
+    object ShowServerErrorMessage : AreaScreenAction()
+    object ShowInterruptedRequestMessage : AreaScreenAction()
+    object ShowNoCategoryFoundMessage : AreaScreenAction()
 }
 
 sealed class CategoryScreenStates {
@@ -105,9 +105,9 @@ sealed class CategoryScreenStates {
     data class Content(val categories: List<CategoryUI>) : CategoryScreenStates()
 }
 
-sealed class CategoryScreenEvent {
+sealed class AreaScreenEvent {
     /** Usiamo la dataclass perchè abbiamo bisogno di passare un parametro */
-    data class OnCategoryClick(val category: CategoryUI) : CategoryScreenEvent()
-    object OnReady : CategoryScreenEvent()
-    object OnRefresh : CategoryScreenEvent()
+    data class OnCategoryClick(val category: CategoryUI) : AreaScreenEvent()
+    object OnReady : AreaScreenEvent()
+    object OnRefresh : AreaScreenEvent()
 }

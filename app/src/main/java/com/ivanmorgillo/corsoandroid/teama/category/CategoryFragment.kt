@@ -7,12 +7,12 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.ivanmorgillo.corsoandroid.teama.R
-import com.ivanmorgillo.corsoandroid.teama.category.CategoryScreenAction.NavigateToRecipes
-import com.ivanmorgillo.corsoandroid.teama.category.CategoryScreenAction.ShowInterruptedRequestMessage
-import com.ivanmorgillo.corsoandroid.teama.category.CategoryScreenAction.ShowNoCategoryFoundMessage
-import com.ivanmorgillo.corsoandroid.teama.category.CategoryScreenAction.ShowNoInternetMessage
-import com.ivanmorgillo.corsoandroid.teama.category.CategoryScreenAction.ShowServerErrorMessage
-import com.ivanmorgillo.corsoandroid.teama.category.CategoryScreenAction.ShowSlowInternetMessage
+import com.ivanmorgillo.corsoandroid.teama.category.AreaScreenAction.NavigateToRecipes
+import com.ivanmorgillo.corsoandroid.teama.category.AreaScreenAction.ShowInterruptedRequestMessage
+import com.ivanmorgillo.corsoandroid.teama.category.AreaScreenAction.ShowNoCategoryFoundMessage
+import com.ivanmorgillo.corsoandroid.teama.category.AreaScreenAction.ShowNoInternetMessage
+import com.ivanmorgillo.corsoandroid.teama.category.AreaScreenAction.ShowServerErrorMessage
+import com.ivanmorgillo.corsoandroid.teama.category.AreaScreenAction.ShowSlowInternetMessage
 import com.ivanmorgillo.corsoandroid.teama.databinding.FragmentCategoryBinding
 import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
 import com.ivanmorgillo.corsoandroid.teama.extension.gone
@@ -28,10 +28,10 @@ class CategoryFragment : Fragment(R.layout.fragment_category) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.categoryRefresh.setOnRefreshListener { // swipe to refresh
-            viewModel.send(CategoryScreenEvent.OnRefresh)
+            viewModel.send(AreaScreenEvent.OnRefresh)
         }
         val categoryCardAdapter = CategoryAdapter { item: CategoryUI, _: View ->
-            viewModel.send(CategoryScreenEvent.OnCategoryClick(item))
+            viewModel.send(AreaScreenEvent.OnCategoryClick(item))
         }
 
         binding.categoryList.adapter = categoryCardAdapter
@@ -76,7 +76,7 @@ class CategoryFragment : Fragment(R.layout.fragment_category) {
     override fun onResume() {
         super.onResume()
         if (viewModel.states.value == null) {
-            viewModel.send(CategoryScreenEvent.OnReady)
+            viewModel.send(AreaScreenEvent.OnReady)
         }
     }
 
@@ -86,7 +86,7 @@ class CategoryFragment : Fragment(R.layout.fragment_category) {
             resources.getString(R.string.server_error_message),
             R.drawable.ic_error,
             resources.getString(R.string.retry),
-            { viewModel.send(CategoryScreenEvent.OnRefresh) },
+            { viewModel.send(AreaScreenEvent.OnRefresh) },
             "",
             {}
         )
@@ -100,7 +100,7 @@ class CategoryFragment : Fragment(R.layout.fragment_category) {
             resources.getString(R.string.network_settings),
             { startActivity(Intent(Settings.ACTION_WIRELESS_SETTINGS)) },
             resources.getString(R.string.retry),
-            { viewModel.send(CategoryScreenEvent.OnRefresh) }
+            { viewModel.send(AreaScreenEvent.OnRefresh) }
         )
     }
 
@@ -112,7 +112,7 @@ class CategoryFragment : Fragment(R.layout.fragment_category) {
             resources.getString(R.string.network_settings),
             { startActivity(Intent(Settings.ACTION_WIRELESS_SETTINGS)) },
             resources.getString(R.string.retry),
-            { viewModel.send(CategoryScreenEvent.OnRefresh) }
+            { viewModel.send(AreaScreenEvent.OnRefresh) }
         )
     }
 
@@ -122,7 +122,7 @@ class CategoryFragment : Fragment(R.layout.fragment_category) {
             resources.getString(R.string.no_category_found_error_message),
             R.drawable.ic_sad_face,
             resources.getString(R.string.retry),
-            { viewModel.send(CategoryScreenEvent.OnRefresh) },
+            { viewModel.send(AreaScreenEvent.OnRefresh) },
             "",
             {}
         )
