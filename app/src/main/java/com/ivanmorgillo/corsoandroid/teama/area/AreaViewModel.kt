@@ -1,4 +1,4 @@
-package com.ivanmorgillo.corsoandroid.teama.home
+package com.ivanmorgillo.corsoandroid.teama.area
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -28,7 +28,7 @@ class AreaViewModel(private val repository: AreaRepository, private val tracking
                 onAreaClick(event)
             }
             AreaScreenEvent.OnRefresh -> {
-                tracking.logEvent("area _refresh_clicked")
+                tracking.logEvent("area_refresh_clicked")
                 loadContent(true)
             }
         }.exhaustive
@@ -67,24 +67,25 @@ class AreaViewModel(private val repository: AreaRepository, private val tracking
         }.exhaustive
     }
 
-    sealed class AreaScreenAction {
-        data class NavigateToRecipes(val area: AreaUI) : AreaScreenAction()
-        object ShowNoInternetMessage : AreaScreenAction()
-        object ShowSlowInternetMessage : AreaScreenAction()
-        object ShowServerErrorMessage : AreaScreenAction()
-        object ShowInterruptedRequestMessage : AreaScreenAction()
-        object ShowNoAreaFoundMessage : AreaScreenAction()
-    }
+}
 
-    sealed class AreaScreenStates {
-        object Loading : AreaScreenStates()
-        object Error : AreaScreenStates()
-        data class Content(val areas: List<AreaUI>) : AreaScreenStates()
-    }
+sealed class AreaScreenAction {
+    data class NavigateToRecipes(val area: AreaUI) : AreaScreenAction()
+    object ShowNoInternetMessage : AreaScreenAction()
+    object ShowSlowInternetMessage : AreaScreenAction()
+    object ShowServerErrorMessage : AreaScreenAction()
+    object ShowInterruptedRequestMessage : AreaScreenAction()
+    object ShowNoAreaFoundMessage : AreaScreenAction()
+}
 
-    sealed class AreaScreenEvent {
-        data class OnAreaClick(val area: AreaUI) : AreaScreenEvent()
-        object OnReady : AreaScreenEvent()
-        object OnRefresh : AreaScreenEvent()
-    }
+sealed class AreaScreenStates {
+    object Loading : AreaScreenStates()
+    object Error : AreaScreenStates()
+    data class Content(val areas: List<AreaUI>) : AreaScreenStates()
+}
+
+sealed class AreaScreenEvent {
+    data class OnAreaClick(val area: AreaUI) : AreaScreenEvent()
+    object OnReady : AreaScreenEvent()
+    object OnRefresh : AreaScreenEvent()
 }

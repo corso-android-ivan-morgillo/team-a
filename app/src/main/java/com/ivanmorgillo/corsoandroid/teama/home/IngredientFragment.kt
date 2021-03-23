@@ -9,7 +9,6 @@ import com.ivanmorgillo.corsoandroid.teama.R
 
 class IngredientFragment : Fragment() {
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

@@ -1,4 +1,4 @@
-package com.ivanmorgillo.corsoandroid.teama.home
+package com.ivanmorgillo.corsoandroid.teama.area
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,29 +7,34 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.ivanmorgillo.corsoandroid.teama.R
-import com.ivanmorgillo.corsoandroid.teama.category.AreaScreenEvent
+import com.ivanmorgillo.corsoandroid.teama.databinding.FragmentAreaBinding
 import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
+import com.ivanmorgillo.corsoandroid.teama.extension.gone
+import com.ivanmorgillo.corsoandroid.teama.extension.showAlertDialog
+import com.ivanmorgillo.corsoandroid.teama.extension.visible
+import com.ivanmorgillo.corsoandroid.teama.utils.viewBinding
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class AreaFragment : Fragment() {
+class AreaFragment : Fragment(R.layout.fragment_area) {
     private val viewModel: AreaViewModel by viewModel()
-    private val binding: by viewBinding(AreaFragmentBinding::bind)
+    private val binding by viewBinding(FragmentAreaBinding::bind)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.areaRefresh.setOnRefreshListener {
-            viewModel.send(AreaViewModel.AreaScreenEvent.OnRefresh)
+            viewModel.send(AreaScreenEvent.OnRefresh)
         }
         val areaCardAdapter = AreaAdapter { item: AreaUI, _: View ->
-            viewModel.send(AreaViewModel.AreaScreenEvent.OnAreaClick(item))
+            viewModel.send(AreaScreenEvent.OnAreaClick(item))
         }
 
         binding.areaList.adapter = areaCardAdapter
 
         viewModel.states.observe(viewLifecycleOwner, { state ->
             when (state) {
-                is AreaViewModel.AreaScreenStates.Content -> {
+                is AreaScreenStates.Content -> {
                     val areas = state.areas
-                    areaCardAdapter.setareas(areas)
+                    areaCardAdapter.setAreas(areas)
                     binding.areaRefresh.isRefreshing = false
                     if (areas.isEmpty()) {
                         binding.areaTextView.visible()
@@ -40,23 +45,23 @@ class AreaFragment : Fragment() {
                     }
                     binding.areaRefresh.isRefreshing = false
                 }
-                AreaViewModel.AreaScreenStates.Error -> binding.areaRefresh.isRefreshing = false
-                AreaViewModel.AreaScreenStates.Loading -> binding.areaRefresh.isRefreshing = true
+                AreaScreenStates.Error -> binding.areaRefresh.isRefreshing = false
+                AreaScreenStates.Loading -> binding.areaRefresh.isRefreshing = true
             }
         })
         viewModel.actions.observe(viewLifecycleOwner,
             { action ->
                 when (action) {
-                    is AreaViewModel.AreaScreenAction.NavigateToRecipes -> {
+                    is AreaScreenAction.NavigateToRecipes -> {
                         val directions =
                             AreaFragmentDirections.actionAreaFragmentToRecipeFragment(action.area.name)
                         findNavController().navigate(directions)
                     }
-                    AreaViewModel.AreaScreenAction.ShowNoInternetMessage -> showNoInternetMessage()
-                    AreaViewModel.AreaScreenAction.ShowInterruptedRequestMessage -> showInterruptedRequestMessage()
-                    AreaViewModel.AreaScreenAction.ShowSlowInternetMessage -> showNoInternetMessage()
-                    AreaViewModel.AreaScreenAction.ShowServerErrorMessage -> showServerErrorMessage()
-                    AreaViewModel.AreaScreenAction.ShowNoAreaFoundMessage -> showNoAreaFoundMessage()
+                    AreaScreenAction.ShowNoInternetMessage -> showNoInternetMessage()
+                    AreaScreenAction.ShowInterruptedRequestMessage -> showInterruptedRequestMessage()
+                    AreaScreenAction.ShowSlowInternetMessage -> showNoInternetMessage()
+                    AreaScreenAction.ShowServerErrorMessage -> showServerErrorMessage()
+                    AreaScreenAction.ShowNoAreaFoundMessage -> showNoAreaFoundMessage()
                 }.exhaustive
             })
     }

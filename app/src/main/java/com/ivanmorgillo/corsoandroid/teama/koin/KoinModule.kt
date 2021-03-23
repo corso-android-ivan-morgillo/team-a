@@ -1,23 +1,13 @@
 package com.ivanmorgillo.corsoandroid.teama.koin
 
-import com.ateam.delicious.domain.repository.AuthenticationManager
-import com.ateam.delicious.domain.repository.AuthenticationManagerImpl
-import com.ateam.delicious.domain.repository.CategoryRepository
-import com.ateam.delicious.domain.repository.CategoryRepositoryImpl
-import com.ateam.delicious.domain.repository.FavouriteRepository
-import com.ateam.delicious.domain.repository.FavouriteRepositoryImpl
-import com.ateam.delicious.domain.repository.RecipeDetailsRepository
-import com.ateam.delicious.domain.repository.RecipeDetailsRepositoryImpl
-import com.ateam.delicious.domain.repository.RecipeRepositoryImpl
-import com.ateam.delicious.domain.repository.RecipesRepository
-import com.ateam.delicious.domain.repository.SettingsRepository
-import com.ateam.delicious.domain.repository.SettingsRepositoryImpl
+import com.ateam.delicious.domain.repository.*
 import com.ivanmorgillo.corsoandroid.teama.MainViewModel
 import com.ivanmorgillo.corsoandroid.teama.Tracking
 import com.ivanmorgillo.corsoandroid.teama.TrackingImpl
 import com.ivanmorgillo.corsoandroid.teama.category.CategoryViewModel
 import com.ivanmorgillo.corsoandroid.teama.detail.DetailViewModel
 import com.ivanmorgillo.corsoandroid.teama.favourite.FavouriteViewModel
+import com.ivanmorgillo.corsoandroid.teama.area.AreaViewModel
 import com.ivanmorgillo.corsoandroid.teama.home.HomeViewModel
 import com.ivanmorgillo.corsoandroid.teama.recipe.RecipeViewModel
 import com.ivanmorgillo.corsoandroid.teama.settings.SettingsViewModel
@@ -35,6 +25,9 @@ val appModule = module {
     }
     single<CategoryRepository> {
         CategoryRepositoryImpl(api = get())
+    }
+    single<AreaRepository> {
+        AreaRepositoryImpl(api = get())
     }
     single<FavouriteRepository> {
         FavouriteRepositoryImpl(fireStoreDatabase = get(), authManager = get())
@@ -62,4 +55,5 @@ val appModule = module {
     viewModel { FavouriteViewModel(repository = get(), tracking = get(), settingsRepository = get()) }
     viewModel { SettingsViewModel(repository = get(), tracking = get()) }
     viewModel { HomeViewModel(tracking = get()) }
+    viewModel { AreaViewModel(tracking = get(), repository = get()) }
 }

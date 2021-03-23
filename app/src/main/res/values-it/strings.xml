@@ -67,4 +67,5 @@
     <string name="ingredient">Ingrediente</string>
     <string name="category">Categoria</string>
     <string name="work_in_progress">Work In Progress…</string>
+    <string name="area_fragment">Area</string>
 </resources>

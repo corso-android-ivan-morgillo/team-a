@@ -117,3 +117,9 @@ sealed class RecipeScreenEvent {
     data class OnRefresh(val categoryName: String) : RecipeScreenEvent()
     data class OnRecipeSearch(val query: String) : RecipeScreenEvent()
 }
+
+sealed class RecipeType {
+    object Category : RecipeType()
+    object Area : RecipeType()
+    object Ingredient : RecipeType()
+}
