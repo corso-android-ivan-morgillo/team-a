@@ -6,6 +6,9 @@ import com.ateam.delicious.domain.repository.CategoryRepository
 import com.ateam.delicious.domain.repository.CategoryRepositoryImpl
 import com.ateam.delicious.domain.repository.FavouriteRepository
 import com.ateam.delicious.domain.repository.FavouriteRepositoryImpl
+import com.ateam.delicious.domain.repository.RecipeByAreaImpl
+import com.ateam.delicious.domain.repository.RecipeByCategoryImpl
+import com.ateam.delicious.domain.repository.RecipeByIngredientImpl
 import com.ateam.delicious.domain.repository.RecipeDetailsRepository
 import com.ateam.delicious.domain.repository.RecipeDetailsRepositoryImpl
 import com.ateam.delicious.domain.repository.RecipeRepositoryImpl
@@ -28,8 +31,13 @@ import org.koin.dsl.module
 val appModule = module {
 
     single<RecipesRepository> {
-        RecipeRepositoryImpl(api = get())
+        RecipeRepositoryImpl(
+            ingredientsRepository = RecipeByIngredientImpl(api = get()),
+            categoriesRepository = RecipeByCategoryImpl(api = get()),
+            areaRepository = RecipeByAreaImpl(api = get())
+        )
     }
+    
     single<RecipeDetailsRepository> {
         RecipeDetailsRepositoryImpl(api = get())
     }

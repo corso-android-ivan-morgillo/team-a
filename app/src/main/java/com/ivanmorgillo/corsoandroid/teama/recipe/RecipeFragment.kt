@@ -1,7 +1,5 @@
 package com.ivanmorgillo.corsoandroid.teama.recipe
 
-import android.app.SearchManager
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.provider.Settings
@@ -18,6 +16,12 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.material.transition.MaterialElevationScale
 import com.ivanmorgillo.corsoandroid.teama.R
+import com.ivanmorgillo.corsoandroid.teama.databinding.FragmentRecipeBinding
+import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
+import com.ivanmorgillo.corsoandroid.teama.extension.gone
+import com.ivanmorgillo.corsoandroid.teama.extension.showAlertDialog
+import com.ivanmorgillo.corsoandroid.teama.extension.visible
+import com.ivanmorgillo.corsoandroid.teama.recipe.RecipeFragmentDirections.Companion.actionRecipeFragmentToDetailFragment
 import com.ivanmorgillo.corsoandroid.teama.recipe.RecipeScreenAction.NavigateToDetail
 import com.ivanmorgillo.corsoandroid.teama.recipe.RecipeScreenAction.ShowInterruptedRequestMessage
 import com.ivanmorgillo.corsoandroid.teama.recipe.RecipeScreenAction.ShowNoInternetMessage
@@ -29,12 +33,6 @@ import com.ivanmorgillo.corsoandroid.teama.recipe.RecipeScreenEvent.OnRefresh
 import com.ivanmorgillo.corsoandroid.teama.recipe.RecipeScreenStates.Content
 import com.ivanmorgillo.corsoandroid.teama.recipe.RecipeScreenStates.Error
 import com.ivanmorgillo.corsoandroid.teama.recipe.RecipeScreenStates.Loading
-import com.ivanmorgillo.corsoandroid.teama.databinding.FragmentRecipeBinding
-import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
-import com.ivanmorgillo.corsoandroid.teama.extension.gone
-import com.ivanmorgillo.corsoandroid.teama.extension.showAlertDialog
-import com.ivanmorgillo.corsoandroid.teama.extension.visible
-import com.ivanmorgillo.corsoandroid.teama.recipe.RecipeFragmentDirections.Companion.actionRecipeFragmentToDetailFragment
 import com.ivanmorgillo.corsoandroid.teama.utils.Util
 import com.ivanmorgillo.corsoandroid.teama.utils.viewBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -53,7 +51,9 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe), SearchView.OnQueryTex
         setHasOptionsMenu(true)
         postponeEnterTransition()
         view.doOnPreDraw { startPostponedEnterTransition() }
-        binding.recipesRefresh.setOnRefreshListener { viewModel.send(OnReady(categoryName)) }
+        binding.recipesRefresh.setOnRefreshListener {
+            viewModel.send(OnReady(categoryName))
+        }
         val adapter = RecipesAdapter { item, view ->
             lastClickedItem = view
             exitTransition = MaterialElevationScale(false).apply {

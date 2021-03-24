@@ -13,4 +13,7 @@ interface NetworkAPI {
     suspend fun loadCategories(): LoadCategoryResult
 
     suspend fun loadRandomRecipe(): LoadRecipeDetailsResult
+
+    suspend fun loadRecipesByIngredient(ingredientName: String): LoadRecipeResult
+    suspend fun loadRecipesByArea(areaName: String): LoadRecipeResult
 }

@@ -294,6 +294,14 @@ class NetworkApiImpl(cacheDir: File) : NetworkAPI {
         }
     }
 
+    override suspend fun loadRecipesByIngredient(ingredientName: String): LoadRecipeResult {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun loadRecipesByArea(areaName: String): LoadRecipeResult {
+        TODO("Not yet implemented")
+    }
+
     private fun RecipeDTO.Meal.toDomain(): Recipe? {
         val id = idMeal.toLongOrNull()
         return if (id != null) {

@@ -41,7 +41,7 @@ class RecipeViewModel(private val repository: RecipesRepository, private val tra
     private fun loadContent(categoryName: String) {
         states.postValue(Loading)
         viewModelScope.launch {
-            val result = repository.loadRecipes(categoryName)
+            val result = repository.loadRecipesByCategory(categoryName)
             when (result) {
                 is Failure -> onFailure(result)
                 is Success -> onSuccess(result)

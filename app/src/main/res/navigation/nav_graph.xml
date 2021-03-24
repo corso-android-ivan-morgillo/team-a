@@ -73,6 +73,9 @@
             app:exitAnim="@anim/fade_out"
             app:popEnterAnim="@anim/fade_in"
             app:popExitAnim="@anim/fade_out" />
+        <action
+            android:id="@+id/action_homeFragment_to_ingredientFragment"
+            app:destination="@id/ingredientFragment" />
     </fragment>
 
     <fragment
@@ -80,4 +83,10 @@
         android:name="com.ivanmorgillo.corsoandroid.teama.settings.SettingsFragment"
         android:label="@string/menu_slideshow"
         tools:layout="@layout/fragment_settings" />
+
+    <fragment
+        android:id="@+id/ingredientFragment"
+        android:name="com.ivanmorgillo.corsoandroid.teama.settings.SettingsFragment"
+        android:label="Ingredient"
+        tools:layout="@layout/fragment_ingredient" />
 </navigation>

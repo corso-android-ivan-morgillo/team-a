@@ -1,14 +1,12 @@
 package com.ateam.delicious.domain.repository
 
-import com.ateam.delicious.domain.NetworkAPI
-import com.ateam.delicious.domain.result.LoadRecipeResult
+interface RecipesRepository : RecipeByIngredients, RecipeByCategory, RecipeByArea {}
 
-interface RecipesRepository {
-    suspend fun loadRecipes(categoryName: String): LoadRecipeResult
-}
-
-class RecipeRepositoryImpl(private val api: NetworkAPI) : RecipesRepository {
-    override suspend fun loadRecipes(categoryName: String): LoadRecipeResult {
-        return api.loadRecipes(categoryName)
-    }
-}
+class RecipeRepositoryImpl(
+    private val ingredientsRepository: RecipeByIngredientImpl,
+    private val categoriesRepository: RecipeByCategoryImpl,
+    private val areaRepository: RecipeByAreaImpl
+) : RecipesRepository,
+    RecipeByIngredients by ingredientsRepository,
+    RecipeByCategory by categoriesRepository,
+    RecipeByArea by areaRepository {}
