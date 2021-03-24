@@ -22,4 +22,8 @@ interface RecipeService {
 
     @GET("list.php?a=list")
     suspend fun loadAreas(): AreaDTO
+
+    @GET("filter.php") // ?i=chicken_breast
+    suspend fun loadRecipesByIngredient(@Query("i") ingredientName: String): RecipeDTO
+
 }

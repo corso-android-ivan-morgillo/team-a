@@ -1,6 +1,11 @@
 package com.ateam.delicious.networking
 
-import com.ateam.delicious.domain.*
+import com.ateam.delicious.domain.Area
+import com.ateam.delicious.domain.Category
+import com.ateam.delicious.domain.Ingredient
+import com.ateam.delicious.domain.NetworkAPI
+import com.ateam.delicious.domain.Recipe
+import com.ateam.delicious.domain.RecipeDetails
 import com.ateam.delicious.domain.error.LoadAreaError
 import com.ateam.delicious.domain.error.LoadCategoryError
 import com.ateam.delicious.domain.error.LoadRecipeDetailError
@@ -317,7 +322,20 @@ class NetworkApiImpl(cacheDir: File) : NetworkAPI {
     }
 
     override suspend fun loadRecipesByIngredient(ingredientName: String): LoadRecipeResult {
-        TODO("Not yet implemented")
+
+        val ingredientRecipesDto = service.loadRecipesByIngredient(ingredientName)
+
+        val ingredientRecipesList = ingredientRecipesDto.meals
+            .mapNotNull {
+                it.toDomain()
+            }
+
+        return if (ingredientRecipesList.isEmpty()) {
+            Failure(NoRecipeFound)
+        } else {
+            Success(ingredientRecipesList)
+        }
+
     }
 
     override suspend fun loadRecipesByArea(areaName: String): LoadRecipeResult {

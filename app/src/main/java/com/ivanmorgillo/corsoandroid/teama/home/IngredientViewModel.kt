@@ -4,6 +4,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ateam.delicious.domain.NetworkAPI
+import com.ateam.delicious.domain.Recipe
+import com.ateam.delicious.domain.result.LoadRecipeResult
+import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
 import kotlinx.coroutines.launch
 
 class IngredientViewModel(val api: NetworkAPI) : ViewModel() {
@@ -24,10 +27,42 @@ class IngredientViewModel(val api: NetworkAPI) : ViewModel() {
     }
 
     private fun loadRecipesByIngredient(ingredient: String) {
-        viewModelScope.launch { api.loadRecipesByIngredient(ingredient) }
+        viewModelScope.launch {
+            val result = api.loadRecipesByIngredient(ingredient)
+            when (result) {
+                is LoadRecipeResult.Success -> onSuccess(result.recipes)
+                is LoadRecipeResult.Failure -> TODO()
+            }.exhaustive
+        }
+
+
     }
 
+    private fun onSuccess(recipesList: List<Recipe>) {
+
+        val recipesByIngredient = recipesList.map {
+
+            RecipeByIngredientUI(
+                title = it.name,
+                id = it.idMeal,
+                image = it.image
+
+            )
+        }
+        TODO()
+
+    }
+
+    private fun onFailure() {}
+
 }
+
+data class RecipeByIngredientUI(
+
+    val title: String,
+    val image: String,
+    val id: Long
+)
 
 sealed class IngredientScreenEvent {
 
