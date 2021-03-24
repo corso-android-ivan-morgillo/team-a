@@ -1,5 +1,7 @@
 package com.ivanmorgillo.corsoandroid.teama.koin
 
+import com.ateam.delicious.domain.repository.AreaRepository
+import com.ateam.delicious.domain.repository.AreaRepositoryImpl
 import com.ateam.delicious.domain.repository.AuthenticationManager
 import com.ateam.delicious.domain.repository.AuthenticationManagerImpl
 import com.ateam.delicious.domain.repository.CategoryRepository
@@ -18,10 +20,10 @@ import com.ateam.delicious.domain.repository.SettingsRepositoryImpl
 import com.ivanmorgillo.corsoandroid.teama.MainViewModel
 import com.ivanmorgillo.corsoandroid.teama.Tracking
 import com.ivanmorgillo.corsoandroid.teama.TrackingImpl
+import com.ivanmorgillo.corsoandroid.teama.area.AreaViewModel
 import com.ivanmorgillo.corsoandroid.teama.category.CategoryViewModel
 import com.ivanmorgillo.corsoandroid.teama.detail.DetailViewModel
 import com.ivanmorgillo.corsoandroid.teama.favourite.FavouriteViewModel
-import com.ivanmorgillo.corsoandroid.teama.area.AreaViewModel
 import com.ivanmorgillo.corsoandroid.teama.home.HomeViewModel
 import com.ivanmorgillo.corsoandroid.teama.recipe.RecipeViewModel
 import com.ivanmorgillo.corsoandroid.teama.settings.SettingsViewModel
