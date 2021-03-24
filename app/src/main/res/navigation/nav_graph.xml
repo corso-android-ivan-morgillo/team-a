@@ -109,7 +109,7 @@
 
     <fragment
         android:id="@+id/ingredientFragment"
-        android:name="com.ivanmorgillo.corsoandroid.teama.settings.SettingsFragment"
+        android:name="com.ivanmorgillo.corsoandroid.teama.home.IngredientFragment"
         android:label="Ingredient"
         tools:layout="@layout/fragment_ingredient" />
 </navigation>

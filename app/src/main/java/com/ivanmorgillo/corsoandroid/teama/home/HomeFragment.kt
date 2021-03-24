@@ -20,9 +20,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val categoryButton = view.findViewById<Button>(R.id.category_button)
-        val areaButton = view.findViewById<Button>(R.id.area_button)
-        val ingredientsButton = view.findViewById<Button>(R.id.ingredient_button)
         val randomButton = view.findViewById<Button>(R.id.random_button)
 
         viewModel.actions.observe(viewLifecycleOwner) { action ->
@@ -36,7 +33,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     findNavController().navigate(directions)
                 }
                 HomeScreenAction.NavigateToIngredient -> {
-                    // bisogna attivare le chiamate di rete e creare le stesse card che abbiamo in category
+                    val directions = HomeFragmentDirections.actionHomeFragmentToIngredientFragment()
+                    findNavController().navigate(directions)
                 }
             }
         }
@@ -46,6 +44,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
         binding.areaButton.setOnClickListener {
             viewModel.send(HomeScreenEvent.OnAreaClick)
+        }
+
+        binding.ingredientButton.setOnClickListener {
+            viewModel.send(HomeScreenEvent.OnIngredientClick)
         }
 
 
