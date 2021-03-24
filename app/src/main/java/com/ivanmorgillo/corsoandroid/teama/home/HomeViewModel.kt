@@ -1,7 +1,9 @@
 package com.ivanmorgillo.corsoandroid.teama.home
 
 import androidx.lifecycle.ViewModel
+import androidx.navigation.fragment.findNavController
 import com.ivanmorgillo.corsoandroid.teama.Tracking
+import com.ivanmorgillo.corsoandroid.teama.category.CategoryFragmentDirections
 import com.ivanmorgillo.corsoandroid.teama.crashlytics.SingleLiveEvent
 
 class HomeViewModel(private val tracking: Tracking) : ViewModel() {
@@ -17,7 +19,6 @@ class HomeViewModel(private val tracking: Tracking) : ViewModel() {
                 actions.postValue(HomeScreenAction.NavigateToArea)
             }
             HomeScreenEvent.OnCategoryClick -> {
-
                 tracking.logEvent("home_category_click")
                 actions.postValue(HomeScreenAction.NavigateToCategory)
             }

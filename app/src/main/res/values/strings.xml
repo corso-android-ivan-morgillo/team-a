@@ -12,6 +12,8 @@
     <string name="no_recipe_detail_found_error_message">Sorry, unable to load recipe</string>
     <string name="no_category_found_error_title">No category found</string>
     <string name="no_category_found_error_message">Sorry, unable to load recipes</string>
+    <string name="no_area_found_error_title">No area found</string>
+    <string name="no_area_found_error_message">Sorry, unable to load recipes</string>
     <string name="server_error_message">Something went wrong!</string>
     <string name="connection_lost_error_message">Connection interrupted</string>
     <string name="no_internet_error_message">No connection available</string>
@@ -65,4 +67,5 @@
     <string name="work_in_progress">Work In Progress…</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="area_fragment">Area</string>
 </resources>

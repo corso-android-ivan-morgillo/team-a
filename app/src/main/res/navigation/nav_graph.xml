@@ -76,6 +76,29 @@
         <action
             android:id="@+id/action_homeFragment_to_ingredientFragment"
             app:destination="@id/ingredientFragment" />
+
+        <action
+            android:id="@+id/action_homeFragment_to_areaFragment"
+            app:destination="@id/areaFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/areaFragment"
+        android:name="com.ivanmorgillo.corsoandroid.teama.area.AreaFragment"
+        android:label="@string/area_fragment"
+        tools:layout="@layout/fragment_area">
+        <action
+            android:id="@+id/action_areaFragment_to_recipeFragment"
+            app:destination="@id/recipeFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
     </fragment>
 
     <fragment

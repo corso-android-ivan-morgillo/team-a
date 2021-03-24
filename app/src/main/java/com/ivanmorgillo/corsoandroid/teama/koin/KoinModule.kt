@@ -21,6 +21,7 @@ import com.ivanmorgillo.corsoandroid.teama.TrackingImpl
 import com.ivanmorgillo.corsoandroid.teama.category.CategoryViewModel
 import com.ivanmorgillo.corsoandroid.teama.detail.DetailViewModel
 import com.ivanmorgillo.corsoandroid.teama.favourite.FavouriteViewModel
+import com.ivanmorgillo.corsoandroid.teama.area.AreaViewModel
 import com.ivanmorgillo.corsoandroid.teama.home.HomeViewModel
 import com.ivanmorgillo.corsoandroid.teama.recipe.RecipeViewModel
 import com.ivanmorgillo.corsoandroid.teama.settings.SettingsViewModel
@@ -37,12 +38,15 @@ val appModule = module {
             areaRepository = RecipeByAreaImpl(api = get())
         )
     }
-    
+
     single<RecipeDetailsRepository> {
         RecipeDetailsRepositoryImpl(api = get())
     }
     single<CategoryRepository> {
         CategoryRepositoryImpl(api = get())
+    }
+    single<AreaRepository> {
+        AreaRepositoryImpl(api = get())
     }
     single<FavouriteRepository> {
         FavouriteRepositoryImpl(fireStoreDatabase = get(), authManager = get())
@@ -70,4 +74,5 @@ val appModule = module {
     viewModel { FavouriteViewModel(repository = get(), tracking = get(), settingsRepository = get()) }
     viewModel { SettingsViewModel(repository = get(), tracking = get()) }
     viewModel { HomeViewModel(tracking = get()) }
+    viewModel { AreaViewModel(tracking = get(), repository = get()) }
 }

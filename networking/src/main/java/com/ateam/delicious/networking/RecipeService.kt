@@ -1,5 +1,6 @@
 package com.ateam.delicious.networking
 
+import com.ateam.delicious.networking.dto.AreaDTO
 import com.ateam.delicious.networking.dto.CategoryDTO
 import com.ateam.delicious.networking.dto.RecipeDTO
 import com.ateam.delicious.networking.dto.RecipeDetailsDTO
@@ -18,4 +19,7 @@ interface RecipeService {
 
     @GET("random.php")
     suspend fun loadRandomRecipe(): RecipeDetailsDTO
+
+    @GET("list.php?a=list")
+    suspend fun loadAreas(): AreaDTO
 }

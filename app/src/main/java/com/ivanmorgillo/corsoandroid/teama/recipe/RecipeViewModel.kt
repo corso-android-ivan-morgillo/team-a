@@ -54,9 +54,7 @@ class RecipeViewModel(private val repository: RecipesRepository, private val tra
             RecipeUI(
                 title = it.name,
                 image = it.image,
-                id = it.idMeal,
-
-                )
+                id = it.idMeal)
         }
         this.recipes = recipes
         states.postValue(Content(recipes))
