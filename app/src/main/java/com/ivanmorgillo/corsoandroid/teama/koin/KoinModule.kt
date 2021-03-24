@@ -78,5 +78,5 @@ val appModule = module {
     viewModel { SettingsViewModel(repository = get(), tracking = get()) }
     viewModel { HomeViewModel(tracking = get()) }
     viewModel { AreaViewModel(tracking = get(), repository = get()) }
-    viewModel { IngredientViewModel() }
+    viewModel { IngredientViewModel(api = get()) }
 }
