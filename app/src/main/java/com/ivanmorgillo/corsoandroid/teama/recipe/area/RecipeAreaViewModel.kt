@@ -3,6 +3,7 @@ package com.ivanmorgillo.corsoandroid.teama.recipe.area
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ateam.delicious.domain.error.LoadRecipeError
 import com.ateam.delicious.domain.repository.RecipesRepository
 import com.ateam.delicious.domain.result.LoadRecipeResult
 import com.ivanmorgillo.corsoandroid.teama.Screens
@@ -11,6 +12,7 @@ import com.ivanmorgillo.corsoandroid.teama.crashlytics.SingleLiveEvent
 import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
 import com.ivanmorgillo.corsoandroid.teama.recipe.RecipeUI
 import kotlinx.coroutines.launch
+import java.util.*
 
 class RecipeAreaViewModel(private val repository: RecipesRepository, private val tracking: Tracking) : ViewModel() {
     private var areaRecipes: List<RecipeUI>? = null
@@ -39,6 +41,49 @@ class RecipeAreaViewModel(private val repository: RecipesRepository, private val
                 is LoadRecipeResult.Success -> onSuccess(result)
             }.exhaustive
         }
+    }
+
+    private fun onSuccess(result: LoadRecipeResult.Success) {
+        val areaRecipes = result.recipes.map {
+            RecipeUI(
+                title = it.name,
+                image = it.image,
+                id = it.idMeal
+            )
+        }
+        this.areaRecipes = areaRecipes
+        states.postValue(RecipeAreaScreenStates.Content(areaRecipes))
+    }
+
+    private fun onRecipeAreaClick(event: RecipeAreaScreenEvent.OnRecipeAreaClick) {
+        tracking.logEvent("areaRecipe_clicked")
+        actions.postValue(RecipeAreaScreenAction.NavigateToDetail(event.areaRecipe))
+    }
+
+    private fun onRecipeAreaSearch(query: String) {
+        tracking.logEvent("recipe_area_search")
+        val filteredAreaRecipes = filter(areaRecipes, query)
+        states.postValue(RecipeAreaScreenStates.Content(filteredAreaRecipes))
+    }
+
+    private fun filter(originalList: List<RecipeUI>?, query: String): List<RecipeUI> {
+        return originalList?.filter {
+            it.title.toLowerCase(Locale.getDefault())
+                .contains(query.toLowerCase(Locale.getDefault()).trim()) || query.isBlank()
+        } ?: emptyList()
+    }
+
+    private fun onFailure(result: LoadRecipeResult.Failure) {
+        states.postValue(RecipeAreaScreenStates.Error)
+        when (result.error) {
+            LoadRecipeError.InterruptedRequest -> {
+                actions.postValue(RecipeAreaScreenAction.ShowInterruptedRequestMessage)
+            }
+            LoadRecipeError.NoInternet -> actions.postValue(RecipeAreaScreenAction.ShowNoInternetMessage)
+            LoadRecipeError.NoRecipeFound -> actions.postValue(RecipeAreaScreenAction.ShowNoRecipeFoundMessage)
+            LoadRecipeError.ServerError -> actions.postValue(RecipeAreaScreenAction.ShowServerErrorMessage)
+            LoadRecipeError.SlowInternet -> actions.postValue(RecipeAreaScreenAction.ShowSlowInternetMessage)
+        }.exhaustive
     }
 }
 
