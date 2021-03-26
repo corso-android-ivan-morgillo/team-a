@@ -13,5 +13,5 @@ class RecipeByAreaImpl(private val api: NetworkAPI) : RecipeByArea {
         return api.loadRecipesByArea(areaName)
     }
 
-
+// detekt test
 }
