@@ -76,7 +76,8 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe), SearchView.OnQueryTex
                 when (action) {
                     is NavigateToDetail -> {
                         lastClickedItem?.run {
-                            val extras = FragmentNavigatorExtras(this to "recipe_transition_item")
+                            val extras =
+                                FragmentNavigatorExtras(this to "recipe_transition_item")
                             val directions = actionRecipeFragmentToDetailFragment(action.recipe.id)
                             Timber.d("Invio al details RecipeId= ${action.recipe.id}")
                             findNavController().navigate(directions, extras)

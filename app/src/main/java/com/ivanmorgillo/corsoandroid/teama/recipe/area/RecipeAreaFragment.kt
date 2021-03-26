@@ -62,7 +62,8 @@ class RecipeAreaFragment : Fragment(R.layout.fragment_recipe_area), SearchView.O
                 when (action) {
                     is RecipeAreaScreenAction.NavigateToDetail -> {
                         lastClickedItem?.run {
-                            val extras = FragmentNavigatorExtras(this to "recipe_transition_item")
+                            val extras =
+                                FragmentNavigatorExtras(this to "recipe_transition_item")
                             val directions = actionRecipeAreaFragmentToDetailFragment(action.areaRecipe.id)
                             Timber.d("Invio al details AreaRecipeId= ${action.areaRecipe.id}")
                             findNavController().navigate(directions, extras)
