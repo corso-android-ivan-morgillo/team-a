@@ -36,6 +36,6 @@ class RecipeAreaViewHolder(private val binding: RecipeAreaItemBinding) : Recycle
         binding.recipeAreaImage.load(item.image)
         binding.recipeAreaImage.contentDescription = item.title
         binding.recipeAreaRoot.setOnClickListener { onclick(item, it) }
-        // binding.recipeAreaRoot.transitionName = "recipe_transition_item${item.id}"
+        binding.recipeAreaRoot.transitionName = "recipe_transition_item${item.id}"
     }
 }
