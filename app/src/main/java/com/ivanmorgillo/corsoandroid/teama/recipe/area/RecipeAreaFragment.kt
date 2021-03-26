@@ -57,24 +57,7 @@ class RecipeAreaFragment : Fragment(R.layout.fragment_recipe_area), SearchView.O
         if (areaName.isEmpty()) {
             findNavController().popBackStack()
         } else {
-            viewModel.states.observe(viewLifecycleOwner, { state ->
-                when (state) {
-                    is RecipeAreaScreenStates.Content -> {
-                        val areaRecipes = state.areaRecipes
-                        adapter.setRecipes(areaRecipes)
-                        binding.recipesAreaRefresh.isRefreshing = false
-                        if (areaRecipes.isEmpty()) {
-                            binding.recipeAreaTextView.visible()
-                            binding.recipeAreaList.gone()
-                        } else {
-                            binding.recipeAreaList.visible()
-                            binding.recipeAreaTextView.gone()
-                        }
-                    }
-                    RecipeAreaScreenStates.Error -> binding.recipesAreaRefresh.isRefreshing = false
-                    RecipeAreaScreenStates.Loading -> binding.recipesAreaRefresh.isRefreshing = true
-                }.exhaustive
-            })
+            observeStates(adapter)
             viewModel.actions.observe(viewLifecycleOwner, { action ->
                 when (action) {
                     is RecipeAreaScreenAction.NavigateToDetail -> {
@@ -94,6 +77,27 @@ class RecipeAreaFragment : Fragment(R.layout.fragment_recipe_area), SearchView.O
             })
             viewModel.send(RecipeAreaScreenEvent.OnReady(areaName))
         }
+    }
+
+    private fun observeStates(adapter: RecipesAreaAdapter) {
+        viewModel.states.observe(viewLifecycleOwner, { state ->
+            when (state) {
+                is RecipeAreaScreenStates.Content -> {
+                    val areaRecipes = state.areaRecipes
+                    adapter.setRecipes(areaRecipes)
+                    binding.recipesAreaRefresh.isRefreshing = false
+                    if (areaRecipes.isEmpty()) {
+                        binding.recipeAreaTextView.visible()
+                        binding.recipeAreaList.gone()
+                    } else {
+                        binding.recipeAreaList.visible()
+                        binding.recipeAreaTextView.gone()
+                    }
+                }
+                RecipeAreaScreenStates.Error -> binding.recipesAreaRefresh.isRefreshing = false
+                RecipeAreaScreenStates.Loading -> binding.recipesAreaRefresh.isRefreshing = true
+            }.exhaustive
+        })
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {

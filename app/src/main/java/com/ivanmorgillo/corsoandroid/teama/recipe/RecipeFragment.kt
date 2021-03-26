@@ -70,25 +70,7 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe), SearchView.OnQueryTex
             // Torna indietro nella schermata da cui provieni.
             findNavController().popBackStack()
         } else {
-            viewModel.states.observe(viewLifecycleOwner, { state ->
-                // riceve l'aggiornamento del nuovo valore
-                when (state) {
-                    is Content -> {
-                        val recipes = state.recipes
-                        adapter.setRecipes(recipes)
-                        binding.recipesRefresh.isRefreshing = false
-                        if (recipes.isEmpty()) {
-                            binding.recipeTextView.visible()
-                            binding.recipeList.gone()
-                        } else {
-                            binding.recipeList.visible()
-                            binding.recipeTextView.gone()
-                        }
-                    }
-                    Error -> binding.recipesRefresh.isRefreshing = false
-                    Loading -> binding.recipesRefresh.isRefreshing = true
-                }
-            })
+            observeStates(adapter)
             // Questo blocco serve a specificare che per le istruzioni interne il this è "view"
             viewModel.actions.observe(viewLifecycleOwner, { action ->
                 when (action) {
@@ -109,6 +91,28 @@ class RecipeFragment : Fragment(R.layout.fragment_recipe), SearchView.OnQueryTex
             })
             viewModel.send(OnReady(categoryName))
         }
+    }
+
+    private fun observeStates(adapter: RecipesAdapter) {
+        viewModel.states.observe(viewLifecycleOwner, { state ->
+            // riceve l'aggiornamento del nuovo valore
+            when (state) {
+                is Content -> {
+                    val recipes = state.recipes
+                    adapter.setRecipes(recipes)
+                    binding.recipesRefresh.isRefreshing = false
+                    if (recipes.isEmpty()) {
+                        binding.recipeTextView.visible()
+                        binding.recipeList.gone()
+                    } else {
+                        binding.recipeList.visible()
+                        binding.recipeTextView.gone()
+                    }
+                }
+                Error -> binding.recipesRefresh.isRefreshing = false
+                Loading -> binding.recipesRefresh.isRefreshing = true
+            }
+        })
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
