@@ -57,7 +57,6 @@ class RecipeAreaFragment : Fragment(R.layout.fragment_recipe_area), SearchView.O
         if (areaName.isEmpty()) {
             findNavController().popBackStack()
         } else {
-
             viewModel.states.observe(viewLifecycleOwner, { state ->
                 when (state) {
                     is RecipeAreaScreenStates.Content -> {
@@ -95,7 +94,6 @@ class RecipeAreaFragment : Fragment(R.layout.fragment_recipe_area), SearchView.O
             })
             viewModel.send(RecipeAreaScreenEvent.OnReady(areaName))
         }
-
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
