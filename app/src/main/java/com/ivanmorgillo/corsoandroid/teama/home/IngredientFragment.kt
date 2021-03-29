@@ -6,27 +6,31 @@ import android.view.MenuInflater
 import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.ivanmorgillo.corsoandroid.teama.R
 import com.ivanmorgillo.corsoandroid.teama.databinding.FragmentIngredientBinding
 import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
 import com.ivanmorgillo.corsoandroid.teama.utils.Util
 import com.ivanmorgillo.corsoandroid.teama.utils.viewBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import timber.log.Timber
 
 class IngredientFragment : Fragment(R.layout.fragment_ingredient), SearchView.OnQueryTextListener {
 
     val binding by viewBinding(FragmentIngredientBinding::bind)
     val viewModel: IngredientViewModel by viewModel()
-    private val recipeByIngredientAdapter = IngredientAdapter()
+    private val recipeByIngredientAdapter = IngredientAdapter { item: RecipeByIngredientUI, _: View ->
+        viewModel.send(IngredientScreenEvent.OnRecipeByIngredientClick(item))
+    }
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
         binding.recipeByIngredientList.adapter = recipeByIngredientAdapter
 
-        viewModel.states.observe(viewLifecycleOwner , {state ->
+        viewModel.states.observe(viewLifecycleOwner, { state ->
 
-            when(state){
+            when (state) {
                 is IngredientScreenState.Content -> {
                     val recipes = state.recipes
                     recipeByIngredientAdapter.setRecipesByIngredient(recipes)
@@ -37,7 +41,14 @@ class IngredientFragment : Fragment(R.layout.fragment_ingredient), SearchView.On
         )
 
 
-
+        viewModel.actions.observe(viewLifecycleOwner, { action ->
+            when (action) {
+                is IngredientScreenAction.NavigateToDetail -> {
+                    val direction = IngredientFragmentDirections.actionIngredientFragmentToDetailFragment(action.recipeByIngredient.id)
+                    findNavController().navigate(direction)
+                }
+            }.exhaustive
+        })
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {

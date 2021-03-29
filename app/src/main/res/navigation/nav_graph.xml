@@ -111,5 +111,9 @@
         android:id="@+id/ingredientFragment"
         android:name="com.ivanmorgillo.corsoandroid.teama.home.IngredientFragment"
         android:label="Ingredient"
-        tools:layout="@layout/fragment_ingredient" />
+        tools:layout="@layout/fragment_ingredient">
+        <action
+            android:id="@+id/action_ingredientFragment_to_detailFragment"
+            app:destination="@id/detailFragment" />
+    </fragment>
 </navigation>

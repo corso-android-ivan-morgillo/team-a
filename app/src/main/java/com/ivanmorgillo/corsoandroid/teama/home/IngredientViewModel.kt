@@ -6,13 +6,14 @@ import androidx.lifecycle.viewModelScope
 import com.ateam.delicious.domain.NetworkAPI
 import com.ateam.delicious.domain.Recipe
 import com.ateam.delicious.domain.result.LoadRecipeResult
+import com.ivanmorgillo.corsoandroid.teama.crashlytics.SingleLiveEvent
 import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
 import kotlinx.coroutines.launch
 
 class IngredientViewModel(val api: NetworkAPI) : ViewModel() {
 
     val states = MutableLiveData<IngredientScreenState>()
-
+    val actions = SingleLiveEvent<IngredientScreenAction>()
     fun send(event: IngredientScreenEvent) {
 
         when (event) {
@@ -23,7 +24,10 @@ class IngredientViewModel(val api: NetworkAPI) : ViewModel() {
                 //Mostrate un alert / qualcosa che dica all'utente "NORESULTS"
                 loadRecipesByIngredient(event.ingredientTextSearch)
             }
-        }
+            is IngredientScreenEvent.OnRecipeByIngredientClick -> {
+                actions.postValue(IngredientScreenAction.NavigateToDetail(event.recipeByIngredient))
+            }
+        }.exhaustive
     }
 
     private fun loadRecipesByIngredient(ingredient: String) {
@@ -59,6 +63,10 @@ class IngredientViewModel(val api: NetworkAPI) : ViewModel() {
 
 }
 
+sealed class IngredientScreenAction {
+    data class NavigateToDetail(val recipeByIngredient: RecipeByIngredientUI) : IngredientScreenAction()
+}
+
 sealed class IngredientScreenState {
 
     data class Content(val recipes: List<RecipeByIngredientUI>) : IngredientScreenState()
@@ -75,5 +83,5 @@ sealed class IngredientScreenEvent {
 
     object OnReady : IngredientScreenEvent()
     data class OnResearch(val ingredientTextSearch: String) : IngredientScreenEvent()
-
+    data class OnRecipeByIngredientClick(val recipeByIngredient: RecipeByIngredientUI) : IngredientScreenEvent()
 }
