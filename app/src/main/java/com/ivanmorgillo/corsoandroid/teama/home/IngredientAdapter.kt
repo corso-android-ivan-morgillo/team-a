@@ -7,7 +7,9 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.ivanmorgillo.corsoandroid.teama.databinding.RecipeItemBinding
 
-class IngredientAdapter(private val onClick: (RecipeByIngredientUI, View) -> Unit) : RecyclerView.Adapter<RecipeByIngredientViewHolder>() {
+class IngredientAdapter(
+    private val onClick: (RecipeByIngredientUI, View) -> Unit
+) : RecyclerView.Adapter<RecipeByIngredientViewHolder>() {
 
     var recipes = emptyList<RecipeByIngredientUI>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipeByIngredientViewHolder {

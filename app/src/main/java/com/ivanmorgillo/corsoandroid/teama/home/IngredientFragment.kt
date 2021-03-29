@@ -48,7 +48,8 @@ class IngredientFragment : Fragment(R.layout.fragment_ingredient), SearchView.On
         viewModel.actions.observe(viewLifecycleOwner, { action ->
             when (action) {
                 is IngredientScreenAction.NavigateToDetail -> {
-                    val direction = IngredientFragmentDirections.actionIngredientFragmentToDetailFragment(action.recipeByIngredient.id)
+                    val direction =
+                        IngredientFragmentDirections.actionIngredientFragmentToDetailFragment(action.recipeByIngredient.id)
                     findNavController().navigate(direction)
                 }
             }.exhaustive
