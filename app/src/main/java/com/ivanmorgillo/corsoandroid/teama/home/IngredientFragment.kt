@@ -12,6 +12,7 @@ import com.ivanmorgillo.corsoandroid.teama.databinding.FragmentIngredientBinding
 import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
 import com.ivanmorgillo.corsoandroid.teama.extension.gone
 import com.ivanmorgillo.corsoandroid.teama.extension.visible
+import com.ivanmorgillo.corsoandroid.teama.home.IngredientFragmentDirections.Companion.actionIngredientFragmentToDetailFragment
 import com.ivanmorgillo.corsoandroid.teama.utils.Util
 import com.ivanmorgillo.corsoandroid.teama.utils.viewBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -49,7 +50,7 @@ class IngredientFragment : Fragment(R.layout.fragment_ingredient), SearchView.On
             when (action) {
                 is IngredientScreenAction.NavigateToDetail -> {
                     val direction =
-                        IngredientFragmentDirections.actionIngredientFragmentToDetailFragment(action.recipeByIngredient.id)
+                        actionIngredientFragmentToDetailFragment(action.recipeByIngredient.id)
                     findNavController().navigate(direction)
                 }
             }.exhaustive
