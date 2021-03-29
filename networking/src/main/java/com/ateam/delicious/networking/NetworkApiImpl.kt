@@ -1,10 +1,12 @@
 package com.ateam.delicious.networking
 
+import com.ateam.delicious.domain.Area
 import com.ateam.delicious.domain.Category
 import com.ateam.delicious.domain.Ingredient
 import com.ateam.delicious.domain.NetworkAPI
 import com.ateam.delicious.domain.Recipe
 import com.ateam.delicious.domain.RecipeDetails
+import com.ateam.delicious.domain.error.LoadAreaError
 import com.ateam.delicious.domain.error.LoadCategoryError
 import com.ateam.delicious.domain.error.LoadRecipeDetailError
 import com.ateam.delicious.domain.error.LoadRecipeDetailError.NoDetailFound
@@ -13,11 +15,13 @@ import com.ateam.delicious.domain.error.LoadRecipeError.NoInternet
 import com.ateam.delicious.domain.error.LoadRecipeError.NoRecipeFound
 import com.ateam.delicious.domain.error.LoadRecipeError.ServerError
 import com.ateam.delicious.domain.error.LoadRecipeError.SlowInternet
+import com.ateam.delicious.domain.result.LoadAreaResult
 import com.ateam.delicious.domain.result.LoadCategoryResult
 import com.ateam.delicious.domain.result.LoadRecipeDetailsResult
 import com.ateam.delicious.domain.result.LoadRecipeResult
 import com.ateam.delicious.domain.result.LoadRecipeResult.Failure
 import com.ateam.delicious.domain.result.LoadRecipeResult.Success
+import com.ateam.delicious.networking.dto.AreaDTO
 import com.ateam.delicious.networking.dto.CategoryDTO
 import com.ateam.delicious.networking.dto.RecipeDTO
 import com.ateam.delicious.networking.dto.RecipeDetailsDTO
@@ -213,6 +217,29 @@ class NetworkApiImpl(cacheDir: File) : NetworkAPI {
         }
     }
 
+    override suspend fun loadAreas(): LoadAreaResult {
+        try {
+            val areasList = service.loadAreas()
+            val areas = areasList.meals.mapNotNull {
+                it.toDomain()
+            }
+            return if (areas.isEmpty()) {
+                LoadAreaResult.Failure(LoadAreaError.NoAreaFound)
+            } else {
+                LoadAreaResult.Success(areas)
+            }
+        } catch (e: IOException) { // no network available
+            return LoadAreaResult.Failure(LoadAreaError.NoInternet)
+        } catch (e: ConnectException) { // interrupted network request
+            return LoadAreaResult.Failure(LoadAreaError.InterruptedRequest)
+        } catch (e: SocketTimeoutException) { // server timeout error
+            return LoadAreaResult.Failure(LoadAreaError.SlowInternet)
+        } catch (e: Exception) { // other generic exception
+            Timber.e(e, "Generic Exception on LoadAreas")
+            return LoadAreaResult.Failure(LoadAreaError.ServerError)
+        }
+    }
+
     private suspend fun loadCategoryInfo(categoryName: String): CategoryInfo {
         val recipesList: LoadRecipeResult = loadRecipes(categoryName)
 
@@ -294,6 +321,34 @@ class NetworkApiImpl(cacheDir: File) : NetworkAPI {
         }
     }
 
+    override suspend fun loadRecipesByIngredient(ingredientName: String): LoadRecipeResult {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun loadRecipesByArea(areaName: String): LoadRecipeResult {
+        try {
+            val recipesByAreaList = service.loadRecipesByArea(areaName)
+            val recipesByArea = recipesByAreaList.meals
+                .mapNotNull {
+                    it.toDomain()
+                }
+            return if (recipesByArea.isEmpty()) {
+                Failure(NoRecipeFound)
+            } else {
+                Success(recipesByArea)
+            }
+        } catch (e: IOException) { // no network available
+            return Failure(NoInternet)
+        } catch (e: ConnectException) { // interrupted network request
+            return Failure(InterruptedRequest)
+        } catch (e: SocketTimeoutException) { // server timeout error
+            return Failure(SlowInternet)
+        } catch (e: Exception) { // other generic exception
+            Timber.e(e, "Generic Exception on LoadRecipes")
+            return Failure(ServerError)
+        }
+    }
+
     private fun RecipeDTO.Meal.toDomain(): Recipe? {
         val id = idMeal.toLongOrNull()
         return if (id != null) {
@@ -320,5 +375,9 @@ class NetworkApiImpl(cacheDir: File) : NetworkAPI {
         } else {
             null
         }
+    }
+
+    private fun AreaDTO.Meal.toDomain(): Area {
+        return Area(name = strArea)
     }
 }

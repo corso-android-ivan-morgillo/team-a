@@ -28,6 +28,16 @@ sealed class Screens {
         override val name: String = "Favourites"
         override val className = "Favourite Fragment"
     }
+
+    object Area : Screens() {
+        override val name: String = "Area"
+        override val className = "Area Fragment"
+    }
+
+    object AreaRecipes : Screens() {
+        override val name: String = "Area Recipes"
+        override val className = "Area Recipe Fragment"
+    }
 }
 
 interface Tracking {

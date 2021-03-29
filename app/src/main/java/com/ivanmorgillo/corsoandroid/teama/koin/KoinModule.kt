@@ -1,11 +1,16 @@
 package com.ivanmorgillo.corsoandroid.teama.koin
 
+import com.ateam.delicious.domain.repository.AreaRepository
+import com.ateam.delicious.domain.repository.AreaRepositoryImpl
 import com.ateam.delicious.domain.repository.AuthenticationManager
 import com.ateam.delicious.domain.repository.AuthenticationManagerImpl
 import com.ateam.delicious.domain.repository.CategoryRepository
 import com.ateam.delicious.domain.repository.CategoryRepositoryImpl
 import com.ateam.delicious.domain.repository.FavouriteRepository
 import com.ateam.delicious.domain.repository.FavouriteRepositoryImpl
+import com.ateam.delicious.domain.repository.RecipeByAreaImpl
+import com.ateam.delicious.domain.repository.RecipeByCategoryImpl
+import com.ateam.delicious.domain.repository.RecipeByIngredientImpl
 import com.ateam.delicious.domain.repository.RecipeDetailsRepository
 import com.ateam.delicious.domain.repository.RecipeDetailsRepositoryImpl
 import com.ateam.delicious.domain.repository.RecipeRepositoryImpl
@@ -15,10 +20,13 @@ import com.ateam.delicious.domain.repository.SettingsRepositoryImpl
 import com.ivanmorgillo.corsoandroid.teama.MainViewModel
 import com.ivanmorgillo.corsoandroid.teama.Tracking
 import com.ivanmorgillo.corsoandroid.teama.TrackingImpl
+import com.ivanmorgillo.corsoandroid.teama.area.AreaViewModel
 import com.ivanmorgillo.corsoandroid.teama.category.CategoryViewModel
 import com.ivanmorgillo.corsoandroid.teama.detail.DetailViewModel
 import com.ivanmorgillo.corsoandroid.teama.favourite.FavouriteViewModel
+import com.ivanmorgillo.corsoandroid.teama.home.HomeViewModel
 import com.ivanmorgillo.corsoandroid.teama.recipe.RecipeViewModel
+import com.ivanmorgillo.corsoandroid.teama.recipe.area.RecipeAreaViewModel
 import com.ivanmorgillo.corsoandroid.teama.settings.SettingsViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -27,13 +35,21 @@ import org.koin.dsl.module
 val appModule = module {
 
     single<RecipesRepository> {
-        RecipeRepositoryImpl(api = get())
+        RecipeRepositoryImpl(
+            ingredientsRepository = RecipeByIngredientImpl(api = get()),
+            categoriesRepository = RecipeByCategoryImpl(api = get()),
+            areaRepository = RecipeByAreaImpl(api = get())
+        )
     }
+
     single<RecipeDetailsRepository> {
         RecipeDetailsRepositoryImpl(api = get())
     }
     single<CategoryRepository> {
         CategoryRepositoryImpl(api = get())
+    }
+    single<AreaRepository> {
+        AreaRepositoryImpl(api = get())
     }
     single<FavouriteRepository> {
         FavouriteRepositoryImpl(fireStoreDatabase = get(), authManager = get())
@@ -60,4 +76,7 @@ val appModule = module {
     }
     viewModel { FavouriteViewModel(repository = get(), tracking = get(), settingsRepository = get()) }
     viewModel { SettingsViewModel(repository = get(), tracking = get()) }
+    viewModel { HomeViewModel(tracking = get()) }
+    viewModel { AreaViewModel(tracking = get(), repository = get()) }
+    viewModel { RecipeAreaViewModel(tracking = get(), repository = get()) }
 }

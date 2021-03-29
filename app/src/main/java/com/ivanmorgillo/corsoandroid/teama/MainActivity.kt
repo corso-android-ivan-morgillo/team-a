@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.view.Gravity
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
@@ -20,6 +21,13 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import coil.load
 import com.firebase.ui.auth.AuthUI
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.RequestConfiguration
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
@@ -31,6 +39,7 @@ import com.ivanmorgillo.corsoandroid.teama.extension.gone
 import com.ivanmorgillo.corsoandroid.teama.extension.visible
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
+import java.util.*
 
 class MainActivity : AppCompatActivity(), GoogleLoginRequest {
 
@@ -87,6 +96,71 @@ class MainActivity : AppCompatActivity(), GoogleLoginRequest {
         })
         viewModel.send(MainScreenEvent.OnInitTheme)
         viewModel.send(MainScreenEvent.OnInitUser)
+
+        //Google Ads Sdk Initializazion
+
+        setupAds()
+    }
+
+    // Determine the screen width (less decorations) to use for the ad width.
+    // If the ad hasn't been laid out, default to the full screen width.
+    private val adSize: AdSize
+        get() {
+            val display = windowManager.defaultDisplay
+            val outMetrics = DisplayMetrics()
+            display.getMetrics(outMetrics)
+
+            val density = outMetrics.density
+
+            var adWidthPixels = binding.appBarMain.contentMain.adViewContainer.width.toFloat()
+            if (adWidthPixels == 0f) {
+                adWidthPixels = outMetrics.widthPixels.toFloat()
+            }
+
+            val adWidth = (adWidthPixels / density).toInt()
+            return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(this, adWidth)
+        }
+
+    private fun setupAds() {
+        MobileAds.initialize(this@MainActivity) {
+        }
+
+        val adView = AdView(this)
+        binding.appBarMain.contentMain.adViewContainer.addView(adView)
+
+        adView.adListener = object : AdListener() {
+            override fun onAdLoaded() = Unit
+
+            override fun onAdFailedToLoad(adError: LoadAdError) {
+                Timber.e(Throwable("Cannot Load Ad: ${adError.code}"))
+            }
+
+            override fun onAdOpened() = Unit
+
+            override fun onAdClicked() = Unit
+
+            override fun onAdLeftApplication() = Unit
+
+            override fun onAdClosed() = Unit
+        }
+
+        //adView.adUnitId = "ca-app-pub-6515754135994712/3247134737"
+        adView.adUnitId = "ca-app-pub-3940256099942544/6300978111"
+
+        adView.adSize = adSize
+
+
+        // Create an ad request. Check your logcat output for the hashed device ID to
+        // get test ads on a physical device, e.g.,
+        // "Use AdRequest.Builder.addTestDevice("ABCDE0123") to get test ads on this device."
+        val requestConfig = RequestConfiguration.Builder()
+            .setTestDeviceIds(listOf("20D62A23A1F0F7AD88E710CB35E343FF")).build()
+        MobileAds.setRequestConfiguration(requestConfig)
+        val adRequest = AdRequest.Builder().build()
+
+        // Start loading the ad in the background.
+        adView.loadAd(adRequest)
+
     }
 
     private fun onItemSelected(itemId: Int) {

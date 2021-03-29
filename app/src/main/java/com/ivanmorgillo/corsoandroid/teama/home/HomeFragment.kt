@@ -5,20 +5,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.ivanmorgillo.corsoandroid.teama.R
+import com.ivanmorgillo.corsoandroid.teama.databinding.FragmentAreaBinding
+import com.ivanmorgillo.corsoandroid.teama.databinding.FragmentHomeBinding
+import com.ivanmorgillo.corsoandroid.teama.utils.viewBinding
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false)
-    }
+    private val viewModel: HomeViewModel by viewModel()
+    private val binding by viewBinding(FragmentHomeBinding::bind)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -27,28 +24,28 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         val areaButton = view.findViewById<Button>(R.id.area_button)
         val ingredientsButton = view.findViewById<Button>(R.id.ingredient_button)
         val randomButton = view.findViewById<Button>(R.id.random_button)
-        categoryButton.setOnClickListener {
 
-            val directions =
-                HomeFragmentDirections.actionHomeFragmentToCategoryFragment()
-            findNavController().navigate(directions)
-
+        viewModel.actions.observe(viewLifecycleOwner) { action ->
+            when (action) {
+                HomeScreenAction.NavigateToArea -> {
+                    val directions = HomeFragmentDirections.actionHomeFragmentToAreaFragment()
+                    findNavController().navigate(directions)
+                }
+                HomeScreenAction.NavigateToCategory -> {
+                    val directions = HomeFragmentDirections.actionHomeFragmentToCategoryFragment()
+                    findNavController().navigate(directions)
+                }
+                HomeScreenAction.NavigateToIngredient -> {
+                    // bisogna attivare le chiamate di rete e creare le stesse card che abbiamo in category
+                }
+            }
         }
-        areaButton.setOnClickListener {
 
-            Toast.makeText(categoryButton.context, getString(R.string.work_in_progress), Toast.LENGTH_LONG).show()
-
-
+        binding.categoryButton.setOnClickListener {
+            viewModel.send(HomeScreenEvent.OnCategoryClick)
         }
-        ingredientsButton.setOnClickListener {
-
-            Toast.makeText(categoryButton.context, getString(R.string.work_in_progress), Toast.LENGTH_LONG).show()
-
-        }
-        randomButton.setOnClickListener {
-
-            Toast.makeText(categoryButton.context, getString(R.string.work_in_progress), Toast.LENGTH_LONG).show()
-
+        binding.areaButton.setOnClickListener {
+            viewModel.send(HomeScreenEvent.OnAreaClick)
         }
 
 

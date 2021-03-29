@@ -73,6 +73,45 @@
             app:exitAnim="@anim/fade_out"
             app:popEnterAnim="@anim/fade_in"
             app:popExitAnim="@anim/fade_out" />
+        <action
+            android:id="@+id/action_homeFragment_to_ingredientFragment"
+            app:destination="@id/ingredientFragment" />
+
+        <action
+            android:id="@+id/action_homeFragment_to_areaFragment"
+            app:destination="@id/areaFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+
+    </fragment>
+
+    <fragment
+        android:id="@+id/areaFragment"
+        android:name="com.ivanmorgillo.corsoandroid.teama.area.AreaFragment"
+        android:label="@string/area_fragment"
+        tools:layout="@layout/fragment_area">
+        <action
+            android:id="@+id/action_areaFragment_to_recipeAreaFragment"
+            app:destination="@id/recipeAreaFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/fade_out" />
+    </fragment>
+    <fragment
+        android:id="@+id/recipeAreaFragment"
+        android:name="com.ivanmorgillo.corsoandroid.teama.recipe.area.RecipeAreaFragment"
+        android:label="@string/recipe_fragment"
+        tools:layout="@layout/fragment_recipe_area">
+        <action
+            android:id="@+id/action_recipeAreaFragment_to_detailFragment"
+            app:destination="@id/detailFragment" />
+        <argument
+            android:name="area_name"
+            app:argType="string"
+            android:defaultValue="" />
     </fragment>
 
     <fragment
@@ -80,4 +119,10 @@
         android:name="com.ivanmorgillo.corsoandroid.teama.settings.SettingsFragment"
         android:label="@string/menu_slideshow"
         tools:layout="@layout/fragment_settings" />
+
+    <fragment
+        android:id="@+id/ingredientFragment"
+        android:name="com.ivanmorgillo.corsoandroid.teama.settings.SettingsFragment"
+        android:label="Ingredient"
+        tools:layout="@layout/fragment_ingredient" />
 </navigation>

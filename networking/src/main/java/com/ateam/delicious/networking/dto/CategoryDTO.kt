@@ -20,3 +20,5 @@ data class CategoryDTO(
         val strCategoryThumb: String,
     )
 }
+
+
