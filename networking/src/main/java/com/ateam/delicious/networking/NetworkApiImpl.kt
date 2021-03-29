@@ -170,14 +170,19 @@ class NetworkApiImpl(cacheDir: File) : NetworkAPI {
     override suspend fun loadRecipes(categoryName: String): LoadRecipeResult {
         try {
             val recipesList = service.loadRecipes(categoryName)
-            val recipes = recipesList.meals
-                .mapNotNull {
-                    it.toDomain()
+            return if (recipesList.meals != null) {
+
+                val recipes = recipesList.meals
+                    .mapNotNull {
+                        it.toDomain()
+                    }
+                if (recipes.isEmpty()) {
+                    Failure(NoRecipeFound)
+                } else {
+                    Success(recipes)
                 }
-            return if (recipes.isEmpty()) {
-                Failure(NoRecipeFound)
             } else {
-                Success(recipes)
+                Failure(NoRecipeFound)
             }
         } catch (e: IOException) { // no network available
             return Failure(NoInternet)
@@ -220,6 +225,7 @@ class NetworkApiImpl(cacheDir: File) : NetworkAPI {
     override suspend fun loadAreas(): LoadAreaResult {
         try {
             val areasList = service.loadAreas()
+
             val areas = areasList.meals.mapNotNull {
                 it.toDomain()
             }
@@ -322,9 +328,11 @@ class NetworkApiImpl(cacheDir: File) : NetworkAPI {
     }
 
     override suspend fun loadRecipesByIngredient(ingredientName: String): LoadRecipeResult {
-
         val ingredientRecipesDto = service.loadRecipesByIngredient(ingredientName)
-
+        if (ingredientRecipesDto.meals == null) {
+            Timber.e("ERRORE RICETTA NULL")
+            return Failure(NoRecipeFound)
+        }
         val ingredientRecipesList = ingredientRecipesDto.meals
             .mapNotNull {
                 it.toDomain()
@@ -341,14 +349,18 @@ class NetworkApiImpl(cacheDir: File) : NetworkAPI {
     override suspend fun loadRecipesByArea(areaName: String): LoadRecipeResult {
         try {
             val recipesByAreaList = service.loadRecipesByArea(areaName)
-            val recipesByArea = recipesByAreaList.meals
-                .mapNotNull {
-                    it.toDomain()
+            return if (recipesByAreaList.meals != null) {
+                val recipesByArea = recipesByAreaList.meals
+                    .mapNotNull {
+                        it.toDomain()
+                    }
+                if (recipesByArea.isEmpty()) {
+                    Failure(NoRecipeFound)
+                } else {
+                    Success(recipesByArea)
                 }
-            return if (recipesByArea.isEmpty()) {
-                Failure(NoRecipeFound)
             } else {
-                Success(recipesByArea)
+                Failure(NoRecipeFound)
             }
         } catch (e: IOException) { // no network available
             return Failure(NoInternet)

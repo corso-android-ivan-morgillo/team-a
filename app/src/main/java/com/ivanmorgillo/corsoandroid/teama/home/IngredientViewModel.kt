@@ -5,9 +5,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ateam.delicious.domain.NetworkAPI
 import com.ateam.delicious.domain.Recipe
+import com.ateam.delicious.domain.error.LoadRecipeError
 import com.ateam.delicious.domain.result.LoadRecipeResult
 import com.ivanmorgillo.corsoandroid.teama.crashlytics.SingleLiveEvent
 import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
+import com.ivanmorgillo.corsoandroid.teama.home.IngredientScreenState.Content
+import com.ivanmorgillo.corsoandroid.teama.home.IngredientScreenState.Error
 import kotlinx.coroutines.launch
 
 class IngredientViewModel(val api: NetworkAPI) : ViewModel() {
@@ -35,7 +38,7 @@ class IngredientViewModel(val api: NetworkAPI) : ViewModel() {
             val result = api.loadRecipesByIngredient(ingredient)
             when (result) {
                 is LoadRecipeResult.Success -> onSuccess(result.recipes)
-                is LoadRecipeResult.Failure -> onFailure()
+                is LoadRecipeResult.Failure -> onFailure(result.error)
             }.exhaustive
         }
 
@@ -53,23 +56,33 @@ class IngredientViewModel(val api: NetworkAPI) : ViewModel() {
 
             )
         }
-        states.postValue(IngredientScreenState.Content(recipesByIngredient))
+        states.postValue(Content(recipesByIngredient))
 
     }
 
-    private fun onFailure() {
-        TODO()
+    private fun onFailure(error: LoadRecipeError) {
+        states.postValue(Error)
+        when (error) {
+            LoadRecipeError.InterruptedRequest -> TODO()
+            LoadRecipeError.NoInternet -> TODO()
+            LoadRecipeError.NoRecipeFound -> actions.postValue(IngredientScreenAction.ShowNoRecipeFound)
+            LoadRecipeError.ServerError -> TODO()
+            LoadRecipeError.SlowInternet -> TODO()
+        }.exhaustive
     }
 
 }
 
 sealed class IngredientScreenAction {
     data class NavigateToDetail(val recipeByIngredient: RecipeByIngredientUI) : IngredientScreenAction()
+    object ShowNoRecipeFound : IngredientScreenAction()
 }
 
 sealed class IngredientScreenState {
 
     data class Content(val recipes: List<RecipeByIngredientUI>) : IngredientScreenState()
+
+    object Error : IngredientScreenState()
 }
 
 data class RecipeByIngredientUI(

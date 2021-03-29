@@ -7,6 +7,7 @@ import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import com.ivanmorgillo.corsoandroid.teama.R
 import com.ivanmorgillo.corsoandroid.teama.databinding.FragmentIngredientBinding
 import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
@@ -16,6 +17,7 @@ import com.ivanmorgillo.corsoandroid.teama.home.IngredientFragmentDirections.Com
 import com.ivanmorgillo.corsoandroid.teama.utils.Util
 import com.ivanmorgillo.corsoandroid.teama.utils.viewBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import timber.log.Timber
 
 class IngredientFragment : Fragment(R.layout.fragment_ingredient), SearchView.OnQueryTextListener {
 
@@ -29,6 +31,7 @@ class IngredientFragment : Fragment(R.layout.fragment_ingredient), SearchView.On
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setHasOptionsMenu(true)
+        binding.containerInfo.visible()
         binding.recipeByIngredientList.adapter = recipeByIngredientAdapter
 
         viewModel.states.observe(viewLifecycleOwner, { state ->
@@ -39,6 +42,9 @@ class IngredientFragment : Fragment(R.layout.fragment_ingredient), SearchView.On
                     binding.containerInfo.gone()
                     val recipes = state.recipes
                     recipeByIngredientAdapter.setRecipesByIngredient(recipes)
+                }
+                IngredientScreenState.Error -> {
+                    Timber.e("L'app è in stato ERRORE!")
                 }
             }.exhaustive
 
@@ -53,8 +59,16 @@ class IngredientFragment : Fragment(R.layout.fragment_ingredient), SearchView.On
                         actionIngredientFragmentToDetailFragment(action.recipeByIngredient.id)
                     findNavController().navigate(direction)
                 }
+                IngredientScreenAction.ShowNoRecipeFound -> {
+                    showNoRecipesFound()
+                }
             }.exhaustive
         })
+    }
+
+    private fun showNoRecipesFound() {
+
+        Snackbar.make(binding.root, "No recipes Found with this ingredient!", Snackbar.LENGTH_LONG).show()
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
