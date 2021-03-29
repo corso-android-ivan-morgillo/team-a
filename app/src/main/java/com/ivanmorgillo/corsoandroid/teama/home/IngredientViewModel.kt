@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 
 class IngredientViewModel(val api: NetworkAPI) : ViewModel() {
 
-    val states = MutableLiveData<IngredientScreenEvent>()
+    val states = MutableLiveData<IngredientScreenState>()
 
     fun send(event: IngredientScreenEvent) {
 
@@ -31,7 +31,7 @@ class IngredientViewModel(val api: NetworkAPI) : ViewModel() {
             val result = api.loadRecipesByIngredient(ingredient)
             when (result) {
                 is LoadRecipeResult.Success -> onSuccess(result.recipes)
-                is LoadRecipeResult.Failure -> TODO()
+                is LoadRecipeResult.Failure -> onFailure()
             }.exhaustive
         }
 
@@ -49,12 +49,19 @@ class IngredientViewModel(val api: NetworkAPI) : ViewModel() {
 
             )
         }
-        TODO()
+        states.postValue(IngredientScreenState.Content(recipesByIngredient))
 
     }
 
-    private fun onFailure() {}
+    private fun onFailure() {
+        TODO()
+    }
 
+}
+
+sealed class IngredientScreenState {
+
+    data class Content(val recipes: List<RecipeByIngredientUI>) : IngredientScreenState()
 }
 
 data class RecipeByIngredientUI(
@@ -68,4 +75,5 @@ sealed class IngredientScreenEvent {
 
     object OnReady : IngredientScreenEvent()
     data class OnResearch(val ingredientTextSearch: String) : IngredientScreenEvent()
+
 }
