@@ -153,7 +153,8 @@ class MainActivity : AppCompatActivity(), GoogleLoginRequest {
         // Create an ad request. Check your logcat output for the hashed device ID to
         // get test ads on a physical device, e.g.,
         // "Use AdRequest.Builder.addTestDevice("ABCDE0123") to get test ads on this device."
-        val requestConfig = RequestConfiguration.Builder().setTestDeviceIds(listOf("20D62A23A1F0F7AD88E710CB35E343FF")).build()
+        val requestConfig = RequestConfiguration.Builder()
+            .setTestDeviceIds(listOf("20D62A23A1F0F7AD88E710CB35E343FF")).build()
         MobileAds.setRequestConfiguration(requestConfig)
         val adRequest = AdRequest.Builder().build()
 

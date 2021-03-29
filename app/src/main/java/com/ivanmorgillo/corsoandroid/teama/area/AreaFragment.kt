@@ -54,7 +54,7 @@ class AreaFragment : Fragment(R.layout.fragment_area) {
                 when (action) {
                     is AreaScreenAction.NavigateToRecipes -> {
                         val directions =
-                            AreaFragmentDirections.actionAreaFragmentToRecipeFragment(action.area.name)
+                            AreaFragmentDirections.actionAreaFragmentToRecipeAreaFragment(action.area.name)
                         findNavController().navigate(directions)
                     }
                     AreaScreenAction.ShowNoInternetMessage -> showNoInternetMessage()
