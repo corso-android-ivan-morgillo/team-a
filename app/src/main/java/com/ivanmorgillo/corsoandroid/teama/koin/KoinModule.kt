@@ -27,7 +27,6 @@ import com.ivanmorgillo.corsoandroid.teama.favourite.FavouriteViewModel
 import com.ivanmorgillo.corsoandroid.teama.home.HomeViewModel
 import com.ivanmorgillo.corsoandroid.teama.home.IngredientViewModel
 import com.ivanmorgillo.corsoandroid.teama.recipe.RecipeViewModel
-import com.ivanmorgillo.corsoandroid.teama.recipe.area.RecipeAreaViewModel
 import com.ivanmorgillo.corsoandroid.teama.settings.SettingsViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -80,5 +79,4 @@ val appModule = module {
     viewModel { HomeViewModel(tracking = get()) }
     viewModel { AreaViewModel(tracking = get(), repository = get()) }
     viewModel { IngredientViewModel(api = get()) }
-
-
+}
