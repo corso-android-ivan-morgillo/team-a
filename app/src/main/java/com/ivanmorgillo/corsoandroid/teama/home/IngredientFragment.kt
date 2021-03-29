@@ -10,6 +10,8 @@ import androidx.navigation.fragment.findNavController
 import com.ivanmorgillo.corsoandroid.teama.R
 import com.ivanmorgillo.corsoandroid.teama.databinding.FragmentIngredientBinding
 import com.ivanmorgillo.corsoandroid.teama.extension.exhaustive
+import com.ivanmorgillo.corsoandroid.teama.extension.gone
+import com.ivanmorgillo.corsoandroid.teama.extension.visible
 import com.ivanmorgillo.corsoandroid.teama.utils.Util
 import com.ivanmorgillo.corsoandroid.teama.utils.viewBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -32,6 +34,8 @@ class IngredientFragment : Fragment(R.layout.fragment_ingredient), SearchView.On
 
             when (state) {
                 is IngredientScreenState.Content -> {
+                    binding.ingredientListRoot.visible()
+                    binding.containerInfo.gone()
                     val recipes = state.recipes
                     recipeByIngredientAdapter.setRecipesByIngredient(recipes)
                 }
