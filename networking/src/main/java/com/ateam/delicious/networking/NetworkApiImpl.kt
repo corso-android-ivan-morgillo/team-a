@@ -322,7 +322,20 @@ class NetworkApiImpl(cacheDir: File) : NetworkAPI {
     }
 
     override suspend fun loadRecipesByIngredient(ingredientName: String): LoadRecipeResult {
-        TODO("Not yet implemented")
+
+        val ingredientRecipesDto = service.loadRecipesByIngredient(ingredientName)
+
+        val ingredientRecipesList = ingredientRecipesDto.meals
+            .mapNotNull {
+                it.toDomain()
+            }
+
+        return if (ingredientRecipesList.isEmpty()) {
+            Failure(NoRecipeFound)
+        } else {
+            Success(ingredientRecipesList)
+        }
+
     }
 
     override suspend fun loadRecipesByArea(areaName: String): LoadRecipeResult {
