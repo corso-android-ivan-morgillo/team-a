@@ -20,8 +20,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val randomButton = view.findViewById<Button>(R.id.random_button)
-
         viewModel.actions.observe(viewLifecycleOwner) { action ->
             when (action) {
                 HomeScreenAction.NavigateToArea -> {
