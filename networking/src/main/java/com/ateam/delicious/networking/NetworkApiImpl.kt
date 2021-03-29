@@ -339,7 +339,27 @@ class NetworkApiImpl(cacheDir: File) : NetworkAPI {
     }
 
     override suspend fun loadRecipesByArea(areaName: String): LoadRecipeResult {
-        TODO("Not yet implemented")
+        try {
+            val recipesByAreaList = service.loadRecipesByArea(areaName)
+            val recipesByArea = recipesByAreaList.meals
+                .mapNotNull {
+                    it.toDomain()
+                }
+            return if (recipesByArea.isEmpty()) {
+                Failure(NoRecipeFound)
+            } else {
+                Success(recipesByArea)
+            }
+        } catch (e: IOException) { // no network available
+            return Failure(NoInternet)
+        } catch (e: ConnectException) { // interrupted network request
+            return Failure(InterruptedRequest)
+        } catch (e: SocketTimeoutException) { // server timeout error
+            return Failure(SlowInternet)
+        } catch (e: Exception) { // other generic exception
+            Timber.e(e, "Generic Exception on LoadRecipes")
+            return Failure(ServerError)
+        }
     }
 
     private fun RecipeDTO.Meal.toDomain(): Recipe? {
