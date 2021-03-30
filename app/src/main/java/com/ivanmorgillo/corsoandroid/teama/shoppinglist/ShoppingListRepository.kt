@@ -14,7 +14,7 @@ class ShoppingListRepositoryImpl : ShoppingListRepository {
                 ShoppingListUI(
                     ingredientName = "patate$it",
                     ingredientQuantity = "500gr",
-                    isChecked = true
+                    isChecked = false
                 )
             }
         Timber.e("Lista $shoppingList")

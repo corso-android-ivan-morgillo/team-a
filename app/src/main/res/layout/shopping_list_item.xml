@@ -22,10 +22,24 @@
         android:layout_height="wrap_content"
         android:text=" 600ml"
         app:layout_constraintTop_toTopOf="@id/ingredient_name"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/ingredient_name"
+        app:layout_constraintEnd_toStartOf="@id/ingredient_delete"
         app:layout_constraintBottom_toBottomOf="@id/ingredient_name"
         android:textSize="24sp"
         android:layout_margin="12dp"
+        tools:ignore="HardcodedText" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:id="@+id/ingredient_delete"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/ingredient_quantity"
+        app:layout_constraintTop_toTopOf="@id/ingredient_quantity"
+        app:layout_constraintBottom_toBottomOf="@id/ingredient_quantity"
+        android:src="@drawable/ic_swipe_delete"
+        android:contentDescription="icon_to_delete"
+        app:tint="@color/black"
         tools:ignore="HardcodedText" />
 
 
