@@ -29,6 +29,7 @@ import com.ivanmorgillo.corsoandroid.teama.home.IngredientViewModel
 import com.ivanmorgillo.corsoandroid.teama.recipe.RecipeViewModel
 import com.ivanmorgillo.corsoandroid.teama.recipe.area.RecipeAreaViewModel
 import com.ivanmorgillo.corsoandroid.teama.settings.SettingsViewModel
+import com.ivanmorgillo.corsoandroid.teama.shoppinglist.ShoppingListViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -81,4 +82,5 @@ val appModule = module {
     viewModel { AreaViewModel(tracking = get(), repository = get()) }
     viewModel { IngredientViewModel(api = get()) }
     viewModel { RecipeAreaViewModel(repository = get(), tracking = get()) }
+    viewModel { ShoppingListViewModel() }
 }

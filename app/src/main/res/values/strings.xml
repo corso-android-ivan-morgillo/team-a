@@ -68,4 +68,5 @@
     <string name="area_fragment">Area</string>
     <string name="do_a_research">Search a recipe by typing an ingredient to see results!</string>
     <string name="recipe_area_image_description">Image Area</string>
+    <string name="shopping_list">Shopping List</string>
 </resources>

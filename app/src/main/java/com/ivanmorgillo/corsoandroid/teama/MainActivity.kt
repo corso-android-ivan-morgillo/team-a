@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity(), GoogleLoginRequest {
         val navController = findNavController(R.id.nav_host_fragment)
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.homeFragment, R.id.favouriteFragment,
+                R.id.homeFragment, R.id.favouriteFragment, R.id.shoppingListFragment,
                 R.id.settingsFragment, R.id.nav_feedback,
                 R.id.login, R.id.logout
             ), drawerLayout
@@ -92,12 +92,16 @@ class MainActivity : AppCompatActivity(), GoogleLoginRequest {
                 is MainScreenAction.UserLogin -> {
                     onUserLoggedIn(action.user)
                 }
+                MainScreenAction.NavigateToShoppingList -> {
+                    Timber.d("vado alla lista")
+                    navController.navigate(R.id.shoppingListFragment)
+                }
             }.exhaustive
         })
         viewModel.send(MainScreenEvent.OnInitTheme)
         viewModel.send(MainScreenEvent.OnInitUser)
 
-        //Google Ads Sdk Initializazion
+        // Google Ads Sdk Initializazion
 
         setupAds()
     }
@@ -143,12 +147,10 @@ class MainActivity : AppCompatActivity(), GoogleLoginRequest {
 
             override fun onAdClosed() = Unit
         }
-
-        //adView.adUnitId = "ca-app-pub-6515754135994712/3247134737"
+        // adView.adUnitId = "ca-app-pub-6515754135994712/3247134737"
         adView.adUnitId = "ca-app-pub-3940256099942544/6300978111"
 
         adView.adSize = adSize
-
 
         // Create an ad request. Check your logcat output for the hashed device ID to
         // get test ads on a physical device, e.g.,
@@ -160,7 +162,6 @@ class MainActivity : AppCompatActivity(), GoogleLoginRequest {
 
         // Start loading the ad in the background.
         adView.loadAd(adRequest)
-
     }
 
     private fun onItemSelected(itemId: Int) {
@@ -172,6 +173,7 @@ class MainActivity : AppCompatActivity(), GoogleLoginRequest {
             R.id.settingsFragment -> viewModel.send(MainScreenEvent.OnSettingsClick)
             R.id.login -> viewModel.send(MainScreenEvent.OnLogin)
             R.id.logout -> viewModel.send(MainScreenEvent.OnLogout)
+            R.id.shoppingListFragment -> viewModel.send(MainScreenEvent.OnShoppingListClick)
         }
     }
 
@@ -242,7 +244,7 @@ class MainActivity : AppCompatActivity(), GoogleLoginRequest {
     }
 
     private fun firebaseLogout() {
-        //Sign out da firebase google.
+        // Sign out da firebase google.
         /**Per questo va  aggiunto il pulsante apposito logout*/
         AuthUI.getInstance()
             .signOut(this)
@@ -254,7 +256,7 @@ class MainActivity : AppCompatActivity(), GoogleLoginRequest {
     }
 
     private fun firebaseLogin() {
-        //activity firebase LOGIN
+        // activity firebase LOGIN
         /**Per questo va  aggiunto il pulsante apposito login*/
         val providers = arrayListOf(
             AuthUI.IdpConfig.GoogleBuilder().build()
@@ -289,5 +291,4 @@ class MainActivity : AppCompatActivity(), GoogleLoginRequest {
         intent.data = Uri.parse(url)
         startActivity(intent)
     }
-
 }

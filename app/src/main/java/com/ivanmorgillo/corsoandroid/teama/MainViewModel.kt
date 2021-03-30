@@ -61,7 +61,10 @@ class MainViewModel(
                 onLogoutSuccessful()
             }
             MainScreenEvent.OnInitUser -> onInitUser()
-
+            MainScreenEvent.OnShoppingListClick -> {
+                tracking.logEvent("shopping_list_clicked")
+                actions.postValue(MainScreenAction.NavigateToShoppingList)
+            }
         }.exhaustive
     }
 
@@ -100,6 +103,7 @@ sealed class MainScreenAction {
     object ShowLoginDialog : MainScreenAction()
     object ShowLogout : MainScreenAction()
     object NavigateToHome : MainScreenAction()
+    object NavigateToShoppingList : MainScreenAction()
 
     data class UserLogin(val user: FirebaseUser?) : MainScreenAction()
 
@@ -120,4 +124,5 @@ sealed class MainScreenEvent {
     object OnLogoutSuccessful : MainScreenEvent()
     object OnLogoutFailed : MainScreenEvent()
     object OnHomeClick : MainScreenEvent()
+    object OnShoppingListClick : MainScreenEvent()
 }
