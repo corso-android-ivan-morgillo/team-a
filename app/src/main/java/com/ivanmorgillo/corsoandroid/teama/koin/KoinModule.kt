@@ -29,6 +29,8 @@ import com.ivanmorgillo.corsoandroid.teama.home.IngredientViewModel
 import com.ivanmorgillo.corsoandroid.teama.recipe.RecipeViewModel
 import com.ivanmorgillo.corsoandroid.teama.recipe.area.RecipeAreaViewModel
 import com.ivanmorgillo.corsoandroid.teama.settings.SettingsViewModel
+import com.ivanmorgillo.corsoandroid.teama.shoppinglist.ShoppingListRepository
+import com.ivanmorgillo.corsoandroid.teama.shoppinglist.ShoppingListRepositoryImpl
 import com.ivanmorgillo.corsoandroid.teama.shoppinglist.ShoppingListViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -62,6 +64,9 @@ val appModule = module {
     single<SettingsRepository> {
         SettingsRepositoryImpl(context = androidContext())
     }
+    single<ShoppingListRepository> {
+        ShoppingListRepositoryImpl()
+    }
     single<Tracking> {
         TrackingImpl()
     }
@@ -82,5 +87,5 @@ val appModule = module {
     viewModel { AreaViewModel(tracking = get(), repository = get()) }
     viewModel { IngredientViewModel(api = get()) }
     viewModel { RecipeAreaViewModel(repository = get(), tracking = get()) }
-    viewModel { ShoppingListViewModel() }
+    viewModel { ShoppingListViewModel(repository = get()) }
 }
