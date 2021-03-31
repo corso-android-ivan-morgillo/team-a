@@ -12,6 +12,7 @@ interface AuthenticationManager {
     fun isUserLoggedIn(): Boolean
     fun getFavouriteCollection(dataBase: FirebaseFirestore): CollectionReference?
     fun getUser(): FirebaseUser?
+    fun getShoppingListCollection(dataBase: FirebaseFirestore): CollectionReference?
 }
 
 class AuthenticationManagerImpl() : AuthenticationManager {
@@ -38,4 +39,12 @@ class AuthenticationManagerImpl() : AuthenticationManager {
         return Firebase.auth.currentUser
     }
 
+    override fun getShoppingListCollection(dataBase: FirebaseFirestore): CollectionReference? {
+        val universalUserId = getUid()
+        return if (universalUserId == null) {
+            null
+        } else {
+            dataBase.collection("shop-$universalUserId")
+        }
+    }
 }

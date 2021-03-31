@@ -70,7 +70,6 @@ class CategoryFragment : Fragment(R.layout.fragment_category) {
                     ShowNoCategoryFoundMessage -> showNoCategoryFoundMessage()
                 }.exhaustive
             })
-
     }
 
     override fun onResume() {

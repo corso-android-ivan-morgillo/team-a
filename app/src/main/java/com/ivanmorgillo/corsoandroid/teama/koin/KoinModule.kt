@@ -65,7 +65,7 @@ val appModule = module {
         SettingsRepositoryImpl(context = androidContext())
     }
     single<ShoppingListRepository> {
-        ShoppingListRepositoryImpl()
+        ShoppingListRepositoryImpl(fireStoreDatabase = get(), authManager = get())
     }
     single<Tracking> {
         TrackingImpl()
